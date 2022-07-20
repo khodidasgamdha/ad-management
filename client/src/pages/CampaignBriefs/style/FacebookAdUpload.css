@@ -1,0 +1,31 @@
+.fb-upload h2 span {
+  padding: 4px 13px;
+  background: #ffffff;
+  box-shadow: 0px 2px 2px #e3edff, 0px 0px 1px #a8ccff;
+  border-radius: 37px;
+  font-size: 15px;
+  line-height: 24px;
+}
+.fb-upload .fb-upload-detail-form input,
+.fb-upload .fb-upload-detail-form textarea {
+  border-width: 2px;
+  border-radius: 0;
+  border-color: gray;
+}
+.fb-upload .fb-upload-detail-form .input-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.fb-upload .fb-upload-detail-form .chakra-form-control,
+.fb-upload .fb-upload-detail-form textarea {
+  margin-right: 20px;
+}
+.fb-upload {
+}
+.fb-upload {
+}
+.fb-upload {
+}
+.fb-upload {
+}

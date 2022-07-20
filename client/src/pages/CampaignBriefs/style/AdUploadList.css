@@ -1,0 +1,26 @@
+.ad-upload-list .ad-name {
+  display: flex;
+  align-items: center;
+}
+.ad-upload-list .ad-name img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+.ad-upload-list .search {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.ad-upload-list .search .chakra-stack{
+  width: 55%;
+}
+.ad-upload-list .search input {
+  border-color: #79a9ff;
+  border-width: 2px;
+}
+.ad-upload-list .search button {
+  margin: 0 0 0 20px;
+}

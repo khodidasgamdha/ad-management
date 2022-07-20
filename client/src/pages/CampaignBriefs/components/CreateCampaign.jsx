@@ -26,11 +26,13 @@ import { BiPlusCircle, BiArrowBack } from "react-icons/bi";
 import { TEXT_COLOR } from "../../../layout/constant/MenuList";
 import { useNavigate, useParams } from "react-router-dom";
 import CreateFacebookCampaign from "./CreateFacebookCampaignModel";
+import AdUploadList from "./AdUploadList";
 import { useGetCampaignList } from "../../../hooks/campaign-briefs/useGetCampaignList";
 import { useEffect } from "react";
 
 const CreateCampaign = () => {
   const [clientId, SetClientId] = useState(null);
+  const [tabIndex, SetTabIndex] = useState(6);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const navigate = useNavigate();
@@ -40,10 +42,6 @@ const CreateCampaign = () => {
     access_info: { clients },
   } = useRecoilValue(profile);
 
-  // const { data: clientInfo, isLoading: dataIsLoading, isFetching, refetch } = useGetCampaignList(
-  //     clients[0]?.id
-  // );
-
   useEffect(() => {
     SetClientId(clients[0].id);
   }, [clients]);
@@ -52,7 +50,11 @@ const CreateCampaign = () => {
 
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-      <GridItem w="full" colSpan={{ base: 6, lg: 4 }} mb={{ base: 3, lg: 0 }}>
+      <GridItem
+        w="full"
+        colSpan={{ base: 6, lg: tabIndex === 6 ? 6 : 4 }}
+        mb={{ base: 3, lg: 0 }}
+      >
         <Heading fontSize="sm" mb={7} color={TEXT_COLOR}>
           <Flex onClick={() => navigate("/campaign-briefs")} cursor={"pointer"}>
             <Center marginRight={2}>
@@ -77,7 +79,13 @@ const CreateCampaign = () => {
         <Heading fontSize="4xl" mb={4} color={TEXT_COLOR}>
           Create Campaign
         </Heading>
-        <Tabs size="sm" w="full" colorScheme="black" overflow="hidden">
+        <Tabs
+          defaultIndex={tabIndex}
+          size="sm"
+          w="full"
+          colorScheme="black"
+          overflow="hidden"
+        >
           <TabList
             overflowX="auto"
             css={css({
@@ -90,9 +98,13 @@ const CreateCampaign = () => {
           >
             <For
               each={CAMPAIGN_BRIEFS_TABS}
-              render={(tab, index) => (
-                <Tab whiteSpace="nowrap">{tab.title}</Tab>
-              )}
+              render={(tab, index) => {
+                return (
+                  <Tab onClick={() => SetTabIndex(index)} whiteSpace="nowrap">
+                    {tab.title}
+                  </Tab>
+                );
+              }}
             />
           </TabList>
 
@@ -107,12 +119,20 @@ const CreateCampaign = () => {
                 }
               />
             </TabPanel>
-            <TabPanel></TabPanel>
-            <TabPanel></TabPanel>
+            <TabPanel>1</TabPanel>
+            <TabPanel>2</TabPanel>
+            <TabPanel>3</TabPanel>
+            <TabPanel>4</TabPanel>
+            <TabPanel>5</TabPanel>
+            <TabPanel>
+              <AdUploadList />
+            </TabPanel>
+            <TabPanel>7</TabPanel>
+            <TabPanel>8</TabPanel>
           </TabPanels>
         </Tabs>
       </GridItem>
-      <GridItem padding={5} colSpan={{ base: 6, lg: 2 }}>
+      <GridItem padding={5} colSpan={{ base: 6, lg: tabIndex === 6 ? 0 : 2 }}>
         {id && (
           <VStack align="start">
             <Button
@@ -139,25 +159,28 @@ const CreateCampaign = () => {
             </Button>
           </VStack>
         )}
-        <VStack align="start" w="full" spacing={4}>
-          <Button
-            px="14"
-            isLoading={isLoading}
-            onClick={() => {
-              if (clientId) {
-                mutate({
-                  id: clientId,
-                });
-              }
-            }}
-            disabled={!clientId}
-            rounded="full"
-            size="sm"
-            marginTop={5}
-          >
-            {id ? "Update" : "Add"}
-          </Button>
-        </VStack>
+
+        {tabIndex !== 6 && (
+          <VStack align="start" w="full" spacing={4}>
+            <Button
+              px="14"
+              isLoading={isLoading}
+              onClick={() => {
+                if (clientId) {
+                  mutate({
+                    id: clientId,
+                  });
+                }
+              }}
+              disabled={!clientId}
+              rounded="full"
+              size="sm"
+              marginTop={5}
+            >
+              {id ? "Update" : "Add"}
+            </Button>
+          </VStack>
+        )}
       </GridItem>
       <CreateFacebookCampaign
         campaignId={id}

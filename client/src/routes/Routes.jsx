@@ -12,6 +12,8 @@ import CampaignBriefs from '../pages/CampaignBriefs'
 import PrivateRoutes from './PrivateRoutes'
 import Settings from '../pages/Settings'
 import CreateCampaign from '../pages/CampaignBriefs/components/CreateCampaign'
+import AdUploadList from '../pages/CampaignBriefs/components/AdUploadList'
+import FacebookAdUpload from '../pages/CampaignBriefs/components/FacebookAdUpload'
 
 const Routes = () => {
   return (
@@ -24,6 +26,11 @@ const Routes = () => {
             <Route
               path="/campaign-briefs/new"
               element={<CreateCampaign />}
+              exact
+            />
+            <Route
+              path="/campaign-brief/:id/ad-upload/new/fb"
+              element={<FacebookAdUpload />}
               exact
             />
             <Route

@@ -79,10 +79,10 @@ const CampaignBriefs = () => {
     return (
         <VStack alignItems="stretch" spacing={6}>
             <HStack alignItems="center" justifyContent="space-between">
-                <Heading color="gray.600" fontWeight="500" size="lg">
-                    Campaign Briefs
-                </Heading>
-                <HStack>
+                    <Heading color="gray.600" fontWeight="500" size="lg">
+                        Campaign Briefs
+                    </Heading>
+                    <HStack>
                     <Tooltip
                         hasArrow
                         placement="left"
