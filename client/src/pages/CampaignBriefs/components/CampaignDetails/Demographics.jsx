@@ -12,10 +12,10 @@ import {
   CheckboxControl,
   RadioGroupControl,
 } from 'formik-chakra-ui'
-import CheckBoxComponent from '../../../components/CheckBoxComponent'
-import InputBox from '../../../components/InputBox'
-import MultiSelectInputBox from '../../../components/MultiSelectInputBox'
-import TextAreaBox from '../../../components/TextAreaBox'
+import CheckBoxComponent from '../../../../components/CheckBoxComponent'
+import InputBox from '../../../../components/InputBox'
+import MultiSelectInputBox from '../../../../components/MultiSelectInputBox'
+import TextAreaBox from '../../../../components/TextAreaBox'
 import {
   BEHAVIOR,
   CampaignAgeGroup,
@@ -26,7 +26,7 @@ import {
   TargettingLocationOptions,
   TargettingLocationRadius,
   TargettingOptionContext,
-} from '../../../constant'
+} from '../../../../constant'
 
 const Demographics = ({ setFieldValue, ...props }) => {
   return (

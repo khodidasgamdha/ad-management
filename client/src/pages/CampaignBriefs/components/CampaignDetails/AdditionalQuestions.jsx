@@ -1,6 +1,6 @@
 import { Box, Heading, Grid, GridItem } from '@chakra-ui/react'
-import InputBox from '../../../components/InputBox'
-import { ADDITIONAL_QUESTIONS } from '../../../constant'
+import InputBox from '../../../../components/InputBox'
+import { ADDITIONAL_QUESTIONS } from '../../../../constant'
 
 const AdditionalQuestions = ({ ...props }) => {
   return (

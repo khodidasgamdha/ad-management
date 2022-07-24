@@ -18,9 +18,9 @@ import {
 import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { CheckboxControl, SelectControl } from "formik-chakra-ui";
+import { CheckboxControl, InputControl, SelectControl } from "formik-chakra-ui";
 import { LockIcon } from "@chakra-ui/icons";
-
+import { initialValues, optionsValues } from "../constant/FacebookCampaign";
 import instance from "../../../helpers/axios";
 
 import * as Yup from "yup";
@@ -28,69 +28,10 @@ import * as Yup from "yup";
 const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
     const toast = useToast();
 
-    const initialValues = {
-        campaignName: "",
-        month: "",
-        isLead: false,
-        category: "",
-        targetingMethod: "",
-        creativeType: "",
-        location: "",
-        segment: "",
-    };
-
-    const optionsValues = {
-        months: [
-            { value: "Jan", key: "Jan" },
-            { value: "Feb", key: "Feb" },
-            { value: "Mar", key: "Mar" },
-            { value: "Apr", key: "Apr" },
-            { value: "May", key: "May" },
-            { value: "Jun", key: "Jun" },
-            { value: "Jul", key: "Jul" },
-            { value: "Aug", key: "Aug" },
-            { value: "Sep", key: "Sep" },
-            { value: "Oct", key: "Oct" },
-            { value: "Nov", key: "Nov" },
-            { value: "Dec", key: "Dec" },
-        ],
-        adCategory: [
-            { value: "Stories", key: "STORIES" },
-            { value: "Weather", key: "WEATHER" },
-            { value: "In Stream", key: "IN_STREAM" },
-            { value: "Bumper", key: "BUMPER" },
-            { value: "Discovery", key: "DISCOVERY" },
-            { value: "Flight", key: "FLIGHT" },
-            { value: "OTA", key: "OTA" },
-            { value: "Sequence", key: "SEQUENCE" },
-        ],
-        targetingMethod: [
-            { value: "Audience", key: "AUDIENCE" },
-            { value: "List", key: "LIST" },
-            { value: "Lookalike", key: "LOOKALIKE" },
-            { value: "Retargeting", key: "RETARGETING" },
-            { value: "Dynamic Retargeting", key: "DYNAMIC_RETARGETING" },
-            { value: "Placement", key: "PLACEMENT" },
-            { value: "Keyword", key: "KEYWORD" },
-        ],
-        creativeType: [
-            { value: "Static", key: "STATIC" },
-            { value: "Carousel", key: "CAROUSEL" },
-            { value: "Video", key: "VIDEO" },
-            { value: "Cinemagraph", key: "CINEMAGRAPH" },
-            { value: "Text", key: "TEXT" },
-            { value: "Dynamic Static", key: "DYNAMIC_STATIC" },
-            { value: "Dynamic Video", key: "DYNAMIC_VIDEO" },
-            { value: "HTML", key: "HTML" },
-            { value: "GIF", key: "GIF" },
-            { value: "Audio", key: "AUDIO" },
-        ],
-    };
-
     const validationSchema = Yup.object().shape({
-        campaignName: Yup.string().required(),
-        targetingMethod: Yup.string().required(),
-        creativeType: Yup.string().required(),
+        campaignName: Yup.string().required("Campaign Name is required."),
+        targetingMethod: Yup.string().required("Targeting Method is required."),
+        creativeType: Yup.string().required("Creative Type is required."),
     });
 
     const onSubmit = async (values, actions) => {
@@ -168,7 +109,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                 </ModalHeader>
                 <ModalCloseButton onClick={() => {}} />
                 <Formik
-                    // enableReinitialize
+                    enableReinitialize
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
@@ -214,18 +155,13 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                         (required)
                                                     </span>
                                                 </FormLabel>
-                                                <Input
+                                                <InputControl
                                                     id="campaign_name"
                                                     name="campaignName"
                                                     placeholder="Example 2022"
                                                     value={values.campaignName}
                                                     onChange={handleChange}
                                                     css={css({
-                                                        borderRadius: "0",
-                                                        border: "2px solid #757998",
-                                                        fontWeight: "600",
-                                                        fontSize: "11px",
-                                                        lineHeight: "16px",
                                                         color: "#757998",
                                                     })}
                                                 />

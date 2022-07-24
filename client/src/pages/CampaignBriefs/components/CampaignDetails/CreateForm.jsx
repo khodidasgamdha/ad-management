@@ -1,13 +1,8 @@
-import { HStack, useToast, VStack } from "@chakra-ui/react";
+import { useToast, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { SubmitButton } from "formik-chakra-ui";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 import * as Yup from "yup";
-import { profile } from "../../../atoms/authAtom";
-import instance from "../../../helpers/axios";
-import { initialValue } from "../constant";
+import instance from "../../../../helpers/axios";
+import { initialValue } from "../../constant";
 import AdditionalQuestions from "./AdditionalQuestions";
 import CampaignBudget from "./CampaignBudget";
 import CampaignDetails from "./CampaignDetails";
@@ -18,11 +13,6 @@ import MediaStrategies from "./MediaStrategies";
 
 const CreateForm = ({ clientDetails }) => {
   const toast = useToast();
-  const { id } = useParams();
-
-  const {
-    access_info: { clients },
-  } = useRecoilValue(profile);
 
   const validationSchema = Yup.object({
     name: Yup.string().required().label("Name"),
@@ -39,28 +29,6 @@ const CreateForm = ({ clientDetails }) => {
       .required()
       .label("Details"),
   });
-
-  useEffect(() => {
-    console.log(id);
-    if (id) {
-
-    }
-  });
-
-  // useEffect(async () => {
-  //   // if (id) {
-  //   //   await instance({
-  //   //     method: "GET",
-  //   //     url: `/client/${clients?.[0]?.id}/campaign-brief/${id}`,
-  //   //   })
-  //   //     .then((res) => {
-  //   //       console.log(res);
-  //   //     })
-  //   //     .catch((err) => {
-  //   //       console.log(err);
-  //   //     });
-  //   // }
-  // }, [clientDetails, clients]);
 
   return (
     <Formik

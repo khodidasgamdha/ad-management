@@ -9,7 +9,7 @@ export const useGetClientDetails = (id) => {
       })
       .then((res) => {
         if (res.status === 200) {
-          return res.data.data.user
+          return res.data.data.client
         }
       })
       .catch((err) => {

@@ -10,7 +10,6 @@ import {
     Text,
     Tooltip,
     IconButton,
-    css,
   } from "@chakra-ui/react";
   import {
     FiChevronsLeft,

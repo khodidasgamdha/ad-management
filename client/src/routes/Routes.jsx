@@ -12,8 +12,8 @@ import CampaignBriefs from '../pages/CampaignBriefs'
 import PrivateRoutes from './PrivateRoutes'
 import Settings from '../pages/Settings'
 import CreateCampaign from '../pages/CampaignBriefs/components/CreateCampaign'
-import AdUploadList from '../pages/CampaignBriefs/components/AdUploadList'
-import FacebookAdUpload from '../pages/CampaignBriefs/components/FacebookAdUpload'
+import FacebookAdUpload from '../pages/CampaignBriefs/components/AdUpload/FacebookAdUpload'
+import ClientDetails from "../pages/Clients/components/ClientDetails"
 
 const Routes = () => {
   return (
@@ -34,6 +34,11 @@ const Routes = () => {
               exact
             />
             <Route
+              path="/campaign-brief/:id/ad-upload/fb/:fbId"
+              element={<FacebookAdUpload />}
+              exact
+            />
+            <Route
               path="/campaign-briefs/:id"
               element={<CreateCampaign />}
               exact
@@ -43,6 +48,7 @@ const Routes = () => {
             <Route path="/config" element={<ConfigManager />} exact />
             <Route path="/config/:id" element={<ConfigDetails />} exact />
             <Route path="/clients" element={<Clients />} exact />
+            <Route path="/client/:id" element={<ClientDetails />} exact />
             <Route path="/settings" element={<Settings />} exact />
           </Route>
         </Route>

@@ -1,69 +1,69 @@
-import { HStack, Radio, VStack, useToast } from '@chakra-ui/react'
-import { Form, Formik } from 'formik'
+import { HStack, Radio, VStack, useToast } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
 import {
   CheckboxContainer,
   CheckboxControl,
   InputControl,
   RadioGroupControl,
   SubmitButton,
-} from 'formik-chakra-ui'
-import { useParams } from 'react-router-dom'
-import * as Yup from 'yup'
-import { useRecoilValue } from 'recoil'
-import BreadcrumbNavigate from '../../../components/BreadcrumbNavigate/BreadcrumbNavigate'
-import ErrorMessage from '../../../components/ErrorMessage'
-import { Roles, States } from '../../../constant'
-import instance from '../../../helpers/axios'
-import { useGetUserDetails } from '../../../hooks/users/useGetUserDetails'
-import UpdatePassword from '../components/UpdatePassword'
-import { profile } from '../../../atoms/authAtom'
+} from "formik-chakra-ui";
+import { useParams } from "react-router-dom";
+import * as Yup from "yup";
+import { useRecoilValue } from "recoil";
+import BreadcrumbNavigate from "../../../components/BreadcrumbNavigate/BreadcrumbNavigate";
+import ErrorMessage from "../../../components/ErrorMessage";
+import { Roles, States } from "../../../constant";
+import instance from "../../../helpers/axios";
+import { useGetUserDetails } from "../../../hooks/users/useGetUserDetails";
+import UpdatePassword from "../components/UpdatePassword";
+import { profile } from "../../../atoms/authAtom";
 
 const UserDetails = () => {
-  const { id } = useParams()
-  const toast = useToast()
+  const { id } = useParams();
+  const toast = useToast();
 
-  const userProfileDetails = useRecoilValue(profile)
+  const userProfileDetails = useRecoilValue(profile);
 
-  const { data, isLoading, error } = useGetUserDetails(id)
+  const { data, isLoading, error } = useGetUserDetails(id);
 
   const initialValues = {
-    name: data?.name || '',
-    email: data?.email || '',
-    roles: data?.access_info.roles || '',
-    state: data?.state || '',
-    clients: data?.access_info.clients.map((c) => c.id) || '',
-  }
+    name: data?.name || "",
+    email: data?.email || "",
+    roles: data?.access_info.roles || "",
+    state: data?.state || "",
+    clients: data?.access_info.clients.map((c) => c.id) || "",
+  };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required().label('Name'),
-    email: Yup.string().email().required().label('Email address'),
-    roles: Yup.array().required().min(1).label('Roles'),
-    clients: Yup.array().min(1).label('Clients'),
-  })
+    name: Yup.string().required().label("Name"),
+    email: Yup.string().email().required().label("Email address"),
+    roles: Yup.array().required().min(1).label("Roles"),
+    clients: Yup.array().min(1).label("Clients"),
+  });
 
   const onSubmit = async (values, action) => {
     await instance({
-      method: 'PUT',
+      method: "PUT",
       url: `/user/${id}`,
       data: values,
     })
       .then((response) => {
-        console.log(response)
+        console.log(response);
         if (response.status === 200) {
           toast({
             isClosable: true,
-            status: 'success',
-            variant: 'top-accent',
-            position: 'top-right',
-            title: 'Success',
-            description: 'User updated successfully',
-          })
+            status: "success",
+            variant: "top-accent",
+            position: "top-right",
+            title: "Success",
+            description: "User updated successfully",
+          });
         }
       })
       .catch((error) => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   return isLoading ? (
     'Loading...'
@@ -165,6 +165,6 @@ const UserDetails = () => {
       )}
     </VStack>
   )
-}
+};
 
-export default UserDetails
+export default UserDetails;

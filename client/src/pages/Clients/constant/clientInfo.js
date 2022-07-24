@@ -1,0 +1,15 @@
+export const clientDetails = {
+    companyName: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    industry: "",
+    address: "",
+    industryType: "",
+    status: "",
+    productAndServices: "",
+    facebookPixels: "",
+    facebookAccountId: "",
+    facebookPageId: "",
+}

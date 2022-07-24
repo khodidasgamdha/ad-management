@@ -49,3 +49,30 @@ export const MenuList = [
     icon: FiSettings,
   },
 ]
+
+export const UserMenuList = [
+  {
+    id: uuidv4(),
+    name: 'Dashboard',
+    path: '/',
+    icon: FiGrid,
+  },
+  {
+    id: uuidv4(),
+    name: 'Campaign briefs',
+    path: '/campaign-briefs',
+    icon: FiCast,
+  },
+  {
+    id: uuidv4(),
+    name: 'Clients',
+    path: '/clients',
+    icon: FiUsers,
+  },
+  {
+    id: uuidv4(),
+    name: 'Settings',
+    path: '/settings',
+    icon: FiSettings,
+  },
+]

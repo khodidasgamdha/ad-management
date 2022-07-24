@@ -1,11 +1,11 @@
 import { Box, Heading, Grid, GridItem } from '@chakra-ui/react'
 import { CheckboxContainer, CheckboxControl } from 'formik-chakra-ui'
-import InputBox from '../../../components/InputBox'
-import MultiSelectInputBox from '../../../components/MultiSelectInputBox'
+import InputBox from '../../../../components/InputBox'
+import MultiSelectInputBox from '../../../../components/MultiSelectInputBox'
 import {
   CampaignInventoryRestriction,
   TargettingOptionDevices,
-} from '../../../constant'
+} from '../../../../constant'
 
 const MediaStrategies = ({ setFieldValue }) => {
   return (

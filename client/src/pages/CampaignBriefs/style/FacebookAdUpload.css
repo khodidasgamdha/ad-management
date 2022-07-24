@@ -21,11 +21,78 @@
 .fb-upload .fb-upload-detail-form textarea {
   margin-right: 20px;
 }
-.fb-upload {
+.fb-upload .file-upload-box {
+  border: 3px solid #757998;
+  padding: 20px;
 }
-.fb-upload {
+.fb-upload .file-upload-box form > div > div:last-child {
+  display: none;
 }
-.fb-upload {
+.fb-upload .file-upload-box {
+  /* width: 90%;
+  display: flex;
+  align-items: center; */
 }
-.fb-upload {
+.fb-upload .file-upload-box form .file-box {
+  position: relative;
+  border: 2px solid #e5e6ec;
+  margin-top: 20px;
+  /* padding: 5px 10px; */
+}
+.fb-upload .file-upload-box form .file-box > div {
+  padding: 10px 20px;
+}
+.fb-upload .file-upload-box form > div > div:first-child > div {
+  border: 2px dashed #e5e6ec;
+  text-align: center;
+  padding: 20px;
+}
+/* .fb-upload .file-upload-box form .file-box button {
+  position: absolute;
+  top: 0;
+  right: 0;
+} */
+.fb-upload .file-upload-box form .loading {
+  height: 5px;
+  padding: 0 !important;
+}
+
+.fb-upload .file-upload-box form .file-box .close-icon {
+  width: 12px;
+  height: 12px;
+}
+.fb-upload .file-upload-box form .file-box img {
+  margin-right: 10px;
+}
+.fb-upload .file-upload-content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.fb-upload .file-upload-content button {
+  background: #79a9ff;
+  border-radius: 32px;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 136%;
+  color: #ffffff;
+  /* padding: ; */
+  width: 119px;
+  height: 25px;
+}
+
+.fb-upload .file-upload-box form .file-box .file-name {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  color: #667085;
+  display: -webkit-box;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

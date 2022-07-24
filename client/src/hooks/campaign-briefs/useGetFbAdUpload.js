@@ -1,10 +1,10 @@
 import { useQuery } from "react-query";
 import axios from "../../helpers/axios";
 
-export const useGetCampaign = (clientId, campaignId) => {
-    return useQuery(["campaign", clientId], async () => {
+export const useGetFbAdUpload = (clientId, campaignId, fbId) => {
+    return useQuery(["campaign", clientId, campaignId,fbId], async () => {
         return axios
-            .get(`/client/${clientId}/campaign-brief/${campaignId}`, {
+            .get(`/client/${clientId}/campaign-brief/${campaignId}/ad-upload/${fbId}`, {
                 withCredentials: true,
             })
             .then((res) => {
