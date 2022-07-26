@@ -23,16 +23,15 @@ import { useParams } from "react-router-dom";
 
 let currentId = 0;
 
-export function FileUpload({ getHashArray }) {
+export function FileUpload({ data, getHashArray }) {
+  const { id } = useParams();
+  
   const [progress, setProgress] = useState(100);
   const [_, __, helpers] = useField("files");
   const [files, setFiles] = useState([]);
-
   const [hashArray, setHashArray] = useState([]);
 
   const { mutateAsync, isLoading } = useUploadFBImage();
-
-  const { id } = useParams();
 
   const {
     access_info: { clients },
@@ -62,6 +61,10 @@ export function FileUpload({ getHashArray }) {
     const mappedRej = rejFiles.map((r) => ({ ...r, id: ++currentId }));
     setFiles((curr) => [...curr, ...mappedAcc, ...mappedRej]);
   }, []);
+
+  useEffect(() => {
+    setHashArray(data)
+  }, [data])
 
   useEffect(() => {
     getHashArray(hashArray);

@@ -38,10 +38,10 @@ const FacebookAdPreview = ({ data }) => {
     }
 
     return (
-    <Grid templatecolumns="repeat(6, 1fr)" gap={4} className="fb-upload">
+    <Grid templateColumns="repeat(6, 1fr)" gap={4} className="fb-upload">
       <GridItem w="full" colSpan={{ base: 6, lg: 6 }}>
         <Heading fontSize="lg" my={4} color={TEXT_COLOR}>
-          { data?.images?.[index]?.name }
+          { data?.images?.[index]?.filename }
         </Heading>
         <Box borderWidth="2px" borderColor="gray" p={10} background="#FFF8F4">
           <Container>
@@ -52,7 +52,7 @@ const FacebookAdPreview = ({ data }) => {
                 <Flex justify="space-between" p={2} px={3} background="white">
                   <Flex alignItems="center" flexDirection="row">
                     <Image
-                      src={ data?.images?.[index]?.imageLink }
+                      src={ data?.images?.[index]?.imageUrl }
                       boxSize="50px"
                       // className="rounded-circle"
                       alt=""
@@ -73,7 +73,7 @@ const FacebookAdPreview = ({ data }) => {
                   </Text>
                 </Box>
                 <Img
-                  src={ data?.images?.[index]?.imageLink }
+                  src={ data?.images?.[index]?.imageUrl }
                   alt=""
                   boxSize="568px"
                 />

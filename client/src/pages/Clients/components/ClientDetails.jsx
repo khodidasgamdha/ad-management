@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetClientDetails } from "../../../hooks/clients/useGetClientDetails";
+import { useGetFbAccounts } from "../../../hooks/clients/useGetFbAccounts";
 import {
   Avatar,
   Box,
@@ -14,18 +15,12 @@ import {
   Heading,
   HStack,
   IconButton,
-  Image,
   Img,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Radio,
   RadioGroup,
-  Stack,
   Text,
   VStack,
-  Wrap,
+  useToast
 } from "@chakra-ui/react";
 import { TEXT_COLOR } from "../../../layout/constant/MenuList";
 import { BiArrowBack } from "react-icons/bi";
@@ -34,20 +29,29 @@ import { HiCamera } from "react-icons/hi";
 import { Form, Formik } from "formik";
 import InputBox from "../../../components/InputBox";
 import TextAreaBox from "../../../components/TextAreaBox";
-import { InputControl } from "formik-chakra-ui";
+import { SelectControl } from "formik-chakra-ui";
 import Dots from "../../../assets/images/three-horizon-dot.png";
-import AddIcon from "../../../assets/images/add-icon.png";
-import SelectInputBox from "../../../components/SelectInputBox";
 import { SubmitButton } from "formik-chakra-ui";
 import { clientDetails } from "../constant/clientInfo";
 import { useEffect, useState } from "react";
+import instance from "../../../helpers/axios";
 
 const ClientDetails = () => {
+  const toast = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState(clientDetails)
+  const [industryType, setIndustryType] = useState(null)
+  const [status, setStatus] = useState(null)
+  const [fbPixels, setFbPixels] = useState([])
 
   const { data } = useGetClientDetails(id);
+  const { mutate, data: fbAccounts } = useGetFbAccounts();
+
+  useEffect(() => {
+    mutate()
+  }, [])
 
   useEffect(() => {
     setFormData({
@@ -55,19 +59,18 @@ const ClientDetails = () => {
         firstName: data?.detail?.contactName,
         lastName: "",
         email: data?.detail?.email,
+        description: data?.description,
         phone: data?.detail?.phone,
         industry: data?.detail?.industry,
         address: data?.detail?.address,
-        industryType: data?.detail?.industryType,
-        status: data?.state,
         productAndServices: data?.detail?.productAndServices,
-        facebookPixels: "",
         facebookAccountId: data?.fb_config?.fb_account_id,
         facebookPageId: data?.fb_config?.fb_page_id,
     })
+    setIndustryType(data?.detail?.industryType)
+    setStatus(data?.state)
+    setFbPixels(data?.detail?.fbPixels)
   }, [data])
-
-  console.log(data);
 
   return (
     <>
@@ -117,29 +120,76 @@ const ClientDetails = () => {
         </Box>
 
         <Formik
+        enableReinitialize
         initialValues={formData}
         // validationSchema={validationSchema}
-        // onSubmit={onSubmit}
+        onSubmit={async (values, actions) => {
+            await instance({
+              method: "PUT",
+              url: `/client/${id}`,
+              withCredentials: true,
+              data: {
+                description: values.description,
+                fbAccountId: values.facebookAccountId,
+                fbPageId: values.facebookPageId,
+                name: values.companyName,
+                state: status,
+                detail: {
+                  address: values.address,
+                  companyName: values.companyName,
+                  contactName: values.firstName + values.lastName,
+                  email: values.email,
+                  industry: values.industry,
+                  industryType: industryType,
+                  phone: values.phone,
+                  productAndServices: values.productAndServices,
+                  fbPixels: fbPixels
+                }
+              }
+            })
+              .then((res) => {
+                if (res.status === 200) {
+                  toast({
+                    isClosable: true,
+                    status: "success",
+                    variant: "top-accent",
+                    position: "top-right",
+                    title: "Success",
+                    description: res.data.message,
+                  });
+                  navigate("/clients")
+                }
+              })
+              .catch((error) => {
+                toast({
+                  isClosable: true,
+                  status: "error",
+                  variant: "top-accent",
+                  position: "top-right",
+                  description: error.response.data.message,
+                });
+              });
+          }}
         >
           {({ values, errors, handleChange }) => (
             <VStack as={Form} w="70%" align={"start"} spacing={4}>
               <InputBox 
                 name="company" 
                 label="Company name"
-                value={formData.companyName} 
+                value={values.companyName} 
                 onChange={handleChange} 
               />
               <HStack spacing={4} w="full">
                 <InputBox 
                     name="name" 
                     label="Contact First Name"
-                    value={formData.firstName}
+                    value={values.firstName}
                     onChange={handleChange} 
                     />
                 <InputBox 
                     name="lastName" 
                     label="Contact Last Name" 
-                    value={formData.lastName}
+                    value={values.lastName}
                     onChange={handleChange} 
                     />
               </HStack>
@@ -147,35 +197,48 @@ const ClientDetails = () => {
                 name="email" 
                 label="Email" 
                 type="email" 
-                value={formData.email}
+                value={values.email}
                 onChange={handleChange} 
                 />
               <HStack spacing={4} w="full">
                 <InputBox 
-                    name="name" 
+                    name="phone" 
                     label="Phone" 
-                    value={formData.phone}
+                    value={values.phone}
                     onChange={handleChange} 
                     />
                 <InputBox
-                  name="lastName"
-                  label="Industry | Product & Services "
-                  value={formData.industry}
+                  name="industry"
+                  label="Industry"
+                  value={values.industry}
                   onChange={handleChange} 
                   />
               </HStack>
+              <InputBox
+                name="description"
+                label="Description"
+                value={values.description}
+                onChange={handleChange} 
+                />
+              <InputBox
+                name="productAndServices"
+                label="Product & Services "
+                value={values.productAndServices}
+                onChange={handleChange} 
+                />
               <HStack spacing={4} w="full">
                 <TextAreaBox 
-                    name="name" 
+                    name="address" 
                     label="Address" 
-                    value={formData.address}
+                    value={values.address}
                     onChange={handleChange} 
                     />
                 <FormControl as="fieldset">
                   <RadioGroup 
-                    defaultValue="B2B" 
-                    value={formData.industryType}
-                    onChange={handleChange} 
+                    // defaultValue="B2B" 
+                    value={industryType}
+                    onChange={setIndustryType} 
+                    name="industryType"
                     >
                     <HStack spacing="30px">
                       <Radio size="lg" value="B2B">
@@ -194,71 +257,71 @@ const ClientDetails = () => {
                     Status
                   </FormLabel>
                   <RadioGroup 
-                    defaultValue="ON HOLD"
-                    value={formData.status}
-                      onChange={handleChange} 
+                    value={status}
+                    onChange={setStatus} 
+                    name="status"
                   >
                     <HStack spacing="24px">
                       <Radio value="ACTIVE">ACTIVE</Radio>
                       <Radio value="INACTIVE">INACTIVE</Radio>
-                      <Radio value="ON HOLD">ON HOLD</Radio>
+                      <Radio value="ON_HOLD">ON HOLD</Radio>
                     </HStack>
                   </RadioGroup>
                 </FormControl>
               </HStack>
               <Divider />
-              {/* <FormControl as="fieldset">
+              <FormControl as="fieldset">
                 <FormLabel as="legend" color="gray" fontSize="sm">
                   Facebook Pixels
                 </FormLabel>
-                <HStack spacing="30px" mb={5}>
-                  <InputControl
-                    id=""
-                    name="name"
-                    inputProps={{
-                      variant: "outline",
-                      border: "2px",
-                      borderRadius: 0,
-                      borderColor: "gray",
-                      type: "text",
-                    }}
-                  />
-                  <Img src={Dots} />
-                </HStack>
-                <HStack spacing="30px" mb={5}>
-                  <InputControl
-                    id=""
-                    name="name"
-                    inputProps={{
-                      variant: "outline",
-                      border: "2px",
-                      borderRadius: 0,
-                      borderColor: "gray",
-                      type: "text",
-                    }}
-                  />
-                  <Img src={Dots} />
-                </HStack>
-                <HStack spacing="10px">
+                {
+                    fbPixels?.length && 
+                    fbPixels.map((el, index) => (
+                        <HStack key={index} spacing="30px" mb={5}>
+                          <InputBox
+                            id="facebookPixels"
+                            name="facebookPixels"
+                            value={`${el?.name} | ${el?.pixelId}`}
+                            inputProps={{
+                              variant: "outline",
+                              border: "2px",
+                              borderRadius: 0,
+                              borderColor: "gray",
+                              type: "text",
+                            }}
+                            onChange={handleChange}
+                          />
+                          <Img src={Dots} />
+                        </HStack>
+                    ))
+                }
+                {/* <HStack spacing="10px">
                   <Img src={AddIcon} />
                   <Text>New Line</Text>
-                </HStack>
-              </FormControl> */}
+                </HStack> */}
+              </FormControl>
               <Divider />
-              <SelectInputBox 
-                name="email" 
+              <SelectControl
+                name="facebookAccountId" 
                 label="Facebook Account ID"
-                value={formData.facebookAccountId}
+                value={values.facebookAccountId}
                 onChange={handleChange}
-                />
+              >
+                {
+                  fbAccounts?.adAccounts?.length &&
+                  fbAccounts?.adAccounts.map((el) => (
+                    <option key={el.id} value={el.id}>{el.name}</option>
+                  ))
+                }
+              </SelectControl>
               <InputBox 
-                name="name" 
+                name="facebookPageId" 
                 label="Facebook Page ID" 
-                value={formData.facebookPageId}
+                value={values.facebookPageId}
                 onChange={handleChange}
               />
-              <Divider />
-              <Wrap spacing="28px">
+              {/* <Divider /> */}
+              {/* <Wrap spacing="28px">
                 <Flex
                   flexDirection="column"
                   justify="center"
@@ -273,51 +336,15 @@ const ClientDetails = () => {
                   />
                   <Text color="#757998">Jason Suez</Text>
                 </Flex>
-                <Flex
-                  flexDirection="column"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Img
-                    borderRadius="full"
-                    boxSize="100px"
-                    objectFit="cover"
-                    src="https://bit.ly/dan-abramov"
-                    alt="Dan Abramov"
-                  />
-                  <Text color="#757998">Jason Suez</Text>
-                </Flex>
-                <Flex
-                  flexDirection="column"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Img
-                    borderRadius="full"
-                    boxSize="100px"
-                    objectFit="cover"
-                    src="https://bit.ly/dan-abramov"
-                    alt="Dan Abramov"
-                  />
-                  <Text color="#757998">Jason Suez</Text>
-                </Flex>
-                <Flex
-                  flexDirection="column"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Img
-                    borderRadius="full"
-                    boxSize="100px"
-                    objectFit="cover"
-                    src="https://bit.ly/dan-abramov"
-                    alt="Dan Abramov"
-                  />
-                  <Text color="#757998">Jason Suez</Text>
-                </Flex>
-              </Wrap>
-              <Divider />
-              <SubmitButton size="sm" colorScheme="blue" px="14" rounded="full">
+              </Wrap> */}
+              {/* <Divider /> */}
+              <SubmitButton 
+                type="submit" 
+                size="sm" 
+                colorScheme="blue" 
+                px="14" 
+                rounded="full"
+              >
                 Update
               </SubmitButton>
             </VStack>

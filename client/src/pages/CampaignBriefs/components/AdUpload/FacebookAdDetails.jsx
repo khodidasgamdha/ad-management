@@ -22,22 +22,14 @@ import {
   facebookAccountIds,
 } from "../../constant/FacebookAdUpload";
 import instance from "../../../../helpers/axios";
-import { profile } from "../../../../atoms/authAtom";
-import { useRecoilValue } from "recoil";
-import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export const FacebookAdDetails = ({ data, getImages, goToPreview }) => {
+export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method }) => {
   const toast = useToast();
-  const { id } = useParams();
+
   const [formData, setFromData] = useState(initialValues);
-
   const [hashArray, setHashArray] = useState([]);
-
-  const {
-    access_info: { clients },
-  } = useRecoilValue(profile);
 
   useEffect(() => {
     getImages({
@@ -61,6 +53,7 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview }) => {
         url: data.detail.link,
         facebookAccountId: data.detail.callToAction.type,
       });
+      setHashArray(data.detail.fileInfoList)
     }
   }, [data]);
 
@@ -78,28 +71,31 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview }) => {
             const hashes = hashArray.map((hash) => {
               return hash.imageHash;
             });
-            await instance({
-              method: "POST",
-              url: `/client/${clients[0]?.id}/campaign-brief/${id}/ad-upload`,
-              withCredentials: true,
-              data: {
+            let payload = {
+              name: values.adName,
+              message: values.primaryText,
+              description: values.description,
+              detail: {
                 name: values.adName,
                 message: values.primaryText,
+                link: values.url,
+                headline: values.headline,
                 description: values.description,
-                ad_upload_type: "FACEBOOK",
-                detail: {
-                  name: values.adName,
-                  message: values.primaryText,
-                  link: values.url,
-                  headline: values.headline,
-                  description: values.description,
-                  callToAction: {
-                    type: values.facebookAccountId,
-                  },
-                  fileInfoList: hashArray,
-                  imageHashes: hashes,
+                callToAction: {
+                  type: values.facebookAccountId,
                 },
-              },
+                fileInfoList: hashArray,
+                imageHashes: hashes,
+              }
+            };
+            if(!data?.id) {
+                payload = { ...payload , ad_upload_type: "FACEBOOK" }
+            }
+            await instance({
+              method: method,
+              url: url,
+              withCredentials: true,
+              data: payload,
             })
               .then((res) => {
                 if (res.status === 200) {
@@ -373,7 +369,7 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview }) => {
                           height: "33px",
                           marginRight: "10px",
                         })}
-                        disabled={!hashArray.length}
+                        disabled={!hashArray?.length}
                         onClick={goToPreview}
                       >
                         Preview
@@ -387,15 +383,16 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview }) => {
                           height: "33px",
                         })}
                         type="submit"
-                        disabled={!hashArray.length}
+                        disabled={!hashArray?.length}
                       >
-                        Submit Ad
+                        {data?.id ? "Update Ad" : "Submit Ad"}
                       </Button>
                     </GridItem>
                   </GridItem>
                   <GridItem w="full" colSpan={{ base: 6, lg: 2 }}>
                     <Box className="file-upload-box">
                       <FileUpload
+                        data={data?.detail?.fileInfoList}
                         getHashArray={(value) => setHashArray(value)}
                       />
                     </Box>

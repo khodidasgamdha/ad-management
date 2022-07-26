@@ -45,6 +45,10 @@ const CreateCampaign = () => {
     useEffect(() => {
         SetClientId(clients[0].id);
     }, [clients]);
+    
+    useEffect(() => {
+        mutate({id: clientId })
+    }, [clientId])
 
     const { mutate, isLoading, data } = useGetClientDetailsOnClick();
 
@@ -140,6 +144,9 @@ const CreateCampaign = () => {
                 </Tabs>
             </GridItem>
             <GridItem
+                position="fixed"
+                right="0"
+                width="500px"
                 padding={5}
                 colSpan={{ base: 6, lg: tabIndex === 0 ? 2 : 0 }}
             >
@@ -166,28 +173,6 @@ const CreateCampaign = () => {
                             disabled={!clientId}
                         >
                             Facebook Campaign
-                        </Button>
-                    </VStack>
-                )}
-
-                {tabIndex === 0 && (
-                    <VStack align="start" w="full" spacing={4}>
-                        <Button
-                            px="14"
-                            isLoading={isLoading}
-                            onClick={() => {
-                                if (clientId) {
-                                    mutate({
-                                        id: clientId,
-                                    });
-                                }
-                            }}
-                            disabled={!clientId}
-                            rounded="full"
-                            size="sm"
-                            marginTop={5}
-                        >
-                            {id ? "Update" : "Add"}
                         </Button>
                     </VStack>
                 )}

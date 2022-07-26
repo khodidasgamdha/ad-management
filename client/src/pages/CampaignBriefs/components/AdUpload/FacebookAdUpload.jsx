@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Center,
   css,
@@ -27,6 +27,9 @@ import { useState } from "react";
 const FacebookAdUpload = () => {
   const [images, setImages] = useState([])
   const [tabIndex, setTabIndex] = useState(0)
+  const [method, setMethod] = useState();
+  const [url, setUrl] = useState();
+
   const navigate = useNavigate();
   const { id, fbId } = useParams();
 
@@ -35,6 +38,16 @@ const FacebookAdUpload = () => {
   } = useRecoilValue(profile);
 
   const { data } = useGetFbAdUpload(clients[0]?.id, id, fbId);
+  
+  useEffect(() => {
+    if(fbId) {
+      setMethod("PUT")
+      setUrl(`/client/${clients[0]?.id}/campaign-brief/${id}/ad-upload/${fbId}`)
+    } else {
+      setMethod("POST")
+      setUrl(`/client/${clients[0]?.id}/campaign-brief/${id}/ad-upload`)
+    }
+  }, [fbId])
 
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={4} className="fb-upload">
@@ -95,6 +108,8 @@ const FacebookAdUpload = () => {
                 getImages={(el) => setImages(el)} 
                 goToPreview={() => setTabIndex(1)}
                 data={data?.adUpload} 
+                url={url}
+                method={method}
               />
             </TabPanel>
             <TabPanel>
