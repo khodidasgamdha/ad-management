@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   CircularProgress,
   CircularProgressLabel,
@@ -22,26 +22,27 @@ import {
   facebookAccountIds,
 } from "../../constant/FacebookAdUpload";
 import instance from "../../../../helpers/axios";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method }) => {
+export const FacebookAdDetails = ({ data, getImages, url, method }) => {
   const toast = useToast();
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const [formData, setFromData] = useState(initialValues);
   const [hashArray, setHashArray] = useState([]);
 
-  useEffect(() => {
+  const sendData = () => {
     getImages({
         name: formData.adName,
         message: formData.primaryText,
         headline: formData.headline,
         description: formData.description,
         url: formData.url,
-        type: facebookAccountIds.filter(el => el.key === formData.facebookAccountId)?.[0]?.name,
+        type: facebookAccountIds.filter(el => el.key === formData.facebookAccountId)?.[0]?.key,
         images: hashArray,
     })
-  }, [hashArray, formData])
+  }
 
   useEffect(() => {
     if (data?.id) {
@@ -54,6 +55,24 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method })
         facebookAccountId: data.detail.callToAction.type,
       });
       setHashArray(data.detail.fileInfoList)
+    } else if(
+        data?.name &&
+        data?.message &&
+        data?.headline &&
+        data?.description &&
+        data?.url &&
+        data?.type &&
+        data?.images
+    ) {
+        setFromData({
+          adName: data.name,
+          primaryText: data.message,
+          headline: data.headline,
+          description: data.description,
+          url: data.url,
+          facebookAccountId: data.type,
+        });
+        setHashArray(data.images)
     }
   }, [data]);
 
@@ -68,9 +87,6 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method })
           initialValues={formData}
           // validationSchema={validationSchema}
           onSubmit={async (values, actions) => {
-            const hashes = hashArray.map((hash) => {
-              return hash.imageHash;
-            });
             let payload = {
               name: values.adName,
               message: values.primaryText,
@@ -85,7 +101,7 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method })
                   type: values.facebookAccountId,
                 },
                 fileInfoList: hashArray,
-                imageHashes: hashes,
+                imageHashes: [hashArray[0].imageHash],
               }
             };
             if(!data?.id) {
@@ -107,6 +123,7 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method })
                     title: "Success",
                     description: res.data.message,
                   });
+                  navigate(`/campaign-briefs/${id}`)
                 }
               })
               .catch((error) => {
@@ -322,7 +339,7 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method })
                           color="gray"
                           fontSize="sm"
                         >
-                          Facebook Account Id
+                          Type
                         </FormLabel>
                         <div className="input-box">
                           <SelectControl
@@ -363,21 +380,21 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method })
                       <Button
                         size="small"
                         css={css({
-                          background: "#79A9FF !important",
+                          background: "#24a0ed !important",
                           borderRadius: "32px",
                           width: "134px",
                           height: "33px",
                           marginRight: "10px",
                         })}
                         disabled={!hashArray?.length}
-                        onClick={goToPreview}
+                        onClick={sendData}
                       >
                         Preview
                       </Button>
                       <Button
                         size="small"
                         css={css({
-                          background: "rgba(89, 171, 158, 0.5) !important",
+                          background: "#4CAF50 !important",
                           borderRadius: "32px",
                           width: "134px",
                           height: "33px",
@@ -392,7 +409,6 @@ export const FacebookAdDetails = ({ data, getImages, goToPreview, url, method })
                   <GridItem w="full" colSpan={{ base: 6, lg: 2 }}>
                     <Box className="file-upload-box">
                       <FileUpload
-                        data={data?.detail?.fileInfoList}
                         getHashArray={(value) => setHashArray(value)}
                       />
                     </Box>

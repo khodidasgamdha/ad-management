@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import {
-    Badge,
     Button,
     Heading,
     HStack,
@@ -44,7 +43,7 @@ const AdUploadList = () => {
             },
             {
                 Header: "Type",
-                accessor: "ad_upload_type"
+                accessor: "ad_upload_type",
             },
             {
                 Header: "Status",
@@ -58,7 +57,6 @@ const AdUploadList = () => {
                 Header: () => <Text>Actions</Text>,
                 accessor: "actions",
                 Cell: (data) => (
-
                     <HStack>
                         <Button
                             as={Link}
@@ -71,7 +69,7 @@ const AdUploadList = () => {
                             View
                         </Button>
                     </HStack>
-                )
+                ),
             },
         ],
         []

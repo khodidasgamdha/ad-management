@@ -15,7 +15,7 @@ import {
     useDisclosure,
     VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { For } from "react-haiku";
 import { useRecoilValue } from "recoil";
 import { profile } from "../../../atoms/authAtom";
@@ -27,7 +27,6 @@ import { TEXT_COLOR } from "../../../layout/constant/MenuList";
 import { useNavigate, useParams } from "react-router-dom";
 import CreateFacebookCampaign from "./CreateFacebookCampaignModel";
 import AdUploadList from "./AdUpload/AdUploadList";
-import { useEffect } from "react";
 import { Comment } from "./Comment";
 
 const CreateCampaign = () => {
@@ -45,12 +44,12 @@ const CreateCampaign = () => {
     useEffect(() => {
         SetClientId(clients[0].id);
     }, [clients]);
-    
-    useEffect(() => {
-        mutate({id: clientId })
-    }, [clientId])
 
-    const { mutate, isLoading, data } = useGetClientDetailsOnClick();
+    useEffect(() => {
+        mutate({ id: clientId });
+    }, [clientId]);
+
+    const { mutate, data } = useGetClientDetailsOnClick();
 
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={4}>
@@ -110,7 +109,7 @@ const CreateCampaign = () => {
                                     <Tab
                                         onClick={() => SetTabIndex(index)}
                                         whiteSpace="nowrap"
-                                        isDisabled={!id && tab.title === 'AD uploads'}
+                                        isDisabled={!id && tab.title === "AD uploads"}
                                     >
                                         {tab.title}
                                     </Tab>
@@ -146,7 +145,7 @@ const CreateCampaign = () => {
             <GridItem
                 position="fixed"
                 right="0"
-                width="500px"
+                width="420px"
                 padding={5}
                 colSpan={{ base: 6, lg: tabIndex === 0 ? 2 : 0 }}
             >
