@@ -7,11 +7,24 @@ import {
   UnorderedList,
   VStack,
 } from '@chakra-ui/react'
+import { useEffect } from 'react'
 import { useRecoilValue } from 'recoil'
 import { profile } from '../../atoms/authAtom'
+import { useGetDashboardComments } from '../../hooks/dashboard/useGetDashboardComments'
+import { CommentsList } from '../CampaignBriefs/components/Comments/CommentsList'
 
 const Dashboard = () => {
-  const { name } = useRecoilValue(profile)
+  const { name, access_info: { clients } } = useRecoilValue(profile)
+
+  useEffect(() => {
+    if(clients?.[0]?.id) {
+        mutate();
+    }
+}, [clients?.[0]?.id]);
+
+  const { mutate, data} = useGetDashboardComments();
+
+  console.log(data);
 
   return (
     <Grid h="200px" templateColumns="repeat(12, 1fr)" gap={4}>
@@ -21,6 +34,9 @@ const Dashboard = () => {
             Welcome back, {name}.
           </Heading>
         </VStack>
+      </GridItem>
+      <GridItem colSpan={8} mt={10}>
+        <CommentsList data={data?.comments} />
       </GridItem>
       <GridItem
         colSpan={4}

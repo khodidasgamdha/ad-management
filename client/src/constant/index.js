@@ -62,10 +62,10 @@ export const CAMPAIGN_BRIEFS_TABS = [
     id: uuidv4(),
     title: 'DV360 IOs',
   },
-//   {
-//     id: uuidv4(),
-//     title: 'Comments',
-//   },
+  {
+    id: uuidv4(),
+    title: 'Comments',
+  },
   {
     id: uuidv4(),
     title: 'AD uploads',

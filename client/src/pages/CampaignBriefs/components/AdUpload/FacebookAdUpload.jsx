@@ -23,6 +23,7 @@ import { useGetFbAdUpload } from "../../../../hooks/campaign-briefs/useGetFbAdUp
 import { useRecoilValue } from "recoil";
 import { profile } from "../../../../atoms/authAtom";
 import { useCreateAdPreview } from "../../../../hooks/campaign-briefs/useCreateAdPreview";
+import { Comments } from "./Comments";
 
 const FacebookAdUpload = () => {
     const [images, setImages] = useState();
@@ -163,7 +164,13 @@ const FacebookAdUpload = () => {
                         <TabPanel>
                             <FacebookAdPreview data={previewData} />
                         </TabPanel>
-                        <TabPanel>3</TabPanel>
+                        <TabPanel>
+                            <Comments
+                                clientId={clients[0]?.id}
+                                campaignId={id}
+                                facebookAdId={fbId}
+                            />
+                        </TabPanel>
                         <TabPanel>4</TabPanel>
                     </TabPanels>
                 </Tabs>

@@ -21,13 +21,15 @@ import { useRecoilValue } from "recoil";
 import { profile } from "../../../atoms/authAtom";
 import { CAMPAIGN_BRIEFS_TABS } from "../../../constant";
 import { useGetClientDetailsOnClick } from "../../../hooks/clients/useGetClientDetails";
+import { useGetComments } from "../../../hooks/campaign-briefs/useGetComments";
 import CreateForm from "./CampaignDetails/CreateForm";
 import { BiPlusCircle, BiArrowBack } from "react-icons/bi";
 import { TEXT_COLOR } from "../../../layout/constant/MenuList";
 import { useNavigate, useParams } from "react-router-dom";
 import CreateFacebookCampaign from "./CreateFacebookCampaignModel";
 import AdUploadList from "./AdUpload/AdUploadList";
-import { Comment } from "./Comment";
+import { Comment } from "./Comments/Comment";
+import { CommentsList } from "./Comments/CommentsList";
 
 const CreateCampaign = () => {
     const [clientId, SetClientId] = useState(null);
@@ -46,10 +48,27 @@ const CreateCampaign = () => {
     }, [clients]);
 
     useEffect(() => {
-        mutate({ id: clientId });
+        if(clientId) {
+            mutate({ id: clientId });
+            mutateComments({
+                clientId: clientId,
+                campaignId: id,
+            });
+        }
     }, [clientId]);
 
+    const setIndex = (index, title) => {
+        SetTabIndex(index)
+        if(title === 'Comments') {
+            mutateComments({
+                clientId: clientId,
+                campaignId: id,
+            });
+        }
+    }
+
     const { mutate, data } = useGetClientDetailsOnClick();
+    const { mutate: mutateComments, data: comments } = useGetComments();
 
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={4}>
@@ -107,9 +126,14 @@ const CreateCampaign = () => {
                             render={(tab, index) => {
                                 return (
                                     <Tab
-                                        onClick={() => SetTabIndex(index)}
+                                        key={index}
+                                        onClick={() => setIndex(index, tab.title)}
                                         whiteSpace="nowrap"
-                                        isDisabled={!id && tab.title === "AD uploads"}
+                                        isDisabled={
+                                            !id && 
+                                            (tab.title === "AD uploads" ||
+                                            tab.title === "Comments")
+                                        }
                                     >
                                         {tab.title}
                                     </Tab>
@@ -124,6 +148,7 @@ const CreateCampaign = () => {
                                 Current Status: New
                             </Heading>
                             <CreateForm
+                                id={id}
                                 clientDetails={
                                     data?.client ||
                                     JSON.parse(localStorage.getItem("client"))
@@ -135,10 +160,13 @@ const CreateCampaign = () => {
                         <TabPanel>3</TabPanel>
                         <TabPanel>4</TabPanel>
                         <TabPanel>
+                            <CommentsList data={comments?.comments} />
+                        </TabPanel>
+                        <TabPanel>
                             <AdUploadList />
                         </TabPanel>
-                        <TabPanel>6</TabPanel>
                         <TabPanel>7</TabPanel>
+                        <TabPanel>8</TabPanel>
                     </TabPanels>
                 </Tabs>
             </GridItem>
