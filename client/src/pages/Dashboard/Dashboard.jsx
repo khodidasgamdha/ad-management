@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import { useRecoilValue } from 'recoil'
 import { profile } from '../../atoms/authAtom'
 import { useGetDashboardComments } from '../../hooks/dashboard/useGetDashboardComments'
-import { CommentsList } from '../CampaignBriefs/components/Comments/CommentsList'
+import { Comments } from './components/Comments'
 
 const Dashboard = () => {
   const { name, access_info: { clients } } = useRecoilValue(profile)
@@ -35,15 +35,17 @@ const Dashboard = () => {
           </Heading>
         </VStack>
       </GridItem>
-      <GridItem colSpan={8} mt={10}>
-        <CommentsList data={data?.comments} />
+      <GridItem colSpan={8} mt={5}>
+        <Comments data={data?.comments} />
       </GridItem>
       <GridItem
+        mt={5}
         colSpan={4}
         p={4}
         border="1px"
         borderColor="blue.500"
         rounded="lg"
+        height={300}
       >
         <VStack align="stretch">
           <Text color="gray.700">What’s new?</Text>

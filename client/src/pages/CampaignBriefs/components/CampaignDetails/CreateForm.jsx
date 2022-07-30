@@ -1,10 +1,4 @@
-import {
-    HStack,
-    useToast,
-    VStack,
-    Button,
-    Stack,
-} from "@chakra-ui/react";
+import { HStack, useToast, VStack, Button, Stack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -21,15 +15,18 @@ import MediaStrategies from "./MediaStrategies";
 const CreateForm = ({ id, clientDetails }) => {
     const toast = useToast();
 
-    const [method, setMethod] = useState("POST")
-    const [url, setURL] = useState(`/client/${clientDetails.id}/campaign-brief`)
+    const [method, setMethod] = useState();
+    const [url, setURL] = useState();
 
     useEffect(() => {
-        if(id) {
-            setMethod("PUT")
-            setURL(`/client/${clientDetails.id}/campaign-brief/${id}`)
+        if (id) {
+            setMethod("PUT");
+            setURL(`/client/${clientDetails.id}/campaign-brief/${id}`);
+        } else {
+            setMethod("POST");
+            setURL(`/client/${clientDetails.id}/campaign-brief`);
         }
-    }, [id])
+    }, [id, clientDetails]);
 
     const validationSchema = Yup.object({
         name: Yup.string().required().label("Name"),
@@ -90,7 +87,10 @@ const CreateForm = ({ id, clientDetails }) => {
                 <VStack as={Form} mt={4} align="stretch" spacing={6}>
                     {/* <pre>{JSON.stringify({ values, errors }, null, 2)}</pre> */}
                     <ClientDetails />
-                    <CampaignDetails />
+                    <CampaignDetails
+                        setFieldValue={setFieldValue}
+                        values={values}
+                    />
                     <CampaignBudget />
                     <CampaignMetrics />
                     <Demographics
@@ -108,10 +108,7 @@ const CreateForm = ({ id, clientDetails }) => {
 
                     <Stack direction="row" justifyContent="flex-end">
                         {/* Cancle button Start */}
-                        <HStack
-                            align="center"
-                            justifyContent="flex-end"
-                        >
+                        <HStack align="center" justifyContent="flex-end">
                             <Button
                                 type="reset"
                                 px="14"
@@ -125,10 +122,7 @@ const CreateForm = ({ id, clientDetails }) => {
                         {/* Submit button End */}
 
                         {/* Cancle button Start */}
-                        <HStack
-                            align="center"
-                            justifyContent="flex-end"
-                        >
+                        <HStack align="center" justifyContent="flex-end">
                             <Button
                                 type="submit"
                                 px="14"
@@ -136,7 +130,7 @@ const CreateForm = ({ id, clientDetails }) => {
                                 colorScheme="blue"
                                 size="sm"
                             >
-                                { id ? "Update" : "Create"}
+                                {id ? "Update" : "Create"}
                             </Button>
                         </HStack>
                         {/* Submit button End */}

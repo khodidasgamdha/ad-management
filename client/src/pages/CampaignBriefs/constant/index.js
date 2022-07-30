@@ -1,5 +1,5 @@
 export const initialValue = (data) => ({
-  name: data?.name || '',
+  name: '',
   startDate: '',
   endDate: '',
   detail: {

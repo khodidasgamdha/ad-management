@@ -44,6 +44,13 @@ const FacebookAdPreview = ({ data }) => {
         }
     };
 
+    const getHeight = (height) => {
+        if(height > '450') {
+            return `${height}px`
+        }
+        return '450px'
+    }
+
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={4} className="fb-upload">
             <GridItem w="full" colSpan={{ base: 6, lg: 6 }}>
@@ -56,7 +63,7 @@ const FacebookAdPreview = ({ data }) => {
                     p={10}
                     background="#FFF8F4"
                 >
-                    <Container>
+                    <Container height="100%">
                         <Flex
                             alignItems="center"
                             flexDirection="row"
@@ -67,8 +74,9 @@ const FacebookAdPreview = ({ data }) => {
                                     src={ads?.[Object.keys(ads)?.[index]]?.src}
                                     title={ads && Object.keys(ads)?.[index]}
                                     width="400px"
-                                    height="450px"
-                                    scrolling="no"
+                                    height={550}
+                                    // height={parseInt(ads?.[Object.keys(ads)?.[index]]?.height) + 120}
+                                    // scrolling="no"
                                 />
                             </Box>
                         </Flex>

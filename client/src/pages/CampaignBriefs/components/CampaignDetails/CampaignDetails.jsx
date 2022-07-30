@@ -12,7 +12,7 @@ const CampaignDetails = () => {
                 </GridItem>
                 <GridItem colSpan={2}>
                     <InputBox
-                        name="detail.campaignBasic.campaignName"
+                        name="name"
                         label="Campaign Name"
                     />
                 </GridItem>
