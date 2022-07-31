@@ -140,7 +140,7 @@ const DetailsTab = () => {
                 {({ values, errors }) => (
                     <VStack as={Form} w="full" align={"start"} spacing={4}>
                         <HStack spacing={4} w="full">
-                            <InputBox name="name" label="First Name" />
+                            <InputBox name="name" label="Full Name" />
                             {/* <InputBox name="lastName" label="Last Name" /> */}
                         </HStack>
                         <InputBox
