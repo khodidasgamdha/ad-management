@@ -21,15 +21,13 @@ import { useRecoilValue } from "recoil";
 import { profile } from "../../../atoms/authAtom";
 import { CAMPAIGN_BRIEFS_TABS } from "../../../constant";
 import { useGetClientDetailsOnClick } from "../../../hooks/clients/useGetClientDetails";
-import { useGetComments } from "../../../hooks/campaign-briefs/useGetComments";
 import CreateForm from "./CampaignDetails/CreateForm";
 import { BiPlusCircle, BiArrowBack } from "react-icons/bi";
 import { TEXT_COLOR } from "../../../layout/constant/MenuList";
 import { useNavigate, useParams } from "react-router-dom";
 import CreateFacebookCampaign from "./CreateFacebookCampaignModel";
 import AdUploadList from "./AdUpload/AdUploadList";
-import { Comment } from "./Comments/Comment";
-import { CommentsList } from "./Comments/CommentsList";
+import { Comment } from "./Comment";
 
 const CreateCampaign = () => {
     const [clientId, SetClientId] = useState(null);
@@ -48,27 +46,12 @@ const CreateCampaign = () => {
     }, [clients]);
 
     useEffect(() => {
-        if(clientId) {
+        if (clientId) {
             mutate({ id: clientId });
-            mutateComments({
-                clientId: clientId,
-                campaignId: id,
-            });
         }
     }, [clientId]);
 
-    const setIndex = (index, title) => {
-        SetTabIndex(index)
-        if(title === 'Comments') {
-            mutateComments({
-                clientId: clientId,
-                campaignId: id,
-            });
-        }
-    }
-
     const { mutate, data } = useGetClientDetailsOnClick();
-    const { mutate: mutateComments, data: comments } = useGetComments();
 
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={4}>
@@ -127,12 +110,12 @@ const CreateCampaign = () => {
                                 return (
                                     <Tab
                                         key={index}
-                                        onClick={() => setIndex(index, tab.title)}
+                                        onClick={() => SetTabIndex(index)}
                                         whiteSpace="nowrap"
                                         isDisabled={
-                                            !id && 
+                                            !id &&
                                             (tab.title === "AD uploads" ||
-                                            tab.title === "Comments")
+                                                tab.title === "Comments")
                                         }
                                     >
                                         {tab.title}
@@ -159,9 +142,9 @@ const CreateCampaign = () => {
                         <TabPanel>2</TabPanel>
                         <TabPanel>3</TabPanel>
                         <TabPanel>4</TabPanel>
-                        <TabPanel>
+                        {/* <TabPanel>
                             <CommentsList data={comments?.comments} />
-                        </TabPanel>
+                        </TabPanel> */}
                         <TabPanel>
                             <AdUploadList />
                         </TabPanel>
@@ -173,7 +156,7 @@ const CreateCampaign = () => {
             <GridItem
                 position="fixed"
                 right="0"
-                width="420px"
+                width="450px"
                 padding={5}
                 colSpan={{ base: 6, lg: tabIndex === 0 ? 2 : 0 }}
             >

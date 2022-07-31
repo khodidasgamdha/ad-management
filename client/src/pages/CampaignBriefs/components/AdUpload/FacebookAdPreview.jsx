@@ -74,9 +74,9 @@ const FacebookAdPreview = ({ data }) => {
                                     src={ads?.[Object.keys(ads)?.[index]]?.src}
                                     title={ads && Object.keys(ads)?.[index]}
                                     width="400px"
-                                    height={550}
+                                    height={600}
                                     // height={parseInt(ads?.[Object.keys(ads)?.[index]]?.height) + 120}
-                                    // scrolling="no"
+                                    scrolling="no"
                                 />
                             </Box>
                         </Flex>

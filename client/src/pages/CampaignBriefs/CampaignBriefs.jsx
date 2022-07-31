@@ -15,7 +15,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { useRecoilValue } from "recoil";
 import { profile } from "../../atoms/authAtom";
 import Datatable from "../../components/Datatable";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useGetCampaignList } from "../../hooks/campaign-briefs/useGetCampaignList";
 import { useNavigate } from "react-router-dom";
 import TableActionCell from "./components/TableActionCell";
@@ -30,6 +30,10 @@ const CampaignBriefs = () => {
     const { data, isLoading, isFetching, refetch } = useGetCampaignList(
         clients[0]?.id
     );
+
+    useEffect(() => {
+        refetch()
+    }, [])
 
     const columns = useMemo(
         () => [

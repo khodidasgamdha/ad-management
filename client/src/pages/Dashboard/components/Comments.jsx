@@ -1,4 +1,4 @@
-import { Avatar, Box, Image } from "@chakra-ui/react";
+import { Avatar, Box } from "@chakra-ui/react";
 import moment from "moment";
 
 export const Comments = ({ data }) => {
@@ -11,7 +11,7 @@ export const Comments = ({ data }) => {
                     borderRadius={20}
                     key={index}
                     w="100%"
-                    p={8}
+                    p={4}
                     mb={4}
                 >
                     <Box display="flex">
@@ -22,7 +22,7 @@ export const Comments = ({ data }) => {
                                 name={el?.user?.name}
                             />
                         </Box>
-                        <Box width="65%" ml={10} mr={10} fontSize="16px">
+                        <Box width="75%" ml={10} mr={10} fontSize="16px">
                             <Box color="gray.700" fontWeight="semibold">{el?.user?.name}</Box>
                             <Box my={1} color="gray.500" fontWeight="semibold">
                                 commented on

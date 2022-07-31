@@ -35,10 +35,10 @@ const Dashboard = () => {
           </Heading>
         </VStack>
       </GridItem>
-      <GridItem colSpan={8} mt={5}>
+      <GridItem colSpan={12} mt={5}>
         <Comments data={data?.comments} />
       </GridItem>
-      <GridItem
+      {/* <GridItem
         mt={5}
         colSpan={4}
         p={4}
@@ -56,7 +56,7 @@ const Dashboard = () => {
             <ListItem>Facilisis in pretium nisl aliquet</ListItem>
           </UnorderedList>
         </VStack>
-      </GridItem>
+      </GridItem> */}
     </Grid>
   )
 }
