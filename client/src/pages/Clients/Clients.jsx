@@ -10,7 +10,7 @@ import {
   Tooltip,
   VStack,
 } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FiRefreshCw, FiUsers } from 'react-icons/fi'
 import Datatable from '../../components/Datatable'
 import { useGetClientList } from '../../hooks/clients/useGetClientList'
@@ -18,6 +18,10 @@ import Actions from './components/Actions'
 
 const Clients = () => {
   const { data, isLoading, isFetching, refetch } = useGetClientList()
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   const columns = useMemo(
     () => [

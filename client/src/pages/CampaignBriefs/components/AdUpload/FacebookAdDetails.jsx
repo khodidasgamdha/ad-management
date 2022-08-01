@@ -11,7 +11,6 @@ import {
   Box,
   Button,
   css,
-  useToast,
 } from "@chakra-ui/react";
 import { InputControl, SelectControl } from "formik-chakra-ui";
 import { Form, Formik } from "formik";
@@ -22,27 +21,30 @@ import {
   facebookAccountIds,
 } from "../../constant/FacebookAdUpload";
 import instance from "../../../../helpers/axios";
-import { useNavigate, useParams } from "react-router-dom";
+import ErrorModal from "../../../../components/PopupModal/ErrorModal";
+import SuccessModal from "../../../../components/PopupModal/SuccessModal";
 
 export const FacebookAdDetails = ({ data, getImages, url, method }) => {
-  const toast = useToast();
-  const { id } = useParams();
-  const navigate = useNavigate();
-
   const [formData, setFromData] = useState(initialValues);
   const [hashArray, setHashArray] = useState([]);
 
+  const [isSuccessModalOpen, setSuccessModal] = useState(false);
+  const [isErrorModalOpen, setErrorModal] = useState(false);
+  const [description, setDescription] = useState("");
+
   const sendData = () => {
     getImages({
-        name: formData.adName,
-        message: formData.primaryText,
-        headline: formData.headline,
-        description: formData.description,
-        url: formData.url,
-        type: facebookAccountIds.filter(el => el.key === formData.facebookAccountId)?.[0]?.key,
-        images: hashArray,
-    })
-  }
+      name: formData.adName,
+      message: formData.primaryText,
+      headline: formData.headline,
+      description: formData.description,
+      url: formData.url,
+      type: facebookAccountIds.filter(
+        (el) => el.key === formData.facebookAccountId
+      )?.[0]?.key,
+      images: hashArray,
+    });
+  };
 
   useEffect(() => {
     if (data?.id) {
@@ -54,25 +56,25 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
         url: data.detail.link,
         facebookAccountId: data.detail.callToAction.type,
       });
-      setHashArray(data.detail.fileInfoList)
-    } else if(
-        data?.name &&
-        data?.message &&
-        data?.headline &&
-        data?.description &&
-        data?.url &&
-        data?.type &&
-        data?.images
+      setHashArray(data.detail.fileInfoList);
+    } else if (
+      data?.name &&
+      data?.message &&
+      data?.headline &&
+      data?.description &&
+      data?.url &&
+      data?.type &&
+      data?.images
     ) {
-        setFromData({
-          adName: data.name,
-          primaryText: data.message,
-          headline: data.headline,
-          description: data.description,
-          url: data.url,
-          facebookAccountId: data.type,
-        });
-        setHashArray(data.images)
+      setFromData({
+        adName: data.name,
+        primaryText: data.message,
+        headline: data.headline,
+        description: data.description,
+        url: data.url,
+        facebookAccountId: data.type,
+      });
+      setHashArray(data.images);
     }
   }, [data]);
 
@@ -102,10 +104,10 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                 },
                 fileInfoList: hashArray,
                 imageHashes: [hashArray[0].imageHash],
-              }
+              },
             };
-            if(!data?.id) {
-                payload = { ...payload , ad_upload_type: "FACEBOOK" }
+            if (!data?.id) {
+              payload = { ...payload, ad_upload_type: "FACEBOOK" };
             }
             await instance({
               method: method,
@@ -115,25 +117,28 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
             })
               .then((res) => {
                 if (res.status === 200) {
-                  toast({
-                    isClosable: true,
-                    status: "success",
-                    variant: "top-accent",
-                    position: "top-right",
-                    title: "Success",
-                    description: res.data.message,
-                  });
-                  navigate(`/campaign-briefs/${id}`)
+                  setSuccessModal(true);
+                  // toast({
+                  //   isClosable: true,
+                  //   status: "success",
+                  //   variant: "top-accent",
+                  //   position: "top-right",
+                  //   title: "Success",
+                  //   description: res.data.message,
+                  // });
+                  // navigate(`/campaign-briefs/${id}`);
                 }
               })
               .catch((error) => {
-                toast({
-                  isClosable: true,
-                  status: "error",
-                  variant: "top-accent",
-                  position: "top-right",
-                  description: error.response.data.message,
-                });
+                // toast({
+                //   isClosable: true,
+                //   status: "error",
+                //   variant: "top-accent",
+                //   position: "top-right",
+                //   description: error.response.data.message,
+                // });
+                setDescription(error.response.data.message)
+                setErrorModal(true);
               });
           }}
         >
@@ -161,7 +166,12 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                               variant: "outline",
                               type: "text",
                             }}
-                            onChange={(e) => setFromData({...formData, adName: e.target.value})}
+                            onChange={(e) =>
+                              setFromData({
+                                ...formData,
+                                adName: e.target.value,
+                              })
+                            }
                           />
                           <CircularProgress
                             max={valueLengths.adName}
@@ -194,7 +204,12 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                               variant: "outline",
                               type: "text",
                             }}
-                            onChange={(e) => setFromData({...formData, primaryText: e.target.value})}
+                            onChange={(e) =>
+                              setFromData({
+                                ...formData,
+                                primaryText: e.target.value,
+                              })
+                            }
                           />
                           <CircularProgress
                             max={valueLengths.primaryText}
@@ -235,7 +250,12 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                               variant: "outline",
                               type: "text",
                             }}
-                            onChange={(e) => setFromData({...formData, headline: e.target.value})}
+                            onChange={(e) =>
+                              setFromData({
+                                ...formData,
+                                headline: e.target.value,
+                              })
+                            }
                           />
                           <CircularProgress
                             max={valueLengths.headline}
@@ -274,7 +294,12 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                               variant: "outline",
                               type: "text",
                             }}
-                            onChange={(e) => setFromData({...formData, description: e.target.value})}
+                            onChange={(e) =>
+                              setFromData({
+                                ...formData,
+                                description: e.target.value,
+                              })
+                            }
                           />
                           <CircularProgress
                             max={valueLengths.description}
@@ -312,7 +337,9 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                               variant: "outline",
                               type: "text",
                             }}
-                            onChange={(e) => setFromData({...formData, url: e.target.value})}
+                            onChange={(e) =>
+                              setFromData({ ...formData, url: e.target.value })
+                            }
                           />
                           <CircularProgress
                             max={valueLengths.url}
@@ -357,7 +384,12 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                               color: "#757998",
                               marginRight: "100px",
                             }}
-                            onChange={(e) => setFromData({...formData, facebookAccountId: e.target.value})}
+                            onChange={(e) =>
+                              setFromData({
+                                ...formData,
+                                facebookAccountId: e.target.value,
+                              })
+                            }
                           >
                             {facebookAccountIds.map((el) => (
                               <option value={el.key} key={el.key}>
@@ -419,6 +451,16 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
           }}
         </Formik>
       </Grid>
+
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setSuccessModal(false)}
+      />
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setErrorModal(false)}
+        description={description}
+      />
     </>
   );
 };

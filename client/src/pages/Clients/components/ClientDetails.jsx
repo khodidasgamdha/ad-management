@@ -35,12 +35,17 @@ import { SubmitButton } from "formik-chakra-ui";
 import { clientDetails } from "../constant/clientInfo";
 import { useEffect, useState } from "react";
 import instance from "../../../helpers/axios";
+import SuccessModal from "../../../components/PopupModal/SuccessModal";
+import ErrorModal from "../../../components/PopupModal/ErrorModal";
 
 const ClientDetails = () => {
-  const toast = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
   
+  const [isSuccessModalOpen, setSuccessModal] = useState(false);
+  const [isErrorModalOpen, setErrorModal] = useState(false);
+  const [description, setDescription] = useState("");
+
   const [formData, setFormData] = useState(clientDetails)
   const [industryType, setIndustryType] = useState(null)
   const [status, setStatus] = useState(null)
@@ -149,25 +154,28 @@ const ClientDetails = () => {
             })
               .then((res) => {
                 if (res.status === 200) {
-                  toast({
-                    isClosable: true,
-                    status: "success",
-                    variant: "top-accent",
-                    position: "top-right",
-                    title: "Success",
-                    description: res.data.message,
-                  });
-                  navigate("/clients")
+                //   toast({
+                //     isClosable: true,
+                //     status: "success",
+                //     variant: "top-accent",
+                //     position: "top-right",
+                //     title: "Success",
+                //     description: res.data.message,
+                //   });
+                  setSuccessModal(true)
+                //   navigate("/clients")
                 }
               })
               .catch((error) => {
-                toast({
-                  isClosable: true,
-                  status: "error",
-                  variant: "top-accent",
-                  position: "top-right",
-                  description: error.response.data.message,
-                });
+                // toast({
+                //   isClosable: true,
+                //   status: "error",
+                //   variant: "top-accent",
+                //   position: "top-right",
+                //   description: error.response.data.message,
+                // });
+                setDescription(error.response.data.message)
+                setErrorModal(true)
               });
           }}
         >
@@ -351,6 +359,16 @@ const ClientDetails = () => {
           )}
         </Formik>
       </HStack>
+
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setSuccessModal(false)}
+      />
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setErrorModal(false)}
+        description={description}
+      />
     </>
   );
 };
