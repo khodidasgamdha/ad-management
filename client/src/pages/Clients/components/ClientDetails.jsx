@@ -22,6 +22,7 @@ import {
     VStack,
     useToast,
 } from "@chakra-ui/react";
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { TEXT_COLOR } from "../../../layout/constant/MenuList";
 import { BiArrowBack } from "react-icons/bi";
 import Upload from "rc-upload";
@@ -30,7 +31,6 @@ import { Form, Formik } from "formik";
 import InputBox from "../../../components/InputBox";
 import TextAreaBox from "../../../components/TextAreaBox";
 import { SelectControl } from "formik-chakra-ui";
-import Dots from "../../../assets/images/three-horizon-dot.png";
 import { SubmitButton } from "formik-chakra-ui";
 import { clientDetails } from "../constant/clientInfo";
 import { useEffect, useState } from "react";
@@ -51,7 +51,7 @@ const ClientDetails = () => {
     const [formData, setFormData] = useState(clientDetails);
     const [industryType, setIndustryType] = useState(null);
     const [status, setStatus] = useState(null);
-    const [fbPixels, setFbPixels] = useState([]);
+    const [fbPixels, setFbPixels] = useState([{ name: "", pixelId: "" }]);
 
     const { data } = useGetClientDetails(id);
     const { mutate, data: fbAccounts } = useGetFbAccounts();
@@ -71,23 +71,33 @@ const ClientDetails = () => {
     }, [id]);
 
     useEffect(() => {
-        setFormData({
-            companyName: data?.detail?.companyName,
-            firstName: data?.detail?.contactName,
-            lastName: "",
-            email: data?.detail?.email,
-            description: data?.description,
-            phone: data?.detail?.phone,
-            industry: data?.detail?.industry,
-            address: data?.detail?.address,
-            productAndServices: data?.detail?.productAndServices,
-            facebookAccountId: data?.fb_config?.fb_account_id,
-            facebookPageId: data?.fb_config?.fb_page_id,
-        });
-        setIndustryType(data?.detail?.industryType);
-        setStatus(data?.state);
-        setFbPixels(data?.detail?.fbPixels);
+        if(data) {
+            let firstName;
+            let lastName;
+            if(data?.detail?.contactName) {
+                firstName = (data?.detail?.contactName).split(" ")[0] 
+                lastName = (data?.detail?.contactName).split(" ")[1] 
+            }
+            setFormData({
+                companyName: data?.detail?.companyName,
+                firstName: firstName.trim(),
+                lastName: lastName.trim() || "",
+                email: data?.detail?.email,
+                description: data?.description,
+                phone: data?.detail?.phone,
+                industry: data?.detail?.industry,
+                address: data?.detail?.address,
+                productAndServices: data?.detail?.productAndServices,
+                facebookAccountId: data?.fb_config?.fb_account_id,
+                facebookPageId: data?.fb_config?.fb_page_id,
+            });
+            setIndustryType(data?.detail?.industryType);
+            setStatus(data?.state);
+            setFbPixels(data?.detail?.fbPixels);
+        }
     }, [data]);
+
+    console.log(fbPixels);
 
     return (
         <>
@@ -159,8 +169,7 @@ const ClientDetails = () => {
                                 detail: {
                                     address: values.address,
                                     companyName: values.companyName,
-                                    contactName:
-                                        values.firstName + values.lastName,
+                                    contactName: `${values.firstName} ${values.lastName}`,
                                     email: values.email,
                                     industry: values.industry,
                                     industryType: industryType,
@@ -343,48 +352,50 @@ const ClientDetails = () => {
                                 >
                                     Facebook Pixels
                                 </FormLabel>
-                                {fbPixels?.length &&
-                                    fbPixels.map((el, index) => (
-                                        <HStack
-                                            key={index}
-                                            spacing="30px"
-                                            mb={5}
-                                        >
-                                            <InputBox
-                                                id="facebookPixels"
-                                                name="facebookPixels"
-                                                value={`${el?.name} | ${el?.pixelId}`}
-                                                inputProps={{
-                                                    variant: "outline",
-                                                    border: "2px",
-                                                    borderRadius: 0,
-                                                    borderColor: "gray",
-                                                    type: "text",
-                                                }}
-                                                onChange={handleChange}
-                                            />
-                                            <Img src={Dots} />
-                                        </HStack>
-                                    ))
-                                }
-                                {/* <InputBox
-                                    id="facebookPixels"
-                                    name="facebookPixels"
-                                    inputProps={{
-                                        variant: "outline",
-                                        border: "2px",
-                                        borderRadius: 0,
-                                        borderColor: "gray",
-                                        type: "text",
-                                    }}
-                                    onChange={(e) => console.log(e.target.value)}
-                                /> */}
-                                {/* 
-                                    <HStack spacing="10px">
-                                    <Img src={AddIcon} />
+                                {fbPixels?.map((el, index) => (
+                                    <HStack key={index} spacing="30px" mb={5}>
+                                        <InputBox
+                                            id="facebookPixels"
+                                            name="facebookPixels"
+                                            value={`${el?.name} | ${el?.pixelId}`}
+                                            inputProps={{
+                                                variant: "outline",
+                                                border: "2px",
+                                                borderRadius: 0,
+                                                borderColor: "gray",
+                                                type: "text",
+                                            }}
+                                            onChange={(e) => {
+                                                const val = [...fbPixels];
+                                                const [name, pixel] = (e.target.value).split("|")
+                                                val[index].pixelId = pixel.trim()
+                                                val[index].name = name.trim()
+                                                setFbPixels(val)
+                                            }}
+                                        />
+                                        <DeleteIcon
+                                            color="red"
+                                            cursor="pointer"
+                                            onClick={() =>
+                                                setFbPixels(
+                                                    fbPixels.filter((el, ind) => ind != index)
+                                                )
+                                            }
+                                        />
+                                    </HStack>
+                                ))}
+                                <HStack
+                                    spacing="10px"
+                                    onClick={() =>
+                                        setFbPixels([
+                                            ...fbPixels,
+                                            { name: "", pixelId: "" },
+                                        ])
+                                    }
+                                >
+                                    <AddIcon cursor="pointer" />
                                     <Text>New Line</Text>
-                                    </HStack> 
-                                */}
+                                </HStack>
                             </FormControl>
                             <Divider />
                             <SelectControl
