@@ -12,12 +12,15 @@ import {
 } from '@chakra-ui/react'
 import { useEffect, useMemo } from 'react'
 import { FiRefreshCw, FiUsers } from 'react-icons/fi'
+import { useNavigate } from 'react-router-dom'
 import Datatable from '../../components/Datatable'
 import { useGetClientList } from '../../hooks/clients/useGetClientList'
 import Actions from './components/Actions'
 
 const Clients = () => {
   const { data, isLoading, isFetching, refetch } = useGetClientList()
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     refetch()
@@ -89,10 +92,11 @@ const Clients = () => {
           </Tooltip>
           <Button
             size="sm"
-            isLoading={isFetching || isLoading}
-            loadingText="Fetching..."
-            disabled={isFetching || isLoading}
+            // isLoading={isFetching || isLoading}
+            // loadingText="Fetching..."
+            // disabled={isFetching || isLoading}
             leftIcon={<FiUsers />}
+            onClick={() => navigate("/client/new")}
           >
             Create client
           </Button>

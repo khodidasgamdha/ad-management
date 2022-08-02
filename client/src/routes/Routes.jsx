@@ -48,6 +48,7 @@ const Routes = () => {
             <Route path="/config" element={<ConfigManager />} exact />
             <Route path="/config/:id" element={<ConfigDetails />} exact />
             <Route path="/clients" element={<Clients />} exact />
+            <Route path="/client/new" element={<ClientDetails />} exact />
             <Route path="/client/:id" element={<ClientDetails />} exact />
             <Route path="/settings" element={<Settings />} exact />
           </Route>
