@@ -53,7 +53,7 @@ const ClientDetails = () => {
     const [status, setStatus] = useState(null);
     const [fbPixels, setFbPixels] = useState([{ name: "", pixelId: "" }]);
 
-    const { data } = useGetClientDetails(id);
+    const { data, refetch } = useGetClientDetails(id);
     const { mutate, data: fbAccounts } = useGetFbAccounts();
 
     useEffect(() => {
@@ -62,6 +62,7 @@ const ClientDetails = () => {
 
     useEffect(() => {
         if (id) {
+            refetch()
             setType("PUT");
             setUrl(`/client/${id}`);
         } else {
