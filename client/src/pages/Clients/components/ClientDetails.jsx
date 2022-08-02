@@ -80,8 +80,8 @@ const ClientDetails = () => {
             }
             setFormData({
                 companyName: data?.detail?.companyName,
-                firstName: firstName.trim() || "",
-                lastName: lastName.trim() || "",
+                firstName: firstName?.trim() || "",
+                lastName: lastName?.trim() || "",
                 email: data?.detail?.email,
                 description: data?.description,
                 phone: data?.detail?.phone,
