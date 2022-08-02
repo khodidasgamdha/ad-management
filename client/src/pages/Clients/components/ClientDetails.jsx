@@ -357,7 +357,8 @@ const ClientDetails = () => {
                                         <InputBox
                                             id="facebookPixels"
                                             name="facebookPixels"
-                                            value={`${el?.name} | ${el?.pixelId}`}
+                                            value={el?.pixelId}
+                                            // value={`${el?.name} | ${el?.pixelId}`}
                                             inputProps={{
                                                 variant: "outline",
                                                 border: "2px",
@@ -367,9 +368,9 @@ const ClientDetails = () => {
                                             }}
                                             onChange={(e) => {
                                                 const val = [...fbPixels];
-                                                const [name, pixel] = (e.target.value).split("|")
-                                                val[index].pixelId = pixel.trim()
-                                                val[index].name = name.trim()
+                                                // const [name, pixel] = (e.target.value).split("|")
+                                                val[index].pixelId = e.target.value
+                                                // val[index].name = name.trim()
                                                 setFbPixels(val)
                                             }}
                                         />
