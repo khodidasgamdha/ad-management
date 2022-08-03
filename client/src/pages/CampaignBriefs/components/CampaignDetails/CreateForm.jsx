@@ -19,7 +19,7 @@ const CreateForm = ({ id, clientDetails }) => {
     const [url, setURL] = useState();
 
     useEffect(() => {
-        if (id) {
+        if (id && clientDetails?.id) {
             setMethod("PUT");
             setURL(`/client/${clientDetails.id}/campaign-brief/${id}`);
         } else {
