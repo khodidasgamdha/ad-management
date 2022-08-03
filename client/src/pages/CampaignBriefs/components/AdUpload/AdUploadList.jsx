@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Button,
   Heading,
@@ -29,7 +29,11 @@ const AdUploadList = () => {
     access_info: { clients },
   } = useRecoilValue(profile);
 
-  const { data } = useAdUploadList(clients[0]?.id, id);
+  const { data, refetch } = useAdUploadList(clients[0]?.id, id);
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   const columns = useMemo(
     () => [
