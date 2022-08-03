@@ -24,8 +24,6 @@ const Dashboard = () => {
 
   const { mutate, data} = useGetDashboardComments();
 
-  console.log(data);
-
   return (
     <Grid h="200px" templateColumns="repeat(12, 1fr)" gap={4}>
       <GridItem colSpan={8}>

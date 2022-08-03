@@ -72,12 +72,12 @@ const ClientDetails = () => {
     }, [id]);
 
     useEffect(() => {
-        if(data) {
+        if (data) {
             let firstName;
             let lastName;
-            if(data?.detail?.contactName) {
-                firstName = (data?.detail?.contactName).split(" ")[0] 
-                lastName = (data?.detail?.contactName).split(" ")[1] 
+            if (data?.detail?.contactName) {
+                firstName = (data?.detail?.contactName).split(" ")[0];
+                lastName = (data?.detail?.contactName).split(" ")[1];
             }
             setFormData({
                 companyName: data?.detail?.companyName,
@@ -370,9 +370,9 @@ const ClientDetails = () => {
                                             onChange={(e) => {
                                                 const val = [...fbPixels];
                                                 // const [name, pixel] = (e.target.value).split("|")
-                                                val[index].pixelId = e.target.value
+                                                val[index].pixelId = e.target.value;
                                                 // val[index].name = name.trim()
-                                                setFbPixels(val)
+                                                setFbPixels(val);
                                             }}
                                         />
                                         <DeleteIcon

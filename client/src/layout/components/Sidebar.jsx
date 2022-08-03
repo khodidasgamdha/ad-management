@@ -13,6 +13,7 @@ import NavItem from "./NavItem";
 import { For } from "react-haiku";
 import { profile } from "../../atoms/authAtom";
 import { useGetClientDetailsOnClick } from "../../hooks/clients/useGetClientDetails";
+import { useGetClients } from "../../hooks/dashboard/useGetClients";
 import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 
@@ -20,12 +21,18 @@ const Sidebar = ({ onClose, ...rest }) => {
     var BORDER_COLOR = useColorModeValue("gray.100", "gray.800");
     var BG_COLOR = useColorModeValue("gray.100", "gray.900");
 
-    var GlobProfile = useRecoilValue(profile);
+    // var GlobProfile = useRecoilValue(profile);
 
     const [isAdmin, setIsAdmin] = useState(false);
     const {
         access_info: { roles },
     } = useRecoilValue(profile);
+
+    const { mutate: clietsMutate, data } = useGetClients();
+
+    useEffect(() => {
+        clietsMutate()
+    }, [])
 
     useEffect(() => {
         setIsAdmin(roles.includes("Admin"));
@@ -108,14 +115,19 @@ const Sidebar = ({ onClose, ...rest }) => {
                                 }
                             }}
                         >
-                            <For
-                                each={GlobProfile?.access_info?.clients}
-                                render={(client) => (
-                                    <option value={client.id}>
-                                        {client.name}
-                                    </option>
-                                )}
-                            />
+                            {
+                                data?.clients && (
+                                    <For
+                                        each={data.clients}
+                                        // each={GlobProfile?.access_info?.clients}
+                                        render={(client) => (
+                                            <option value={client.id}>
+                                                {client.name}
+                                            </option>
+                                        )}
+                                    />
+                                )
+                            }
                         </Select>
                     </Box>
 
