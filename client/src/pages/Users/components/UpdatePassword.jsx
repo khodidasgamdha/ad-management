@@ -27,7 +27,7 @@ const UpdatePassword = () => {
       method: 'PUT',
       url: `/user/${id}/password`,
       data: values,
-      withCredentials: true,
+      withCredentials: false,
     })
       .then((response) => {
         console.log(response)

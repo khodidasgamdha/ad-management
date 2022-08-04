@@ -28,7 +28,7 @@ const Login = () => {
       method: 'GET',
       baseURL: `${process.env.REACT_APP_API_URL}`,
       url: '/user/me',
-      withCredentials: true,
+      withCredentials: false,
     })
       .then((response) => {
         if (response.status === 200) {
@@ -57,7 +57,7 @@ const Login = () => {
         email: values.email,
         password: values.password,
       },
-      withCredentials: true,
+      withCredentials: false,
     })
       .then((response) => {
         if (response.status === 200) {

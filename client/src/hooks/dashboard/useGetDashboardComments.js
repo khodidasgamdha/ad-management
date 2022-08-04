@@ -6,7 +6,7 @@ export const useGetDashboardComments = () => {
         axios({
             method: "GET",
             url: `/user/me/comments/1`,
-            withCredentials: true,
+            withCredentials: false,
         })
             .then((res) => {
                 if (res.status === 200) {

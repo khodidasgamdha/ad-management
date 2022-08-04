@@ -8,7 +8,7 @@ export const useCreateAdPreview = () => {
             return axios({
                 method: "POST",
                 url: `/client/${values.clientId}/campaign-brief/${values.campaignBriefId}/ad-upload/preview-ad`,
-                withCredentials: true,
+                withCredentials: false,
                 data: {
                     call_to_action: {
                         type: values?.type,

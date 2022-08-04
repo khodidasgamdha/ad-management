@@ -5,7 +5,7 @@ export const useGetUserList = () => {
   return useQuery(['users'], async () => {
     return axios
       .get('/user', {
-        withCredentials: true,
+        withCredentials: false,
       })
       .then((res) => {
         if (res.status === 200) {

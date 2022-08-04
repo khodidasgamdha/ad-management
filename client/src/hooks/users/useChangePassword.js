@@ -14,7 +14,7 @@ export const useChangePassword = () => {
           newPassword: values.newPassword,
           confirmPassword: values.confirmPassword,
         },
-        withCredentials: true,
+        withCredentials: false,
       })
         .then((res) => {
           if (res.status === 200) {

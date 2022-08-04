@@ -5,7 +5,7 @@ export const useGetCampaign = (clientId, campaignId) => {
     return useQuery(["campaign", clientId], async () => {
         return axios
             .get(`/client/${clientId}/campaign-brief/${campaignId}`, {
-                withCredentials: true,
+                withCredentials: false,
             })
             .then((res) => {
                 if (res.status === 200) {

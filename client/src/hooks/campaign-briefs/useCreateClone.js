@@ -12,7 +12,7 @@ export const useCreateClone = () => {
       return axios({
         method: 'POST',
         url: `/client/${values.clientId}/campaign-brief/${values.campaignBriefId}/clone`,
-        withCredentials: true,
+        withCredentials: false,
       })
         .then((res) => {
           return res.data.data

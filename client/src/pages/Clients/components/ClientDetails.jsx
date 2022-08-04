@@ -204,7 +204,7 @@ const ClientDetails = () => {
                         await instance({
                             method: type,
                             url: url,
-                            withCredentials: true,
+                            withCredentials: false,
                             data: data,
                         })
                             .then((res) => {

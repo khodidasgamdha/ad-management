@@ -5,7 +5,7 @@ export const useGetClientUsers = (clientId) => {
     return useQuery(["comments", clientId], async () => {
         return axios
             .get(`/user/me/client-users/${clientId}`, {
-                withCredentials: true,
+                withCredentials: false,
             })
             .then((res) => {
                 if (res.status === 200) {

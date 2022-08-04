@@ -112,7 +112,7 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
             await instance({
               method: method,
               url: url,
-              withCredentials: true,
+              withCredentials: false,
               data: payload,
             })
               .then((res) => {

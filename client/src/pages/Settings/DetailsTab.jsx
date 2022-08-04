@@ -104,7 +104,7 @@ const DetailsTab = () => {
                     });
                 });
         },
-        withCredentials: true,
+        withCredentials: false,
     };
 
     return (

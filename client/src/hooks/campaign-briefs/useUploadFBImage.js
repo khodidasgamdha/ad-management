@@ -15,7 +15,7 @@ export const useUploadFBImage = () => {
         method: "POST",
         url: `/client/${values.clientId}/campaign-brief/${values.campaignBriefId}/ad-upload/file-upload/fb`,
         data: formData,
-        withCredentials: true,
+        withCredentials: false,
       })
         .then((res) => {
           if (res.status === 200) {

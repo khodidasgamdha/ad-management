@@ -58,7 +58,7 @@ export const Comment = ({ clientid, campaignId }) => {
                     await instance({
                         method: "POST",
                         url: `/client/${clientid}/campaign-brief/${campaignId}/comment`,
-                        withCredentials: true,
+                        withCredentials: false,
                         data: {
                             content: values.comment,
                             users: clientUsers,
@@ -146,8 +146,9 @@ export const Comment = ({ clientid, campaignId }) => {
                         if (a.created_at > b.created_at) return -1;
                         return 0;
                     })
-                    ?.map((el) => (
+                    ?.map((el, index) => (
                         <Box
+                            key={index}
                             border="2px solid"
                             borderRadius={10}
                             borderColor="blue.300"

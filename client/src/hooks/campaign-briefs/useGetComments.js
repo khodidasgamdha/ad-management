@@ -6,7 +6,7 @@ export const useGetComments = () => {
         axios({
             method: "GET",
             url: `/client/${values.clientId}/campaign-brief/${values.campaignId}/comment`,
-            withCredentials: true,
+            withCredentials: false,
         })
             .then((res) => {
                 if (res.status === 200) {
@@ -24,7 +24,7 @@ export const useGetFacebookAdComments = () => {
         axios({
             method: "GET",
             url: `/client/${values.clientId}/campaign-brief/${values.campaignId}/ad-upload/${values.facebookAdId}/comment`,
-            withCredentials: true,
+            withCredentials: false,
         })
             .then((res) => {
                 if (res.status === 200) {

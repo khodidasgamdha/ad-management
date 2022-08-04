@@ -6,7 +6,7 @@ export const useGetFbAccounts = () => {
         axios({
             method: "GET",
             url: `/client/fb-ad-accounts`,
-            withCredentials: true,
+            withCredentials: false,
         })
             .then((res) => {
                 if (res.status === 200) {

@@ -6,7 +6,7 @@ export const useGetClients = () => {
         axios({
             method: "GET",
             url: `/client`,
-            withCredentials: true,
+            withCredentials: false,
         })
             .then((res) => {
                 if (res.status === 200) {

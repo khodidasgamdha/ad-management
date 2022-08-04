@@ -5,7 +5,7 @@ export const useGetClientDetails = (id) => {
   return useQuery(['client', id], async () => {
     return axios
       .get(`/client/${id}`, {
-        withCredentials: true,
+        withCredentials: false,
       })
       .then((res) => {
         if (res.status === 200) {
@@ -23,7 +23,7 @@ export const useGetClientDetailsOnClick = () => {
     axios({
       method: 'GET',
       url: `/client/${values.id}`,
-      withCredentials: true,
+      withCredentials: false,
     })
       .then((res) => {
         if (res.status === 200) {

@@ -57,7 +57,7 @@ const CreateForm = ({ id, clientDetails }) => {
                 await instance({
                     method: method,
                     url: url,
-                    withCredentials: true,
+                    withCredentials: false,
                     data: values,
                 })
                     .then((res) => {

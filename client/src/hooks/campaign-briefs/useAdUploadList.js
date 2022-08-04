@@ -5,7 +5,7 @@ export const useAdUploadList = (clientId, campaignId) => {
     return useQuery(["campaign", clientId, campaignId], async () => {
         return axios
             .get(`/client/${clientId}/campaign-brief/${campaignId}/ad-upload`, {
-                withCredentials: true,
+                withCredentials: false,
             })
             .then((res) => {
                 if (res.status === 200) {

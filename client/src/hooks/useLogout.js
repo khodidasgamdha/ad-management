@@ -15,7 +15,7 @@ export const useLogout = () => {
   return useMutation(async () => {
     return axios
       .post('/logout', {
-        withCredentials: true,
+        withCredentials: false,
       })
       .then((res) => {
         if (res.status === 200) {

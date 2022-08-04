@@ -12,7 +12,7 @@ export const useCreateCampaignList = (clientId) => {
         method: 'POST',
         url: `/client/${clientId}/campaign-brief`,
         data: values,
-        withCredentials: true,
+        withCredentials: false,
       })
         .then((res) => {
           console.log(res.data)

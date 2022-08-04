@@ -59,7 +59,7 @@ export const Comments = ({ clientId, campaignId, facebookAdId }) => {
                     await instance({
                         method: "POST",
                         url: `/client/${clientId}/campaign-brief/${campaignId}/ad-upload/${facebookAdId}/comment`,
-                        withCredentials: true,
+                        withCredentials: false,
                         data: {
                             content: values.comment,
                             users: clientUsers,

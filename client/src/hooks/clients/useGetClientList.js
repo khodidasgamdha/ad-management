@@ -5,7 +5,7 @@ export const useGetClientList = () => {
   return useQuery(['client'], async () => {
     return axios
       .get('/client', {
-        withCredentials: true,
+        withCredentials: false,
       })
       .then((res) => {
         if (res.status === 200) {

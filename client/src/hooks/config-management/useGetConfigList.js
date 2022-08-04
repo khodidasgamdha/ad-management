@@ -5,7 +5,7 @@ export const useGetConfigList = () => {
   return useQuery(['config'], async () => {
     return axios
       .get('/config', {
-        withCredentials: true,
+        withCredentials: false,
       })
       .then((res) => {
         if (res.status === 200) {

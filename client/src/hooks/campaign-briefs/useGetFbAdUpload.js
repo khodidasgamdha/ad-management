@@ -5,7 +5,7 @@ export const useGetFbAdUpload = (clientId, campaignId, fbId) => {
     return useQuery(["campaign", clientId, campaignId,fbId], async () => {
         return axios
             .get(`/client/${clientId}/campaign-brief/${campaignId}/ad-upload/${fbId}`, {
-                withCredentials: true,
+                withCredentials: false,
             })
             .then((res) => {
                 if (res.status === 200) {

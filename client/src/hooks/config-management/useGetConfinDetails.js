@@ -5,7 +5,7 @@ export const useGetConfinDetails = (id) => {
   return useQuery(['config', id], async () => {
     return axios
       .get(`/config/${id}`, {
-        withCredentials: true,
+        withCredentials: false,
       })
       .then((res) => {
         if (res.status === 200) {

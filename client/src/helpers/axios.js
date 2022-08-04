@@ -7,7 +7,7 @@ const instance = axios.create({
     AUTH_JWT: localStorage.getItem("jwt"),
     AUTH_JWT_REFRESH: localStorage.getItem("jwtRefresh"),
   },
-  withCredentials: true,
+  withCredentials: false,
   crossdomain: true,
 })
 
@@ -15,7 +15,7 @@ const refreshAuthLogic = (failedRequest) => {
   return instance({
     method: 'post',
     url: '/refresh-token',
-    withCredentials: true,
+    withCredentials: false,
     skipAuthRefresh: true,
   })
     .then(() => {
