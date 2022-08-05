@@ -85,7 +85,6 @@ const CreateForm = ({ id, clientDetails }) => {
         >
             {({ values, errors, setFieldValue, resetForm }) => (
                 <VStack as={Form} mt={4} align="stretch" spacing={6}>
-                    {/* <pre>{JSON.stringify({ values, errors }, null, 2)}</pre> */}
                     <ClientDetails />
                     <CampaignDetails
                         setFieldValue={setFieldValue}

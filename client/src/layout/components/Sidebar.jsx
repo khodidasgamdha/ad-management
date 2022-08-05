@@ -13,26 +13,21 @@ import NavItem from "./NavItem";
 import { For } from "react-haiku";
 import { profile } from "../../atoms/authAtom";
 import { useGetClientDetailsOnClick } from "../../hooks/clients/useGetClientDetails";
-import { useGetClients } from "../../hooks/dashboard/useGetClients";
 import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
+import { useDispatch } from "react-redux";
+import { updateCurrentClient } from "../../store/client/clientThunk";
 
 const Sidebar = ({ onClose, ...rest }) => {
     var BORDER_COLOR = useColorModeValue("gray.100", "gray.800");
     var BG_COLOR = useColorModeValue("gray.100", "gray.900");
 
-    // var GlobProfile = useRecoilValue(profile);
-
     const [isAdmin, setIsAdmin] = useState(false);
+    const dispatch = useDispatch();
+
     const {
-        access_info: { roles },
+        access_info: { roles, clients },
     } = useRecoilValue(profile);
-
-    const { mutate: clietsMutate, data } = useGetClients();
-
-    useEffect(() => {
-        clietsMutate()
-    }, [])
 
     useEffect(() => {
         setIsAdmin(roles.includes("Admin"));
@@ -88,9 +83,8 @@ const Sidebar = ({ onClose, ...rest }) => {
                             defaultValue={localStorage.getItem("clientId")}
                             onChange={(e) => {
                                 if (e.target.value.length) {
-                                    localStorage.setItem(
-                                        "clientId",
-                                        e.target.value
+                                    dispatch(
+                                        updateCurrentClient(e.target.value)
                                     );
                                     mutate(
                                         {
@@ -115,37 +109,34 @@ const Sidebar = ({ onClose, ...rest }) => {
                                 }
                             }}
                         >
-                            {
-                                data?.clients && (
-                                    <For
-                                        each={data.clients}
-                                        // each={GlobProfile?.access_info?.clients}
-                                        render={(client) => (
-                                            <option value={client.id}>
-                                                {client.name}
-                                            </option>
-                                        )}
-                                    />
-                                )
-                            }
+                            <For
+                                each={clients}
+                                render={(client) => (
+                                    <option value={client.id}>
+                                        {client.name}
+                                    </option>
+                                )}
+                            />
                         </Select>
                     </Box>
 
-                    {isAdmin ? MenuList.map((link) => (
-                        <NavItem
-                            key={link.id}
-                            path={link.path}
-                            icon={link.icon}
-                            title={link.name}
-                        />
-                    )) : UserMenuList.map((link) => (
-                        <NavItem
-                            key={link.id}
-                            path={link.path}
-                            icon={link.icon}
-                            title={link.name}
-                        />
-                    ))}
+                    {isAdmin
+                        ? MenuList.map((link) => (
+                              <NavItem
+                                  key={link.id}
+                                  path={link.path}
+                                  icon={link.icon}
+                                  title={link.name}
+                              />
+                          ))
+                        : UserMenuList.map((link) => (
+                              <NavItem
+                                  key={link.id}
+                                  path={link.path}
+                                  icon={link.icon}
+                                  title={link.name}
+                              />
+                          ))}
                 </VStack>
             </Flex>
         </Box>

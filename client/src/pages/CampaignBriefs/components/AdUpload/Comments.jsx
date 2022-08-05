@@ -10,9 +10,7 @@ import {
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
 import * as Yup from "yup";
-import { profile } from "../../../../atoms/authAtom";
 import instance from "../../../../helpers/axios";
 import { useGetClientUsers } from "../../../../hooks/campaign-briefs/useGetClientUsers";
 import { useGetFacebookAdComments } from "../../../../hooks/campaign-briefs/useGetComments";
@@ -20,18 +18,13 @@ import { CommentsList } from "../Comments/CommentsList";
 
 export const Comments = ({ clientId, campaignId, facebookAdId }) => {
     const toast = useToast();
-
     const [clientUsers, setClientUsers] = useState([]);
 
     const validationSchema = Yup.object({
         comment: Yup.string().required().label("Comment"),
     });
 
-    const {
-        access_info: { clients },
-    } = useRecoilValue(profile);
-
-    const { data } = useGetClientUsers(clients[0]?.id);
+    const { data } = useGetClientUsers(clientId);
     const { mutate, data: comments } = useGetFacebookAdComments();
 
     useEffect(() => {

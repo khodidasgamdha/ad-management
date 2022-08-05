@@ -9,27 +9,22 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useRecoilValue } from "recoil";
 import { BiPlusCircle } from "react-icons/bi";
 import { useNavigate, Link } from "react-router-dom";
 import { SearchIcon } from "@chakra-ui/icons";
 import { FiEye } from "react-icons/fi";
-
 import Datatable from "../../../../components/Datatable";
 import { useAdUploadList } from "../../../../hooks/campaign-briefs/useAdUploadList";
-import { profile } from "../../../../atoms/authAtom";
 import { useParams } from "react-router-dom";
 import "../../style/AdUploadList.css";
+import { useSelector } from "react-redux";
 
 const AdUploadList = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const clientId  = useSelector((state) => state.client.clientId);
 
-  const {
-    access_info: { clients },
-  } = useRecoilValue(profile);
-
-  const { data, refetch } = useAdUploadList(clients[0]?.id, id);
+  const { data, refetch } = useAdUploadList(clientId, id);
 
   useEffect(() => {
     refetch()

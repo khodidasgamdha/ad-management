@@ -20,10 +20,9 @@ import "../../style/FacebookAdUpload.css";
 import { FacebookAdDetails } from "./FacebookAdDetails";
 import FacebookAdPreview from "./FacebookAdPreview";
 import { useGetFbAdUpload } from "../../../../hooks/campaign-briefs/useGetFbAdUpload";
-import { useRecoilValue } from "recoil";
-import { profile } from "../../../../atoms/authAtom";
 import { useCreateAdPreview } from "../../../../hooks/campaign-briefs/useCreateAdPreview";
 import { Comments } from "./Comments";
+import { useSelector } from "react-redux";
 
 const FacebookAdUpload = () => {
     const [images, setImages] = useState();
@@ -34,23 +33,20 @@ const FacebookAdUpload = () => {
 
     const navigate = useNavigate();
     const { id, fbId } = useParams();
+    const clientId  = useSelector((state) => state.client.clientId);
 
-    const {
-        access_info: { clients },
-    } = useRecoilValue(profile);
-
-    const { data } = useGetFbAdUpload(clients[0]?.id, id, fbId);
+    const { data } = useGetFbAdUpload(clientId, id, fbId);
     const { mutateAsync } = useCreateAdPreview();
 
     useEffect(() => {
         if (fbId) {
             setMethod("PUT");
             setUrl(
-                `/client/${clients[0]?.id}/campaign-brief/${id}/ad-upload/${fbId}`
+                `/client/${clientId}/campaign-brief/${id}/ad-upload/${fbId}`
             );
         } else {
             setMethod("POST");
-            setUrl(`/client/${clients[0]?.id}/campaign-brief/${id}/ad-upload`);
+            setUrl(`/client/${clientId}/campaign-brief/${id}/ad-upload`);
         }
     }, [fbId]);
 
@@ -58,7 +54,7 @@ const FacebookAdUpload = () => {
         setImages(data);
         await mutateAsync(
             {
-                clientId: clients?.[0]?.id,
+                clientId: clientId,
                 campaignBriefId: id,
                 type: data?.type,
                 description: data?.description,
@@ -166,7 +162,7 @@ const FacebookAdUpload = () => {
                         </TabPanel>
                         <TabPanel>
                             <Comments
-                                clientId={clients[0]?.id}
+                                clientId={clientId}
                                 campaignId={id}
                                 facebookAdId={fbId}
                             />

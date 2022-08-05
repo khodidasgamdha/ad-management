@@ -11,10 +11,7 @@ const CampaignDetails = () => {
                     </Heading>
                 </GridItem>
                 <GridItem colSpan={2}>
-                    <InputBox
-                        name="name"
-                        label="Campaign Name"
-                    />
+                    <InputBox name="name" label="Campaign Name" />
                 </GridItem>
                 <GridItem>
                     <InputBox name="startDate" label="Start Date" type="date" />

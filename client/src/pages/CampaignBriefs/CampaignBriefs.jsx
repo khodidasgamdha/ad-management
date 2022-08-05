@@ -12,28 +12,24 @@ import {
 } from "@chakra-ui/react";
 import { FiRefreshCw } from "react-icons/fi";
 import { BiPlusCircle } from "react-icons/bi";
-import { useRecoilValue } from "recoil";
-import { profile } from "../../atoms/authAtom";
 import Datatable from "../../components/Datatable";
 import { useEffect, useMemo } from "react";
 import { useGetCampaignList } from "../../hooks/campaign-briefs/useGetCampaignList";
 import { useNavigate } from "react-router-dom";
 import TableActionCell from "./components/TableActionCell";
+import { useSelector } from "react-redux";
 
 const CampaignBriefs = () => {
     const navigate = useNavigate();
 
-    const {
-        access_info: { clients },
-    } = useRecoilValue(profile);
+    const clientId = useSelector((state) => state.client.clientId);
 
-    const { data, isLoading, isFetching, refetch } = useGetCampaignList(
-        clients[0]?.id
-    );
+    const { data, isLoading, isFetching, refetch } =
+        useGetCampaignList(clientId);
 
     useEffect(() => {
-        refetch()
-    }, [])
+        refetch();
+    }, []);
 
     const columns = useMemo(
         () => [
@@ -83,10 +79,10 @@ const CampaignBriefs = () => {
     return (
         <VStack alignItems="stretch" spacing={6}>
             <HStack alignItems="center" justifyContent="space-between">
-                    <Heading color="gray.600" fontWeight="500" size="lg">
-                        Campaign Briefs
-                    </Heading>
-                    <HStack>
+                <Heading color="gray.600" fontWeight="500" size="lg">
+                    Campaign Briefs
+                </Heading>
+                <HStack>
                     <Tooltip
                         hasArrow
                         placement="left"

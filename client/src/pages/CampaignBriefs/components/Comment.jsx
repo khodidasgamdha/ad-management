@@ -11,14 +11,12 @@ import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
 import * as Yup from "yup";
-import { profile } from "../../../atoms/authAtom";
 import instance from "../../../helpers/axios";
 import { useGetClientUsers } from "../../../hooks/campaign-briefs/useGetClientUsers";
 import { useGetComments } from "../../../hooks/campaign-briefs/useGetComments";
 
-export const Comment = ({ clientid, campaignId }) => {
+export const Comment = ({ clientId, campaignId }) => {
     const toast = useToast();
 
     const [clientUsers, setClientUsers] = useState([]);
@@ -27,21 +25,17 @@ export const Comment = ({ clientid, campaignId }) => {
         comment: Yup.string().required().label("Comment"),
     });
 
-    const {
-        access_info: { clients },
-    } = useRecoilValue(profile);
-
-    const { data } = useGetClientUsers(clients[0]?.id);
+    const { data } = useGetClientUsers(clientId);
     const { mutate, data: comments } = useGetComments();
 
     useEffect(() => {
-        if (clientid && campaignId) {
+        if (clientId && campaignId) {
             mutate({
-                clientId: clientid,
+                clientId: clientId,
                 campaignId: campaignId,
             });
         }
-    }, [clientid, campaignId]);
+    }, [clientId, campaignId]);
 
     useEffect(() => {
         const ids = data?.users?.length ? data?.users.map((el) => el.id) : [];
@@ -57,7 +51,7 @@ export const Comment = ({ clientid, campaignId }) => {
                 onSubmit={async (values, actions) => {
                     await instance({
                         method: "POST",
-                        url: `/client/${clientid}/campaign-brief/${campaignId}/comment`,
+                        url: `/client/${clientId}/campaign-brief/${campaignId}/comment`,
                         withCredentials: false,
                         data: {
                             content: values.comment,
@@ -76,7 +70,7 @@ export const Comment = ({ clientid, campaignId }) => {
                                 });
                                 values.comment = "";
                                 mutate({
-                                    clientId: clientid,
+                                    clientId: clientId,
                                     campaignId: campaignId,
                                 });
                             }
