@@ -1,31 +1,33 @@
 import {
     Heading,
-    VStack,
-    HStack,
-    Tooltip,
-    IconButton,
     Button,
     Divider,
-    Spinner,
-    Badge,
     Text,
+    Input,
+    InputLeftElement,
+    InputGroup,
+    Stack,
+    Icon,
+    HStack,
 } from "@chakra-ui/react";
-import { FiRefreshCw } from "react-icons/fi";
-import { BiPlusCircle } from "react-icons/bi";
 import Datatable from "../../components/Datatable";
 import { useEffect, useMemo } from "react";
 import { useGetCampaignList } from "../../hooks/campaign-briefs/useGetCampaignList";
-import { useNavigate } from "react-router-dom";
-import TableActionCell from "./components/TableActionCell";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { IoMdAddCircle } from "react-icons/io";
+import { SearchIcon } from "@chakra-ui/icons";
+import { TEXT_COLOR } from "../../layout/constant/MenuList";
+import { useCreateClone } from "../../hooks/campaign-briefs/useCreateClone";
+import { FiCopy, FiEye } from "react-icons/fi";
 
 const CampaignBriefs = () => {
     const navigate = useNavigate();
 
     const clientId = useSelector((state) => state.client.clientId);
 
-    const { data, isLoading, isFetching, refetch } =
-        useGetCampaignList(clientId);
+    const { data, refetch } = useGetCampaignList(clientId);
+    const { mutate, isLoading } = useCreateClone();
 
     useEffect(() => {
         refetch();
@@ -42,20 +44,27 @@ const CampaignBriefs = () => {
                 accessor: "state",
                 Cell: (data) => {
                     return (
-                        <Badge
-                            variant="subtle"
-                            colorScheme={
-                                data.row.original.state === "ACTIVE"
-                                    ? "green"
-                                    : data.row.original.state === "INACTIVE"
-                                    ? "red"
-                                    : data.row.original.state === "ON_HOLD"
-                                    ? "yellow"
-                                    : "blue"
-                            }
-                        >
+                        <>
+                            <Icon
+                                viewBox="0 0 200 200"
+                                mr={2}
+                                color={
+                                    data.row.original.state === "ACTIVE"
+                                        ? "#3F7EE6"
+                                        : data.row.original.state === "INACTIVE"
+                                        ? "#B5B7C8"
+                                        : data.row.original.state === "ON_HOLD"
+                                        ? "#59AB9E"
+                                        : "blue"
+                                }
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                                />
+                            </Icon>
                             {data.row.original.state}
-                        </Badge>
+                        </>
                     );
                 },
             },
@@ -70,54 +79,79 @@ const CampaignBriefs = () => {
             {
                 Header: () => <Text>Actions</Text>,
                 accessor: "actions",
-                Cell: (data) => <TableActionCell data={data} />,
+                Cell: (data) => (
+                    <HStack>
+                        <Button
+                            as={Link}
+                            size="sm"
+                            variant="outline"
+                            aria-label="View details"
+                            icon={<FiEye />}
+                            to={`/campaign-briefs/${data.row.original.id}`}
+                            py={5}
+                        >
+                            View/Edit
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            isLoading={isLoading}
+                            onClick={() => {
+                                mutate({
+                                    clientId: data.row.original.client_id,
+                                    campaignBriefId: data.row.original.id,
+                                });
+                            }}
+                            colorScheme="yellow"
+                            leftIcon={<FiCopy />}
+                            py={5}
+                        >
+                            Clone
+                        </Button>
+                    </HStack>
+                ),
             },
         ],
         []
     );
 
     return (
-        <VStack alignItems="stretch" spacing={6}>
-            <HStack alignItems="center" justifyContent="space-between">
-                <Heading color="gray.600" fontWeight="500" size="lg">
-                    Campaign Briefs
-                </Heading>
-                <HStack>
-                    <Tooltip
-                        hasArrow
-                        placement="left"
-                        label="Refresh"
-                        aria-label="Refresh"
-                    >
-                        <IconButton
-                            size="sm"
-                            variant="ghost"
-                            disabled={isFetching || isLoading}
-                            onClick={refetch}
-                            icon={
-                                isFetching ? (
-                                    <Spinner size="sm" />
-                                ) : (
-                                    <FiRefreshCw />
-                                )
-                            }
+        <div className="ad-upload-list">
+            <Heading
+                color={TEXT_COLOR}
+                fontWeight="500"
+                size="lg"
+                my={5}
+                mb={7}
+            >
+                Campaign Briefs
+            </Heading>
+            <div className="search">
+                <Stack spacing={4}>
+                    <InputGroup>
+                        <InputLeftElement
+                            pointerEvents="none"
+                            children={<SearchIcon color="gray.300" />}
                         />
-                    </Tooltip>
-                    <Button
-                        size="md"
-                        loadingText="Fetching..."
-                        isLoading={isFetching || isLoading}
-                        disabled={isFetching || isLoading}
-                        rightIcon={<BiPlusCircle />}
-                        onClick={() => navigate("/campaign-briefs/new")}
-                    >
-                        New Brief
-                    </Button>
-                </HStack>
-            </HStack>
+                        <Input type="tel" placeholder="Search" />
+                    </InputGroup>
+                </Stack>
+                <Button
+                    colorScheme="blue"
+                    backgroundColor="blue.400"
+                    borderRadius={4}
+                    px="10"
+                    marginTop={5}
+                    rightIcon={<IoMdAddCircle />}
+                    onClick={() => navigate("/campaign-briefs/new")}
+                >
+                    New Brief
+                </Button>
+            </div>
+
             <Divider />
             <Datatable data={data?.campaigns || []} columns={columns} />
-        </VStack>
+        </div>
     );
 };
 

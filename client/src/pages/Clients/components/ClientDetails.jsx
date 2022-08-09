@@ -15,12 +15,10 @@ import {
     Heading,
     HStack,
     IconButton,
-    Img,
     Radio,
     RadioGroup,
     Text,
     VStack,
-    useToast,
 } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { TEXT_COLOR } from "../../../layout/constant/MenuList";
@@ -32,7 +30,7 @@ import InputBox from "../../../components/InputBox";
 import TextAreaBox from "../../../components/TextAreaBox";
 import { SelectControl } from "formik-chakra-ui";
 import { SubmitButton } from "formik-chakra-ui";
-import { clientDetails } from "../constant/clientInfo";
+import { clientDetails } from "../constant/InitialValues";
 import { useEffect, useState } from "react";
 import instance from "../../../helpers/axios";
 import SuccessModal from "../../../components/PopupModal/SuccessModal";
@@ -47,8 +45,6 @@ const ClientDetails = () => {
     const [description, setDescription] = useState("");
     const [type, setType] = useState("POST");
     const [url, setUrl] = useState("");
-
-    const [formData, setFormData] = useState(clientDetails);
     const [industryType, setIndustryType] = useState(null);
     const [status, setStatus] = useState(null);
     const [fbPixels, setFbPixels] = useState([{ name: "", pixelId: "" }]);
@@ -73,32 +69,11 @@ const ClientDetails = () => {
 
     useEffect(() => {
         if (data) {
-            let firstName;
-            let lastName;
-            if (data?.detail?.contactName) {
-                firstName = (data?.detail?.contactName).split(" ")[0];
-                lastName = (data?.detail?.contactName).split(" ")[1];
-            }
-            setFormData({
-                companyName: data?.detail?.companyName,
-                firstName: firstName?.trim() || "",
-                lastName: lastName?.trim() || "",
-                email: data?.detail?.email,
-                description: data?.description,
-                phone: data?.detail?.phone,
-                industry: data?.detail?.industry,
-                address: data?.detail?.address,
-                productAndServices: data?.detail?.productAndServices,
-                facebookAccountId: data?.fb_config?.fb_account_id,
-                facebookPageId: data?.fb_config?.fb_page_id,
-            });
             setIndustryType(data?.detail?.industryType);
             setStatus(data?.state);
             setFbPixels(data?.detail?.fbPixels);
         }
     }, [data]);
-
-    console.log(fbPixels);
 
     return (
         <>
@@ -121,7 +96,7 @@ const ClientDetails = () => {
                                         color: "#A7A9BD",
                                     })}
                                 >
-                                    Back to Users
+                                    Back to Clients
                                 </Text>
                             </Center>
                         </Flex>
@@ -156,7 +131,7 @@ const ClientDetails = () => {
 
                 <Formik
                     enableReinitialize
-                    initialValues={formData}
+                    initialValues={clientDetails(data)}
                     // validationSchema={validationSchema}
                     onSubmit={async (values, actions) => {
                         let data;
@@ -170,7 +145,7 @@ const ClientDetails = () => {
                                 detail: {
                                     address: values.address,
                                     companyName: values.companyName,
-                                    contactName: `${values.firstName} ${values.lastName}`,
+                                    contactName: values.contactName,
                                     email: values.email,
                                     industry: values.industry,
                                     industryType: industryType,
@@ -189,8 +164,7 @@ const ClientDetails = () => {
                                 detail: {
                                     address: values.address,
                                     companyName: values.companyName,
-                                    contactName:
-                                        values.firstName + values.lastName,
+                                    contactName: values.contactName,
                                     email: values.email,
                                     industry: values.industry,
                                     industryType: industryType,
@@ -209,26 +183,10 @@ const ClientDetails = () => {
                         })
                             .then((res) => {
                                 if (res.status === 200) {
-                                    //   toast({
-                                    //     isClosable: true,
-                                    //     status: "success",
-                                    //     variant: "top-accent",
-                                    //     position: "top-right",
-                                    //     title: "Success",
-                                    //     description: res.data.message,
-                                    //   });
                                     setSuccessModal(true);
-                                    //   navigate("/clients")
                                 }
                             })
                             .catch((error) => {
-                                // toast({
-                                //   isClosable: true,
-                                //   status: "error",
-                                //   variant: "top-accent",
-                                //   position: "top-right",
-                                //   description: error.response.data.message,
-                                // });
                                 setDescription(error.response.data.message);
                                 setErrorModal(true);
                             });
@@ -242,20 +200,12 @@ const ClientDetails = () => {
                                 value={values.companyName}
                                 onChange={handleChange}
                             />
-                            <HStack spacing={4} w="full">
-                                <InputBox
-                                    name="firstName"
-                                    label="Contact First Name"
-                                    value={values.firstName}
-                                    onChange={handleChange}
-                                />
-                                <InputBox
-                                    name="lastName"
-                                    label="Contact Last Name"
-                                    value={values.lastName}
-                                    onChange={handleChange}
-                                />
-                            </HStack>
+                            <InputBox
+                                name="contactName"
+                                label="Contact Full Name"
+                                value={values.contactName}
+                                onChange={handleChange}
+                            />
                             <InputBox
                                 name="email"
                                 label="Email"

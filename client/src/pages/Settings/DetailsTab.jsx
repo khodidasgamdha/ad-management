@@ -9,31 +9,29 @@ import {
 import { Form, Formik } from "formik";
 import { SubmitButton } from "formik-chakra-ui";
 import { useRecoilState } from "recoil";
-import * as Yup from "yup";
+import validationSchema from "../../validations/Setting/Details";
 import Upload from "rc-upload";
 import { HiCamera } from "react-icons/hi";
 import { profile } from "../../atoms/authAtom";
 import InputBox from "../../components/InputBox";
 import instance from "../../helpers/axios";
 import { useAuthCheck } from "../../hooks/useAuthCheck";
+import { useState } from "react";
+import { useEffect } from "react";
+import { detailInitialValue } from "./constant/InititalValues"
 
 const DetailsTab = () => {
     const toast = useToast();
     const [details, setDetails] = useRecoilState(profile);
+    const [isAdmin, setAdmin] = useState(false);
 
     const { refetch } = useAuthCheck();
 
-    var initialValues = {
-        name: details.name,
-        // lastName: "",
-        email: details.email,
-        // company: "",
-    };
-
-    const validationSchema = Yup.object({
-        email: Yup.string().email().required().label("Email address"),
-        name: Yup.string().required().label("Name"),
-    });
+    useEffect(() => {
+        if(details?.access_info?.roles?.length) {
+            setAdmin(details.access_info.roles.includes("Admin"))
+        }
+    }, [details])
 
     const onSubmit = async (values, actions) => {
         await instance({
@@ -133,7 +131,7 @@ const DetailsTab = () => {
             </Box>
 
             <Formik
-                initialValues={initialValues}
+                initialValues={detailInitialValue(details)}
                 validationSchema={validationSchema}
                 onSubmit={onSubmit}
             >
@@ -154,6 +152,7 @@ const DetailsTab = () => {
                             colorScheme="blue"
                             px="14"
                             rounded="full"
+                            disabled={!isAdmin}
                         >
                             Update
                         </SubmitButton>

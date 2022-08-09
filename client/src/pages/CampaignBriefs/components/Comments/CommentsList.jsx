@@ -4,8 +4,8 @@ import moment from "moment";
 export const CommentsList = ({ data }) => {
     return (
         <>
-            {data?.map((el) => (
-                <Box bg="blue.50" w="100%" p={4} mb={4}>
+            {data?.map((el, index) => (
+                <Box key={index} bg="blue.50" w="100%" p={4} mb={4}>
                     <Box display="flex">
                         <Box
                             color="gray.500"

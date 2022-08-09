@@ -18,31 +18,50 @@ import {
 import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { CheckboxControl, InputControl, SelectControl } from "formik-chakra-ui";
+import { CheckboxControl, SelectControl } from "formik-chakra-ui";
 import { LockIcon } from "@chakra-ui/icons";
-import { initialValues, optionsValues } from "../constant/FacebookCampaign";
-import instance from "../../../helpers/axios";
-
-import * as Yup from "yup";
+import {
+    AdCategory,
+    TargetingMethod,
+    CreativeType,
+    Months,
+} from "../../constant/SelectValues";
+import instance from "../../../../helpers/axios";
+import InputBox from "../../../../components/InputBox";
+import validationSchema from "../../../../validations/CampaignBrief/FacebookCampaignModel";
+import { facebookModelInitialValues } from "../../constant/InitialValues";
 
 const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
     const toast = useToast();
 
-    const validationSchema = Yup.object().shape({
-        campaignName: Yup.string().required("Campaign Name is required."),
-        targetingMethod: Yup.string().required("Targeting Method is required."),
-        creativeType: Yup.string().required("Creative Type is required."),
-    });
-
     const onSubmit = async (values, actions) => {
         let name = "WR";
-        if (values.campaignName) name += `- ${values.campaignName}`;
-        if (values.month) name += `- ${values.month}`;
-        name += "- FACEBOOK";
-        if (values.isLead) name += `- ${values.isLead}`;
-        if (values.category) name += `- ${values.category}`;
-        if (values.targetingMethod) name += `- ${values.targetingMethod}`;
-        if (values.creativeType) name += `- ${values.creativeType}`;
+        if (values.campaignName) name += ` - ${values.campaignName}`;
+        if (values.month) name += ` - ${values.month}`;
+        name += " - FACEBOOK";
+        if (values.isLead) name += `- Lead`;
+        if (values.category) {
+            const val = AdCategory.filter((el) => el.key === values.category);
+            if (val?.[0]?.value) {
+                name += ` - ${val[0].value}`;
+            }
+        }
+        if (values.targetingMethod) {
+            const val = TargetingMethod.filter(
+                (el) => el.key === values.targetingMethod
+            );
+            if (val?.[0]?.value) {
+                name += ` - ${val[0].value}`;
+            }
+        }
+        if (values.creativeType) {
+            const val = CreativeType.filter(
+                (el) => el.key === values.creativeType
+            );
+            if (val?.[0]?.value) {
+                name += ` - ${val[0].value}`;
+            }
+        }
         if (values.location) name += `- ${values.location}`;
         if (values.segment) name += `- ${values.segment}`;
 
@@ -93,7 +112,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
     };
 
     return (
-        <Modal onClose={onClose} isOpen={isOpen} isCentered size="xl">
+        <Modal onClose={onClose} isOpen={isOpen} isCentered size="2xl">
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader
@@ -110,7 +129,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                 <ModalCloseButton onClick={() => {}} />
                 <Formik
                     enableReinitialize
-                    initialValues={initialValues}
+                    initialValues={facebookModelInitialValues}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
@@ -141,7 +160,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="campaign_name"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                     })}
@@ -155,7 +174,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                         (required)
                                                     </span>
                                                 </FormLabel>
-                                                <InputControl
+                                                <InputBox
                                                     id="campaign_name"
                                                     name="campaignName"
                                                     placeholder="Example 2022"
@@ -163,13 +182,15 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     onChange={handleChange}
                                                     css={css({
                                                         color: "#757998",
+                                                        fontSize: "14px",
+                                                        fontWeight: "600",
                                                     })}
                                                 />
                                             </FormControl>
                                         </GridItem>
                                     </Grid>
-                                    <br />
                                     <Grid
+                                        mt={3}
                                         templateColumns={{
                                             base: "repeat(2, 1fr)",
                                             md: "repeat(3, 1fr)",
@@ -182,7 +203,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="month"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                         marginBottom: "5px",
@@ -203,21 +224,19 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                         borderRadius: 0,
                                                         borderColor: "gray",
                                                         fontWeight: "600",
-                                                        fontSize: "11px",
+                                                        fontSize: "14px",
                                                         lineHeight: "16px",
                                                         color: "#757998",
                                                     }}
                                                 >
-                                                    {optionsValues.months.map(
-                                                        (el) => (
-                                                            <option
-                                                                key={el.key}
-                                                                value={el.key}
-                                                            >
-                                                                {el.value}
-                                                            </option>
-                                                        )
-                                                    )}
+                                                    {Months.map((el) => (
+                                                        <option
+                                                            key={el.key}
+                                                            value={el.key}
+                                                        >
+                                                            {el.value}
+                                                        </option>
+                                                    ))}
                                                 </SelectControl>
                                             </FormControl>
                                         </GridItem>
@@ -227,7 +246,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="campaign_name"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                         marginBottom: "5px",
@@ -252,7 +271,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                             borderRadius: "0",
                                                             border: "2px solid #757998",
                                                             fontWeight: "600",
-                                                            fontSize: "11px",
+                                                            fontSize: "14px",
                                                             lineHeight: "16px",
                                                             color: "#757998",
                                                         })}
@@ -273,7 +292,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                 onChange={handleChange}
                                                 css={css({
                                                     fontWeight: "600",
-                                                    fontSize: "10px",
+                                                    fontSize: "12px",
                                                     lineHeight: "15px",
                                                     color: "#757998",
                                                 })}
@@ -282,8 +301,8 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                             </CheckboxControl>
                                         </GridItem>
                                     </Grid>
-                                    <br />
                                     <Grid
+                                        mt={3}
                                         templateColumns={{
                                             base: "repeat(1, 1fr)",
                                             md: "repeat(3, 1fr)",
@@ -296,7 +315,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="category"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                         marginBottom: "5px",
@@ -317,21 +336,19 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                         borderRadius: 0,
                                                         borderColor: "gray",
                                                         fontWeight: "600",
-                                                        fontSize: "11px",
+                                                        fontSize: "14px",
                                                         lineHeight: "16px",
                                                         color: "#757998",
                                                     }}
                                                 >
-                                                    {optionsValues.adCategory.map(
-                                                        (el) => (
-                                                            <option
-                                                                key={el.key}
-                                                                value={el.key}
-                                                            >
-                                                                {el.value}
-                                                            </option>
-                                                        )
-                                                    )}
+                                                    {AdCategory.map((el) => (
+                                                        <option
+                                                            key={el.key}
+                                                            value={el.key}
+                                                        >
+                                                            {el.value}
+                                                        </option>
+                                                    ))}
                                                 </SelectControl>
                                             </FormControl>
                                         </GridItem>
@@ -341,7 +358,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="targetingMethod"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                         marginBottom: "5px",
@@ -371,12 +388,12 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                         borderRadius: 0,
                                                         borderColor: "gray",
                                                         fontWeight: "600",
-                                                        fontSize: "11px",
+                                                        fontSize: "14px",
                                                         lineHeight: "16px",
                                                         color: "#757998",
                                                     }}
                                                 >
-                                                    {optionsValues.targetingMethod.map(
+                                                    {TargetingMethod.map(
                                                         (el) => (
                                                             <option
                                                                 key={el.key}
@@ -395,7 +412,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="creativeType"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                         marginBottom: "5px",
@@ -423,27 +440,25 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                         borderRadius: 0,
                                                         borderColor: "gray",
                                                         fontWeight: "600",
-                                                        fontSize: "11px",
+                                                        fontSize: "14px",
                                                         lineHeight: "16px",
                                                         color: "#757998",
                                                     }}
                                                 >
-                                                    {optionsValues.creativeType.map(
-                                                        (el) => (
-                                                            <option
-                                                                key={el.key}
-                                                                value={el.key}
-                                                            >
-                                                                {el.value}
-                                                            </option>
-                                                        )
-                                                    )}
+                                                    {CreativeType.map((el) => (
+                                                        <option
+                                                            key={el.key}
+                                                            value={el.key}
+                                                        >
+                                                            {el.value}
+                                                        </option>
+                                                    ))}
                                                 </SelectControl>
                                             </FormControl>
                                         </GridItem>
                                     </Grid>
-                                    <br />
                                     <Grid
+                                        mt={3}
                                         templateColumns={{
                                             base: "repeat(2, 1fr)",
                                             md: "repeat(3, 1fr)",
@@ -456,7 +471,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="location"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                         marginBottom: "5px",
@@ -464,18 +479,15 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                 >
                                                     Location
                                                 </FormLabel>
-                                                <Input
+                                                <InputBox
                                                     id="location"
                                                     name="location"
                                                     placeholder="Middle Earth"
                                                     onChange={handleChange}
                                                     value={values.location}
                                                     css={css({
-                                                        borderRadius: "0",
-                                                        border: "2px solid #757998",
                                                         fontWeight: "600",
-                                                        fontSize: "11px",
-                                                        lineHeight: "16px",
+                                                        fontSize: "14px",
                                                         color: "#757998",
                                                     })}
                                                 />
@@ -487,7 +499,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                     htmlFor="segment"
                                                     css={css({
                                                         fontWeight: "600",
-                                                        fontSize: "10px",
+                                                        fontSize: "12px",
                                                         lineHeight: "15px",
                                                         color: "#A7A9BD",
                                                         marginBottom: "5px",
@@ -495,28 +507,23 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                                                 >
                                                     Audience Segment
                                                 </FormLabel>
-                                                <Input
+                                                <InputBox
                                                     id="segment"
                                                     name="segment"
                                                     placeholder="Families"
                                                     value={values.segment}
                                                     onChange={handleChange}
                                                     css={css({
-                                                        borderRadius: "0",
-                                                        border: "2px solid #757998",
                                                         fontWeight: "600",
-                                                        fontSize: "11px",
-                                                        lineHeight: "16px",
+                                                        fontSize: "14px",
                                                         color: "#757998",
                                                     })}
                                                 />
                                             </FormControl>
                                         </GridItem>
                                     </Grid>
-                                    <br />
-                                    <br />
                                 </ModalBody>
-                                <Flex>
+                                <Flex mt={5}>
                                     <Button
                                         onClick={onClose}
                                         css={css({

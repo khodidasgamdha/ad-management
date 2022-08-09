@@ -3,7 +3,6 @@ import { Select } from 'chakra-react-select'
 
 const MultiSelectInputBox = ({ options, name, label, ...rest }) => {
   // onChange={(e) => console.log(e.map((v) => v['value']))}
-
   return (
     <FormControl>
       <FormLabel htmlFor={name} color="gray" fontSize="sm">

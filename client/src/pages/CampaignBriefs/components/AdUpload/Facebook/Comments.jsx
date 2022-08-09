@@ -10,19 +10,16 @@ import {
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
 import { useState } from "react";
-import * as Yup from "yup";
-import instance from "../../../../helpers/axios";
-import { useGetClientUsers } from "../../../../hooks/campaign-briefs/useGetClientUsers";
-import { useGetFacebookAdComments } from "../../../../hooks/campaign-briefs/useGetComments";
-import { CommentsList } from "../Comments/CommentsList";
+import instance from "../../../../../helpers/axios";
+import { useGetClientUsers } from "../../../../../hooks/campaign-briefs/useGetClientUsers";
+import { useGetFacebookAdComments } from "../../../../../hooks/campaign-briefs/useGetComments";
+import { CommentsList } from "../../Comments/CommentsList";
+import validationSchema from "../../../../../validations/CampaignBrief/Comments"
+import { commentInitialValue } from "../../../constant/InitialValues";
 
 export const Comments = ({ clientId, campaignId, facebookAdId }) => {
     const toast = useToast();
     const [clientUsers, setClientUsers] = useState([]);
-
-    const validationSchema = Yup.object({
-        comment: Yup.string().required().label("Comment"),
-    });
 
     const { data } = useGetClientUsers(clientId);
     const { mutate, data: comments } = useGetFacebookAdComments();
@@ -46,7 +43,7 @@ export const Comments = ({ clientId, campaignId, facebookAdId }) => {
         <>
             <Formik
                 enableReinitialize
-                initialValues={{ comment: "" }}
+                initialValues={commentInitialValue}
                 validationSchema={validationSchema}
                 onSubmit={async (values, actions) => {
                     await instance({

@@ -17,32 +17,38 @@ import { CloseIcon } from "@chakra-ui/icons";
 import FileUploadIcon from "../../../../assets/images/file-upload-icon.png";
 import DefaultImageIcon from "../../../../assets/images/default-image-icon.png";
 import { TEXT_COLOR } from "../../../../layout/constant/MenuList";
-import { useUploadFBImage } from "../../../../hooks/campaign-briefs/useUploadFBImage";
-import { useRecoilValue } from "recoil";
-import { profile } from "../../../../atoms/authAtom";
+import { useUploadImage } from "../../../../hooks/campaign-briefs/useUploadImage";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { fileUploadInitialValue } from "../../constant/InitialValues";
 
 let currentId = 0;
 
-export function FileUpload({ getHashArray }) {
+export function FileUpload({ getHashArray, type }) {
     const { id } = useParams();
+    const clientId = useSelector((state) => state.client.clientId);
 
     const [_, __, helpers] = useField("files");
     const [files, setFiles] = useState([]);
     const [hashArray, setHashArray] = useState([]);
 
-    const { mutateAsync } = useUploadFBImage();
-
-    const {
-        access_info: { clients },
-    } = useRecoilValue(profile);
+    const { mutateAsync } = useUploadImage();
 
     const onDrop = useCallback(async (accFiles, rejFiles) => {
+        let adUploadType;
+        if(type == 'facebook') {
+            adUploadType = 'fb'
+        }
+        if(type == 'dv360') {
+            adUploadType = 'dv360'
+        }
+
         await mutateAsync(
             {
-                clientId: clients[0].id,
+                clientId: clientId,
                 campaignBriefId: id,
                 adFile: accFiles[0],
+                type: adUploadType
             },
             {
                 onSuccess: (data, variables, context) => {
@@ -97,7 +103,7 @@ export function FileUpload({ getHashArray }) {
 
     return (
         <>
-            <Formik initialValues={{ files: [] }}>
+            <Formik initialValues={fileUploadInitialValue}>
                 {({ values, errors, isValid, isSubmitting }) => {
                     return (
                         <Form>

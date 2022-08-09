@@ -1,6 +1,6 @@
-import { atom } from 'recoil'
+import { atom } from "recoil";
 
 export const profile = atom({
-  key: 'profile',
-  default: {},
-})
+    key: "profile",
+    default: {},
+});

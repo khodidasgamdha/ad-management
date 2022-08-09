@@ -1,121 +1,136 @@
+import { SearchIcon } from "@chakra-ui/icons";
 import {
-  Badge,
-  Button,
-  Divider,
-  Heading,
-  HStack,
-  IconButton,
-  Spinner,
-  Text,
-  Tooltip,
-  useDisclosure,
-  VStack,
-} from '@chakra-ui/react'
-import { useMemo } from 'react'
-import { FiRefreshCw, FiUser } from 'react-icons/fi'
-import Datatable from '../../components/Datatable'
-import { useGetUserList } from '../../hooks/users/useGetUserList'
-import { TEXT_COLOR } from '../../layout/constant/MenuList'
-import Actions from './components/Actions'
-import CreateUserModal from './components/CreateUserModal'
-import RolesView from './components/RolesView'
-import UserTableNameWithProfile from './components/UserTableNameWithProfile'
+    Badge,
+    Button,
+    Divider,
+    Heading,
+    Icon,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    Stack,
+    Text,
+} from "@chakra-ui/react";
+import { useEffect, useMemo } from "react";
+import { IoMdAddCircle } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import Datatable from "../../components/Datatable";
+import { useGetUserList } from "../../hooks/users/useGetUserList";
+import { TEXT_COLOR } from "../../layout/constant/MenuList";
+import Actions from "./components/Actions";
+import RolesView from "./components/RolesView";
+import UserTableNameWithProfile from "./components/UserTableNameWithProfile";
+import "../../pages/CampaignBriefs/style/AdUploadList.css";
 
 const Users = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Name",
+                accessor: "name",
+                Cell: (data) => <UserTableNameWithProfile data={data} />,
+            },
+            {
+                Header: "Email",
+                accessor: "email",
+            },
+            {
+                Header: "Rotes",
+                accessor: "roles",
+                Cell: (data) => {
+                    return (
+                        <RolesView
+                            roles={data.row.original.access_info.roles}
+                        />
+                    );
+                },
+            },
+            {
+                Header: "State",
+                accessor: "state",
+                Cell: (data) => {
+                    return (
+                        <>
+                            <Icon
+                                viewBox="0 0 200 200"
+                                mr={2}
+                                color={
+                                    data.row.original.state === "ACTIVE"
+                                        ? "#3F7EE6"
+                                        : data.row.original.state === "INACTIVE"
+                                        ? "red"
+                                        : data.row.original.state === "ON_HOLD"
+                                        ? "yellow.500"
+                                        : "#3F7EE6"
+                                }
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                                />
+                            </Icon>
+                            {data.row.original.state}
+                        </>
+                    );
+                },
+            },
+            {
+                Header: () => <Text>Actions</Text>,
+                accessor: "actions",
+                Cell: (data) => {
+                    return <Actions row={data.row.original} />;
+                },
+            },
+        ],
+        []
+    );
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'Name',
-        accessor: 'name',
-        Cell: (data) => <UserTableNameWithProfile data={data} />,
-      },
-      {
-        Header: 'Email',
-        accessor: 'email',
-      },
-      {
-        Header: 'Rotes',
-        accessor: 'roles',
-        Cell: (data) => {
-          return <RolesView roles={data.row.original.access_info.roles} />
-        },
-      },
-      {
-        Header: 'State',
-        accessor: 'state',
-        Cell: (data) => {
-          return (
-            <Badge
-              variant="subtle"
-              colorScheme={
-                data.row.original.state === 'ACTIVE'
-                  ? 'green'
-                  : data.row.original.state === 'INACTIVE'
-                  ? 'red'
-                  : data.row.original.state === 'ON_HOLD'
-                  ? 'yellow'
-                  : 'blue'
-              }
+    const { data, refetch } = useGetUserList();
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        refetch()
+    }, [])
+
+    return (
+        <div className="ad-upload-list">
+            <Heading
+                color={TEXT_COLOR}
+                fontWeight="500"
+                size="lg"
+                my={5}
+                mb={7}
             >
-              {data.row.original.state}
-            </Badge>
-          )
-        },
-      },
-      {
-        Header: () => <Text>Actions</Text>,
-        accessor: 'actions',
-        Cell: (data) => {
-          return <Actions row={data.row.original} />
-        },
-      },
-    ],
-    []
-  )
+                Users
+            </Heading>
+            <div className="search">
+                <Stack spacing={4}>
+                    <InputGroup>
+                        <InputLeftElement
+                            pointerEvents="none"
+                            children={<SearchIcon color="gray.300" />}
+                        />
+                        <Input type="tel" placeholder="Search" />
+                    </InputGroup>
+                </Stack>
+                <Button
+                    colorScheme="blue"
+                    backgroundColor="blue.400"
+                    borderRadius={4}
+                    px="10"
+                    marginTop={5}
+                    rightIcon={<IoMdAddCircle />}
+                    onClick={() => navigate("/user")}
+                >
+                    Add User
+                </Button>
+            </div>
 
-  const { data, isLoading, refetch, isFetching } = useGetUserList()
+            <Divider />
+            <Datatable data={data ? data.users : []} columns={columns} />
+            {/* <CreateUserModal isOpen={isOpen} onClose={onClose} /> */}
+        </div>
+    );
+};
 
-  return (
-    <VStack alignItems="stretch" spacing={6}>
-      <HStack alignItems="center" justifyContent="space-between">
-        <Heading color={TEXT_COLOR} fontWeight="500" size="lg">
-          Users
-        </Heading>
-        <HStack>
-          <Tooltip
-            hasArrow
-            placement="left"
-            label="Refresh"
-            aria-label="Refresh"
-          >
-            <IconButton
-              size="sm"
-              variant="ghost"
-              disabled={isFetching || isLoading}
-              onClick={refetch}
-              icon={isFetching ? <Spinner size="sm" /> : <FiRefreshCw />}
-            />
-          </Tooltip>
-          <Button
-            size="sm"
-            isLoading={isFetching || isLoading}
-            loadingText="Fetching..."
-            disabled={isFetching || isLoading}
-            leftIcon={<FiUser />}
-            colorScheme="blue"
-            onClick={onOpen}
-          >
-            Create user
-          </Button>
-        </HStack>
-      </HStack>
-      <Divider />
-      <Datatable data={data ? data.users : []} columns={columns} />
-      <CreateUserModal isOpen={isOpen} onClose={onClose} />
-    </VStack>
-  )
-}
-
-export default Users
+export default Users;

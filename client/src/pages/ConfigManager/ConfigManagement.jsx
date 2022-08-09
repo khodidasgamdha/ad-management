@@ -1,115 +1,130 @@
 import {
-  Badge,
-  Button,
-  Divider,
-  Heading,
-  HStack,
-  IconButton,
-  Spinner,
-  Text,
-  Tooltip,
-  useDisclosure,
-  VStack,
-} from '@chakra-ui/react'
-import { FiRefreshCw, FiServer } from 'react-icons/fi'
-import { useMemo } from 'react'
-import Datatable from '../../components/Datatable'
-import { useGetConfigList } from '../../hooks/config-management/useGetConfigList'
-import Actions from './components/Actions'
-import CreateConfigModal from './components/CreateConfigModal'
+    Button,
+    Heading,
+    Icon,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    Stack,
+    Text,
+    useDisclosure,
+} from "@chakra-ui/react";
+import { IoMdAddCircle } from "react-icons/io";
+import { useEffect, useMemo } from "react";
+import Datatable from "./components/Datatable";
+import { useGetConfigList } from "../../hooks/config-management/useGetConfigList";
+import Actions from "./components/Actions";
+import CreateConfigModal from "./components/CreateConfigModal";
+import { SearchIcon } from "@chakra-ui/icons";
+import { TEXT_COLOR } from "../../layout/constant/MenuList";
 
 const ConfigManagement = () => {
-  const { data, isLoading, isFetching, refetch } = useGetConfigList()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+    const { data, refetch } = useGetConfigList();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'ID',
-        accessor: 'id',
-      },
-      {
-        Header: 'Key',
-        accessor: 'key',
-      },
-      {
-        Header: 'Value',
-        accessor: 'value',
-        Cell: (data) => {
-          return <Text>{JSON.stringify(data.row.original.value, null, 2)}</Text>
-        },
-      },
-      {
-        Header: 'State',
-        accessor: 'state',
-        Cell: (data) => {
-          return (
-            <Badge
-              variant="subtle"
-              colorScheme={
-                data.row.original.state === 'ACTIVE'
-                  ? 'green'
-                  : data.row.original.state === 'INACTIVE'
-                  ? 'red'
-                  : data.row.original.state === 'ON_HOLD'
-                  ? 'yellow'
-                  : 'blue'
-              }
+    useEffect(() => {
+        refetch()
+    }, [])
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: "ID",
+                accessor: "id",
+            },
+            {
+                Header: "Key",
+                accessor: "key",
+            },
+            {
+                Header: "Value",
+                accessor: "value",
+                Cell: (data) => {
+                    return (
+                        <Text>
+                            {JSON.stringify(data.row.original.value, null, 2)}
+                        </Text>
+                    );
+                },
+            },
+            {
+                Header: "State",
+                accessor: "state",
+                Cell: (data) => {
+                    return (
+                        <>
+                            <Icon
+                                viewBox="0 0 200 200"
+                                mr={2}
+                                color={
+                                    data.row.original.state === "ACTIVE"
+                                        ? "#3F7EE6"
+                                        : data.row.original.state === "INACTIVE"
+                                        ? "red"
+                                        : data.row.original.state === "ON_HOLD"
+                                        ? "yellow.500"
+                                        : "#3F7EE6"
+                                }
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                                />
+                            </Icon>
+                            {data.row.original.state}
+                        </>
+                    );
+                },
+            },
+            {
+                Header: () => <Text>Actions</Text>,
+                accessor: "actions",
+                Cell: (data) => {
+                    return <Actions row={data.row.original} />;
+                },
+            },
+        ],
+        []
+    );
+
+    return (
+        <div className="ad-upload-list">
+            <Heading
+                color={TEXT_COLOR}
+                fontWeight="500"
+                size="lg"
+                my={5}
+                mb={7}
             >
-              {data.row.original.state}
-            </Badge>
-          )
-        },
-      },
-      {
-        Header: () => <Text>Actions</Text>,
-        accessor: 'actions',
-        Cell: (data) => {
-          return <Actions row={data.row.original} />
-        },
-      },
-    ],
-    []
-  )
+                Config management
+            </Heading>
+            <div className="search">
+                <Stack spacing={4}>
+                    <InputGroup>
+                        <InputLeftElement
+                            pointerEvents="none"
+                            children={<SearchIcon color="gray.300" />}
+                        />
+                        <Input type="tel" placeholder="Search" />
+                    </InputGroup>
+                </Stack>
+                <Button
+                    colorScheme="blue"
+                    backgroundColor="blue.400"
+                    borderRadius={4}
+                    px="10"
+                    marginTop={5}
+                    rightIcon={<IoMdAddCircle />}
+                    onClick={onOpen}
+                >
+                    Create config
+                </Button>
+            </div>
 
-  return (
-    <VStack alignItems="stretch" spacing={6}>
-      <HStack alignItems="center" justifyContent="space-between">
-        <Heading color="gray.600" fontWeight="500" size="lg">
-          Config management
-        </Heading>
-        <HStack>
-          <Tooltip
-            hasArrow
-            placement="left"
-            label="Refresh"
-            aria-label="Refresh"
-          >
-            <IconButton
-              size="sm"
-              variant="ghost"
-              disabled={isFetching || isLoading}
-              onClick={refetch}
-              icon={isFetching ? <Spinner size="sm" /> : <FiRefreshCw />}
-            />
-          </Tooltip>
-          <Button
-            size="sm"
-            isLoading={isFetching || isLoading}
-            loadingText="Fetching..."
-            disabled={isFetching || isLoading}
-            leftIcon={<FiServer />}
-            onClick={onOpen}
-          >
-            Create config
-          </Button>
-        </HStack>
-      </HStack>
-      <Divider />
-      <Datatable data={data ? data.configs : []} columns={columns} />
-      <CreateConfigModal isOpen={isOpen} onClose={onClose} />
-    </VStack>
-  )
-}
+            <Datatable data={data ? data.configs : []} columns={columns} />
+            <CreateConfigModal isOpen={isOpen} onClose={onClose} />
+        </div>
+    );
+};
 
-export default ConfigManagement
+export default ConfigManagement;

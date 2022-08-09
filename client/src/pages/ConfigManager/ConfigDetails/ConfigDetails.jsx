@@ -1,6 +1,6 @@
 import { useToast, VStack, HStack, Radio } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
-import * as Yup from 'yup'
+import validationSchema from "../../../validations/ConfigManager/ConfigModel"
 import {
   InputControl,
   TextareaControl,
@@ -14,6 +14,7 @@ import instance from '../../../helpers/axios'
 import { States } from '../../../constant'
 import ErrorMessage from '../../../components/ErrorMessage'
 import Loading from '../../../components/Loading'
+import { clientDetaiInitialValues } from "../constant/InititlaValues"
 
 const ConfigDetails = () => {
   const { id } = useParams()
@@ -21,17 +22,6 @@ const ConfigDetails = () => {
   const { data, isLoading, error } = useGetConfinDetails(id)
 
   const toast = useToast()
-
-  const initialValues = {
-    key: data?.key || '',
-    value: JSON.stringify(data?.value) || '',
-    state: data?.state || '',
-  }
-
-  const validationSchema = Yup.object().shape({
-    key: Yup.string().required().label('Key'),
-    value: Yup.string().required().label('Value'),
-  })
 
   const onSubmit = async (values, actions) => {
     await instance({
@@ -74,7 +64,7 @@ const ConfigDetails = () => {
         <ErrorMessage error={error} />
       ) : (
         <Formik
-          initialValues={initialValues}
+          initialValues={clientDetaiInitialValues(data)}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >

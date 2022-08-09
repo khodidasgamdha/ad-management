@@ -1,9 +1,7 @@
 import { HStack, useToast, VStack, Button, Stack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import * as Yup from "yup";
 import instance from "../../../../helpers/axios";
-import { initialValue } from "../../constant";
 import AdditionalQuestions from "./AdditionalQuestions";
 import CampaignBudget from "./CampaignBudget";
 import CampaignDetails from "./CampaignDetails";
@@ -11,8 +9,10 @@ import CampaignMetrics from "./CampaignMetrics";
 import ClientDetails from "./ClientDetails";
 import Demographics from "./Demographics";
 import MediaStrategies from "./MediaStrategies";
+import validationSchema from "../../../../validations/CampaignBrief/CampaignForm";
+import { campaignInitialValue } from "../../constant/InitialValues";
 
-const CreateForm = ({ id, clientDetails }) => {
+const CreateForm = ({ id, clientDetails, campaignDetails }) => {
     const toast = useToast();
 
     const [method, setMethod] = useState();
@@ -28,30 +28,10 @@ const CreateForm = ({ id, clientDetails }) => {
         }
     }, [id, clientDetails]);
 
-    const validationSchema = Yup.object({
-        name: Yup.string().required().label("Name"),
-        startDate: Yup.string().required().label("Start date"),
-        endDate: Yup.string().required().label("End date"),
-        detail: Yup.object({
-            industryBasic: Yup.object({
-                companyName: Yup.string().required().label("Company name"),
-                phone: Yup.string()
-                    .required()
-                    .min(10)
-                    .max(13)
-                    .label("Phone number"),
-            })
-                .required()
-                .label("Industry Basic"),
-        })
-            .required()
-            .label("Details"),
-    });
-
     return (
         <Formik
             enableReinitialize
-            initialValues={initialValue(clientDetails)}
+            initialValues={campaignInitialValue(clientDetails, campaignDetails)}
             validationSchema={validationSchema}
             onSubmit={async (values, actions) => {
                 await instance({
@@ -90,7 +70,10 @@ const CreateForm = ({ id, clientDetails }) => {
                         setFieldValue={setFieldValue}
                         values={values}
                     />
-                    <CampaignBudget />
+                    <CampaignBudget
+                        setFieldValue={setFieldValue}
+                        values={values}
+                    />
                     <CampaignMetrics />
                     <Demographics
                         setFieldValue={setFieldValue}

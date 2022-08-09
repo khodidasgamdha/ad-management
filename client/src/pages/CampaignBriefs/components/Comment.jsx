@@ -11,19 +11,16 @@ import { Form, Formik } from "formik";
 import moment from "moment";
 import { useEffect } from "react";
 import { useState } from "react";
-import * as Yup from "yup";
 import instance from "../../../helpers/axios";
 import { useGetClientUsers } from "../../../hooks/campaign-briefs/useGetClientUsers";
 import { useGetComments } from "../../../hooks/campaign-briefs/useGetComments";
+import validationSchema from "../../../validations/CampaignBrief/Comments"
+import { commentInitialValue } from "../constant/InitialValues";
 
 export const Comment = ({ clientId, campaignId }) => {
     const toast = useToast();
 
     const [clientUsers, setClientUsers] = useState([]);
-
-    const validationSchema = Yup.object({
-        comment: Yup.string().required().label("Comment"),
-    });
 
     const { data } = useGetClientUsers(clientId);
     const { mutate, data: comments } = useGetComments();
@@ -46,7 +43,7 @@ export const Comment = ({ clientId, campaignId }) => {
         <>
             <Formik
                 enableReinitialize
-                initialValues={{ comment: "" }}
+                initialValues={commentInitialValue}
                 validationSchema={validationSchema}
                 onSubmit={async (values, actions) => {
                     await instance({

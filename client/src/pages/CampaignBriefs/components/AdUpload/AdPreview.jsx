@@ -13,7 +13,7 @@ import {
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { TEXT_COLOR } from "../../../../layout/constant/MenuList";
 
-const FacebookAdPreview = ({ data }) => {
+const AdPreview = ({ data }) => {
     const [index, setIndex] = useState(0);
     const [ads, setAds] = useState([]);
 
@@ -44,13 +44,6 @@ const FacebookAdPreview = ({ data }) => {
         }
     };
 
-    const getHeight = (height) => {
-        if(height > '450') {
-            return `${height}px`
-        }
-        return '450px'
-    }
-
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={4} className="fb-upload">
             <GridItem w="full" colSpan={{ base: 6, lg: 6 }}>
@@ -75,7 +68,6 @@ const FacebookAdPreview = ({ data }) => {
                                     title={ads && Object.keys(ads)?.[index]}
                                     width="400px"
                                     height={600}
-                                    // height={parseInt(ads?.[Object.keys(ads)?.[index]]?.height) + 120}
                                     scrolling="no"
                                 />
                             </Box>
@@ -112,4 +104,4 @@ const FacebookAdPreview = ({ data }) => {
     );
 };
 
-export default FacebookAdPreview;
+export default AdPreview;

@@ -1,85 +1,98 @@
-import { HStack, useToast, VStack } from '@chakra-ui/react'
-import { Formik, Form } from 'formik'
-import { useParams } from 'react-router-dom'
-import * as Yup from 'yup'
-import { InputControl, SubmitButton } from 'formik-chakra-ui'
-import instance from '../../../helpers/axios'
+import { HStack, VStack } from "@chakra-ui/react";
+import { Formik, Form } from "formik";
+import { useParams } from "react-router-dom";
+import validationSchema from "../../../validations/User/UpdatePassword";
+import { SubmitButton } from "formik-chakra-ui";
+import instance from "../../../helpers/axios";
+import SuccessModal from "../../../components/PopupModal/SuccessModal";
+import ErrorModal from "../../../components/PopupModal/ErrorModal";
+import { useState } from "react";
+import InputBox from "../../../components/InputBox";
+import { passwordInitialValues } from "../constant/InitialValues"
 
 const UpdatePassword = () => {
-  const { id } = useParams()
-  const toast = useToast()
+    const { id } = useParams();
 
-  const initialValues = {
-    newPassword: '',
-    confirmPassword: '',
-  }
+    const [isSuccessModalOpen, setSuccessModal] = useState(false);
+    const [isErrorModalOpen, setErrorModal] = useState(false);
+    const [description, setDescription] = useState("");
 
-  const validationSchema = Yup.object({
-    newPassword: Yup.string().required().label('New Password'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
-      .required()
-      .label('Confirm Password'),
-  })
-
-  const onSubmit = async (values, action) => {
-    await instance({
-      method: 'PUT',
-      url: `/user/${id}/password`,
-      data: values,
-      withCredentials: false,
-    })
-      .then((response) => {
-        console.log(response)
-        if (response.status === 200) {
-          action.setSubmitting(false)
-          action.resetForm()
-          toast({
-            isClosable: true,
-            status: 'success',
-            variant: 'top-accent',
-            position: 'top-right',
-            title: 'Success',
-            description: 'Passwrord updated successfully',
-          })
-        }
-      })
-      .catch((error) => {
-        toast({
-          isClosable: true,
-          status: 'error',
-          variant: 'top-accent',
-          position: 'top-right',
-          description: error.response.data.message,
+    const onSubmit = async (values, action) => {
+        await instance({
+            method: "PUT",
+            url: `/user/${id}/password`,
+            data: values,
+            withCredentials: false,
         })
-      })
-  }
+            .then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                    action.setSubmitting(false);
+                    action.resetForm();
+                    setSuccessModal(true);
+                }
+            })
+            .catch((error) => {
+                setDescription(error.response.data.message);
+                setErrorModal(true);
+            });
+    };
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      {({ dirty, isValid, isSubmitting }) => (
-        <Form>
-          <VStack alignItems="stretch" spacing={6}>
-            <InputControl label="New password" name="newPassword" />
-            <InputControl label="Confirm password" name="confirmPassword" />
-            <HStack justifyContent="end">
-              <SubmitButton
-                disabled={!(dirty && isValid) || isSubmitting}
-                variant="solid"
-                colorScheme="blue"
-              >
-                Update password
-              </SubmitButton>
-            </HStack>
-          </VStack>
-        </Form>
-      )}
-    </Formik>
-  )
-}
+    return (
+        <>
+            <Formik
+                initialValues={passwordInitialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+            >
+                {({ values, dirty, isValid, isSubmitting, handleChange }) => (
+                    <Form>
+                        <VStack alignItems="stretch" spacing={6}>
+                            <HStack gap={4} w="full">
+                                <InputBox
+                                    label="New password"
+                                    name="newPassword"
+                                    type="password"
+                                    value={values.newPassword}
+                                    onChange={handleChange}
+                                />
+                                <InputBox
+                                    label="Confirm password"
+                                    name="confirmPassword"
+                                    type="password"
+                                    value={values.confirmPassword}
+                                    onChange={handleChange}
+                                />
+                            </HStack>
+                            <HStack>
+                                <SubmitButton
+                                    disabled={
+                                        !(dirty && isValid) || isSubmitting
+                                    }
+                                    size="sm"
+                                    colorScheme="blue"
+                                    px="14"
+                                    rounded="full"
+                                >
+                                    Update password
+                                </SubmitButton>
+                            </HStack>
+                        </VStack>
+                    </Form>
+                )}
+            </Formik>
 
-export default UpdatePassword
+            <SuccessModal
+                isOpen={isSuccessModalOpen}
+                onClose={() => setSuccessModal(false)}
+            />
+            <ErrorModal
+                isOpen={isErrorModalOpen}
+                onClose={() => setErrorModal(false)}
+                description={description}
+            />
+        </>
+    );
+};
+
+export default UpdatePassword;

@@ -15,14 +15,15 @@ import {
 } from "@chakra-ui/react";
 import { BiArrowBack } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
-import { TEXT_COLOR } from "../../../../layout/constant/MenuList";
-import "../../style/FacebookAdUpload.css";
+import { TEXT_COLOR } from "../../../../../layout/constant/MenuList";
+import "../../../style/FacebookAdUpload.css";
 import { FacebookAdDetails } from "./FacebookAdDetails";
-import FacebookAdPreview from "./FacebookAdPreview";
-import { useGetFbAdUpload } from "../../../../hooks/campaign-briefs/useGetFbAdUpload";
-import { useCreateAdPreview } from "../../../../hooks/campaign-briefs/useCreateAdPreview";
+import AdPreview from "../AdPreview";
+import { useGetAdUpload } from "../../../../../hooks/campaign-briefs/useGetAdUpload";
+import { useCreateAdPreview } from "../../../../../hooks/campaign-briefs/useCreateAdPreview";
 import { Comments } from "./Comments";
 import { useSelector } from "react-redux";
+import AuditLogsList from "../AuditLogsList";
 
 const FacebookAdUpload = () => {
     const [images, setImages] = useState();
@@ -35,7 +36,7 @@ const FacebookAdUpload = () => {
     const { id, fbId } = useParams();
     const clientId  = useSelector((state) => state.client.clientId);
 
-    const { data } = useGetFbAdUpload(clientId, id, fbId);
+    const { data } = useGetAdUpload(clientId, id, fbId);
     const { mutateAsync } = useCreateAdPreview();
 
     useEffect(() => {
@@ -140,14 +141,14 @@ const FacebookAdUpload = () => {
                         >
                             Preview
                         </Tab>
-                        <Tab whiteSpace="nowrap">Comments</Tab>
+                        <Tab whiteSpace="nowrap" isDisabled={!fbId}>Comments</Tab>
                         <Tab whiteSpace="nowrap">Audit Logs</Tab>
                     </TabList>
 
                     <TabPanels>
                         <TabPanel>
                             {isPreview ? (
-                                <FacebookAdPreview data={previewData} />
+                                <AdPreview data={previewData} />
                             ) : (
                                 <FacebookAdDetails
                                     getImages={getImageData}
@@ -158,7 +159,7 @@ const FacebookAdUpload = () => {
                             )}
                         </TabPanel>
                         <TabPanel>
-                            <FacebookAdPreview data={previewData} />
+                            <AdPreview data={previewData} />
                         </TabPanel>
                         <TabPanel>
                             <Comments
@@ -167,7 +168,9 @@ const FacebookAdUpload = () => {
                                 facebookAdId={fbId}
                             />
                         </TabPanel>
-                        <TabPanel>4</TabPanel>
+                        <TabPanel>
+                            <AuditLogsList />
+                        </TabPanel>
                     </TabPanels>
                 </Tabs>
             </GridItem>

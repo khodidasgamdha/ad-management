@@ -10,6 +10,7 @@ import {
     Text,
     Tooltip,
     IconButton,
+    Box,
 } from "@chakra-ui/react";
 import {
     FiChevronsLeft,
@@ -17,7 +18,8 @@ import {
     FiChevronsRight,
     FiChevronRight,
 } from "react-icons/fi";
-import { useTable, usePagination } from "react-table";
+import { FaSort } from "react-icons/fa";
+import { useTable, usePagination, useSortBy } from "react-table";
 
 const Datatable = ({ data, columns }) => {
     const {
@@ -38,8 +40,9 @@ const Datatable = ({ data, columns }) => {
         {
             columns,
             data,
-            initialState: { pageIndex: 0 },
+            initialState: { pageIndex: 0, pageSize: 5 },
         },
+        // useSortBy,
         usePagination
     );
 
@@ -51,14 +54,27 @@ const Datatable = ({ data, columns }) => {
                         {headerGroups.map((headerGroup) => (
                             <Tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
-                                    <Th {...column.getHeaderProps()}>
-                                        {column.render("Header")}
+                                    <Th
+                                        {...column.getHeaderProps()}
+                                        // onClick={() =>
+                                        //     column.toggleSortBy(
+                                        //         !column.isSortedDesc
+                                        //     )
+                                        // }
+                                    >
+                                        <Box
+                                            display="flex"
+                                            justifyContent="space-between"
+                                        >
+                                            {column.render("Header")}
+                                            <FaSort />
+                                        </Box>
                                     </Th>
                                 ))}
                             </Tr>
                         ))}
                     </Thead>
-                    <Tbody {...getTableBodyProps()}>
+                    <Tbody height="70px" {...getTableBodyProps()}>
                         {page.map((row, i) => {
                             prepareRow(row);
                             return (
@@ -66,12 +82,19 @@ const Datatable = ({ data, columns }) => {
                                     {row.cells.map((cell, index) => {
                                         return (
                                             <Td
-                                                style={index === 0 ? {
-                                                    whiteSpace: "nowrap",
-                                                    maxWidth: 650,
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
-                                                } : {}}
+                                                style={
+                                                    index === 0
+                                                        ? {
+                                                              whiteSpace:
+                                                                  "nowrap",
+                                                              maxWidth: 600,
+                                                              overflow:
+                                                                  "hidden",
+                                                              textOverflow:
+                                                                  "ellipsis",
+                                                          }
+                                                        : {}
+                                                }
                                                 {...cell.getCellProps()}
                                             >
                                                 {cell.render("Cell")}
