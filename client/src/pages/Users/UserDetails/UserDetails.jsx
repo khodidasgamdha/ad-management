@@ -32,7 +32,8 @@ import { useEffect, useState } from "react";
 import instance from "../../../helpers/axios";
 import SuccessModal from "../../../components/PopupModal/SuccessModal";
 import ErrorModal from "../../../components/PopupModal/ErrorModal";
-import validationSchema from "../../../validations/User/UserDetails";
+import editValidationSchema from "../../../validations/User/UserDetails";
+import createValidationSchema from "../../../validations/User/CreateUser";
 import { userDetailInitialValues } from "../constant/InitialValues";
 import MultiSelectInputBox from "../../../components/MultiSelectInputBox";
 
@@ -66,8 +67,8 @@ const UserDetails = () => {
         if (data?.access_info?.roles?.length) {
             setSelectedRoles(
                 data.access_info.roles.map((el) => {
-                    const id = Roles.filter(e => e.title === el)
-                    return { value: id?.[0]?.id, label: el };
+                    const id = Roles.filter(e => e.value === el)
+                    return { value: el, label: id?.[0]?.title };
                 })
             );
         }
@@ -151,23 +152,25 @@ const UserDetails = () => {
                 <Formik
                     enableReinitialize
                     initialValues={userDetailInitialValues(data)}
-                    validationSchema={validationSchema}
+                    validationSchema={id ? editValidationSchema : createValidationSchema}
                     onSubmit={async (values, actions) => {
                         let payload;
                         if (id) {
                             payload = {
                                 name: values.name,
                                 email: values.email,
-                                roles: selectedRoles.map((el) => el.label),
+                                roles: selectedRoles.map((el) => el.value),
                                 clients: selectedClients.map((el) => el.value),
+                                state: status
                             };
                         } else {
                             payload = {
                                 name: values.name,
                                 email: values.email,
                                 password: values.password,
-                                roles: selectedRoles.map((el) => el.label),
+                                roles: selectedRoles.map((el) => el.value),
                                 clients: selectedClients.map((el) => el.value),
+                                state: status
                             };
                         }
                         await instance({
@@ -186,7 +189,7 @@ const UserDetails = () => {
                             });
                     }}
                 >
-                    {({ values, errors, handleChange }) => (
+                    {({ values, errors, handleChange }) => {console.log(values);return(
                         <VStack as={Form} w="70%" align={"start"} spacing={4}>
                             <InputBox
                                 name="name"
@@ -218,8 +221,7 @@ const UserDetails = () => {
                                     options={Roles?.map((el) => {
                                         return {
                                             label: el.title,
-                                            value: el.id,
-                                            id: el.value
+                                            value: el.value,
                                         };
                                     })}
                                     placeholder={`-- Select One --`}
@@ -281,7 +283,7 @@ const UserDetails = () => {
                                 {id ? "Update" : "Add"}
                             </SubmitButton>
                         </VStack>
-                    )}
+                    )}}
                 </Formik>
             </HStack>
 

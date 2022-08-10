@@ -21,6 +21,7 @@ import Actions from "./components/Actions";
 import RolesView from "./components/RolesView";
 import UserTableNameWithProfile from "./components/UserTableNameWithProfile";
 import "../../pages/CampaignBriefs/style/AdUploadList.css";
+import { Roles } from "../../constant";
 
 const Users = () => {
     const columns = useMemo(
@@ -96,7 +97,7 @@ const Users = () => {
     }, []);
 
     useEffect(() => {
-        setUsers(data?.users);
+        setUserInfo(data?.users);
     }, [data]);
 
     useEffect(() => {
@@ -112,9 +113,21 @@ const Users = () => {
             });
             setUsers(searchedUsers);
         } else {
-            setUsers(data?.users);
+            setUserInfo(data?.users);
         }
     }, [search]);
+
+    const setUserInfo = (data) => {
+        const user = data?.map((el) => {
+            const roles = []
+            el?.access_info?.roles?.forEach((val) => {
+                const role = Roles.filter(e => e.value === val)
+                roles.push(role?.[0]?.title)
+            })
+            return { ...el, access_info: { roles } }
+        })
+        setUsers(user);
+    }
 
     return (
         <div className="ad-upload-list">
