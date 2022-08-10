@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Button,
     Heading,
@@ -19,15 +19,39 @@ import moment from "moment";
 const AuditLogsList = () => {
     const { id } = useParams();
     const clientId = useSelector((state) => state.client.clientId);
-
+    const [search, setSearch] = useState();
+    const [auditLogList, setAuditLogList] = useState();
     const { data, mutate } = useGetAuditLogs();
 
     useEffect(() => {
         mutate({
             clientId,
-            campaignId: id
+            campaignId: id,
         });
     }, []);
+
+    useEffect(() => {
+        setAuditLogList(data?.auditLogs);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedAuditLog = auditLogList.filter((el) => {
+                if (el?.user.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.created_at?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                } else if (el?.state?.toLowerCase().includes(search.trim())) {
+                    return true;
+                }
+            });
+            setAuditLogList(searchedAuditLog);
+        } else {
+            setAuditLogList(data?.auditLogs);
+        }
+    }, [search]);
 
     const columns = useMemo(
         () => [
@@ -76,7 +100,12 @@ const AuditLogsList = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -90,7 +119,7 @@ const AuditLogsList = () => {
                     Download Data
                 </Button>
             </div>
-            <Datatable data={data?.auditLogs || []} columns={columns} />
+            <Datatable data={auditLogList || []} columns={columns} />
         </div>
     );
 };

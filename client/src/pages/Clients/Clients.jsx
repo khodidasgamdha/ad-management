@@ -10,7 +10,7 @@ import {
     Stack,
     Text,
 } from "@chakra-ui/react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Datatable from "../../components/Datatable";
 import { useGetClientList } from "../../hooks/clients/useGetClientList";
@@ -22,12 +22,36 @@ import UserTableNameWithProfile from "../Users/components/UserTableNameWithProfi
 
 const Clients = () => {
     const { data, refetch } = useGetClientList();
-
+    const [clients, setClients] = useState([]);
+    const [search, setSearch] = useState();
     const navigate = useNavigate();
 
     useEffect(() => {
         refetch();
     }, []);
+
+    useEffect(() => {
+        setClients(data?.clients);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedClients = clients.filter((el) => {
+                if (el?.description?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (el?.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.detail?.industry?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                }
+            });
+            setClients(searchedClients);
+        } else {
+            setClients(data?.clients);
+        }
+    }, [search]);
 
     const columns = useMemo(
         () => [
@@ -53,9 +77,9 @@ const Clients = () => {
                                     data.row.original.state === "ACTIVE"
                                         ? "#3F7EE6"
                                         : data.row.original.state === "INACTIVE"
-                                        ? "red"
+                                        ? "#B5B7C8"
                                         : data.row.original.state === "ON_HOLD"
-                                        ? "yellow.500"
+                                        ? "#59AB9E"
                                         : "#3F7EE6"
                                 }
                             >
@@ -98,7 +122,12 @@ const Clients = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -115,7 +144,7 @@ const Clients = () => {
             </div>
 
             <Divider />
-            <Datatable data={data ? data.clients : []} columns={columns} />
+            <Datatable data={clients || []} columns={columns} />
         </div>
     );
 };

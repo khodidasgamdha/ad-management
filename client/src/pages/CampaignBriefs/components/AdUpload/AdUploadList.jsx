@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Box,
     Button,
@@ -28,9 +28,43 @@ const AdUploadList = () => {
 
     const { data, refetch } = useAdUploadList(clientId, id);
 
+    const [search, setSearch] = useState();
+    const [adUploadList, setAdUploadList] = useState();
+
     useEffect(() => {
         refetch();
     }, []);
+
+    useEffect(() => {
+        setAdUploadList(data?.adUploads);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedAdUploads = adUploadList.filter((el) => {
+                if (el?.ad_upload_type?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.description?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                } else if (el?.message?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (el?.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (el?.status?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.created_at?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                }
+            });
+            setAdUploadList(searchedAdUploads);
+        } else {
+            setAdUploadList(data?.adUploads);
+        }
+    }, [search]);
 
     const columns = useMemo(
         () => [
@@ -72,8 +106,8 @@ const AdUploadList = () => {
                 accessor: "actions",
                 Cell: (data) => {
                     let url = `/campaign-brief/${id}/ad-upload/fb/${data.row.original.id}`;
-                    if(data?.row.original?.ad_upload_type == 'DV360') {
-                        url = `/campaign-brief/${id}/ad-upload/dv360/${data.row.original.id}`
+                    if (data?.row.original?.ad_upload_type == "DV360") {
+                        url = `/campaign-brief/${id}/ad-upload/dv360/${data.row.original.id}`;
                     }
                     return (
                         <HStack>
@@ -119,7 +153,12 @@ const AdUploadList = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -149,7 +188,7 @@ const AdUploadList = () => {
                     DV360
                 </Button>
             </div>
-            <Datatable data={data?.adUploads || []} columns={columns} />
+            <Datatable data={adUploadList || []} columns={columns} />
         </div>
     );
 };

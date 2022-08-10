@@ -10,16 +10,14 @@ import {
     Text,
     Tooltip,
     IconButton,
-    Box,
 } from "@chakra-ui/react";
-import { FaSort } from "react-icons/fa";
 import {
     FiChevronsLeft,
     FiChevronLeft,
     FiChevronsRight,
     FiChevronRight,
 } from "react-icons/fi";
-import { useTable, usePagination, useSortBy } from "react-table";
+import { useTable, usePagination } from "react-table";
 
 const Datatable = ({ data, columns }) => {
     const {
@@ -42,7 +40,6 @@ const Datatable = ({ data, columns }) => {
             data,
             initialState: { pageIndex: 0, pageSize: 5 },
         },
-        useSortBy,
         usePagination
     );
 
@@ -54,23 +51,8 @@ const Datatable = ({ data, columns }) => {
                         {headerGroups.map((headerGroup) => (
                             <Tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
-                                    <Th
-                                        {...column.getHeaderProps(
-                                            column.getSortByToggleProps()
-                                        )}
-                                        onClick={() =>
-                                            column.toggleSortBy(
-                                                !column.isSortedDesc
-                                            )
-                                        }
-                                    >
-                                        <Box
-                                            display="flex"
-                                            justifyContent="space-between"
-                                        >
-                                            {column.render("Header")}
-                                            <FaSort />
-                                        </Box>
+                                    <Th {...column.getHeaderProps()}>
+                                        {column.render("Header")}
                                     </Th>
                                 ))}
                             </Tr>
@@ -87,8 +69,7 @@ const Datatable = ({ data, columns }) => {
                                                 style={
                                                     index === 2
                                                         ? {
-                                                              whiteSpace:
-                                                                  "nowrap",
+                                                              whiteSpace: "nowrap",
                                                               maxWidth: 400,
                                                               overflow:
                                                                   "hidden",

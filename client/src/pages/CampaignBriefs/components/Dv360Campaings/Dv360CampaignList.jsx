@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Button,
     Heading,
@@ -20,18 +20,43 @@ import { useSelector } from "react-redux";
 
 const Dv360CampaignList = () => {
     const { id } = useParams();
+    const [search, setSearch] = useState();
+    const [dv360Data, setDv360Data] = useState([]);
     const clientId = useSelector((state) => state.client.clientId);
 
     const { mutate, data } = useGetDv360Campaigns();
 
     useEffect(() => {
-        if(clientId && id) {
+        if (clientId && id) {
             mutate({
-                clientId, 
-                campaignId: id
-            })
+                clientId,
+                campaignId: id,
+            });
         }
     }, [clientId, id]);
+
+    useEffect(() => {
+        setDv360Data(data?.dvCampaigns);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedDv360 = dv360Data.filter((el) => {
+                if (el?.id?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.dv_campaign_id?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                } else if (el?.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                }
+            });
+            setDv360Data(searchedDv360);
+        } else {
+            setDv360Data(data?.dvCampaigns);
+        }
+    }, [search]);
 
     const columns = useMemo(
         () => [
@@ -100,7 +125,12 @@ const Dv360CampaignList = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -114,7 +144,7 @@ const Dv360CampaignList = () => {
                     Download Data
                 </Button>
             </div>
-            <Datatable data={data?.dvCampaigns || []} columns={columns} />
+            <Datatable data={dv360Data || []} columns={columns} />
         </div>
     );
 };

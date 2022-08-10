@@ -36,8 +36,12 @@ const FacebookAdUpload = () => {
     const { id, fbId } = useParams();
     const clientId  = useSelector((state) => state.client.clientId);
 
-    const { data } = useGetAdUpload(clientId, id, fbId);
+    const { data, refetch } = useGetAdUpload(clientId, id, fbId);
     const { mutateAsync } = useCreateAdPreview();
+
+    useEffect(() => {
+        refetch()
+    }, [])
 
     useEffect(() => {
         if (fbId) {

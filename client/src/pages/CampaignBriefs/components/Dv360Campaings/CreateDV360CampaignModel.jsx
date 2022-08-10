@@ -26,7 +26,7 @@ import InputBox from "../../../../components/InputBox"
 import validationSchema from "../../../../validations/CampaignBrief/DV360CampaignModel";
 import { dv360ModelInitialValues } from "../../constant/InitialValues";
 
-const CreateDV360Campaign = ({ campaignId, isOpen, onClose, clientId }) => {
+const CreateDV360Campaign = ({ isOpen, onClose, clientId, data }) => {
     const toast = useToast();
 
     const onSubmit = async (values, actions) => {
@@ -70,7 +70,7 @@ const CreateDV360Campaign = ({ campaignId, isOpen, onClose, clientId }) => {
 
         await instance({
             method: "POST",
-            url: `/client/${clientId}/campaign-brief/${campaignId}/dv-campaign`,
+            url: `/client/${clientId}/campaign-brief/${data?.id}/dv-campaign`,
             data: {
                 name: name,
                 campaignGoalType: values.campaignGoalType,
@@ -153,7 +153,7 @@ const CreateDV360Campaign = ({ campaignId, isOpen, onClose, clientId }) => {
                 <ModalCloseButton onClick={() => {}} />
                 <Formik
                     enableReinitialize
-                    initialValues={dv360ModelInitialValues}
+                    initialValues={dv360ModelInitialValues(data)}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >

@@ -32,9 +32,8 @@ import InputBox from "../../../../components/InputBox";
 import validationSchema from "../../../../validations/CampaignBrief/FbAdSetModel";
 import { fbAdSetInitialValue } from "../../constant/InitialValues";
 
-const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbId }) => {
+const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
     const toast = useToast();
-
     const onSubmit = async (values, actions) => {
         let name = "WR";
         if (values.campaignName) name += ` - ${values.campaignName}`;
@@ -75,11 +74,11 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbId }) => {
 
         await instance({
             method: "POST",
-            url: `/client/${clientId}/campaign-brief/${campaignId}/fb-campaign/${fbId}/fb-ad-set`,
+            url: `/client/${clientId}/campaign-brief/${campaignId}/fb-campaign/${fbData?.id}/fb-ad-set`,
             data: {
                 name: name,
                 bidAmount: parseInt(values.bidAmount) * 100,
-                lifeTimeBudget: parseInt(values.lifeTimeBudget) * 100,
+                lifetimeBudget: parseInt(values.lifeTimeBudget) * 100,
                 startTime: values.startDate,
                 endTime: values.endDate,
                 optimizationGoal: values.optimizationGoal,
@@ -142,7 +141,7 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbId }) => {
                 <ModalCloseButton onClick={() => {}} />
                 <Formik
                     enableReinitialize
-                    initialValues={fbAdSetInitialValue}
+                    initialValues={fbAdSetInitialValue(fbData)}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
@@ -256,7 +255,7 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbId }) => {
                                             <CheckboxControl
                                                 colorScheme="pink"
                                                 name="isLead"
-                                                value={values.isLead.toString()}
+                                                value={values?.isLead.toString()}
                                                 onChange={handleChange}
                                                 css={css({
                                                     fontWeight: "600",
@@ -658,8 +657,8 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbId }) => {
                                                     id="startDate"
                                                     name="startDate"
                                                     type="date"
-                                                    onChange={handleChange}
                                                     value={values.startDate}
+                                                    onChange={handleChange}
                                                     css={css({
                                                         fontWeight: "600",
                                                         fontSize: "14px",

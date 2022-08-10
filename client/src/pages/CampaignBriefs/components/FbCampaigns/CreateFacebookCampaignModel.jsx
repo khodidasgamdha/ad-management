@@ -31,7 +31,7 @@ import InputBox from "../../../../components/InputBox";
 import validationSchema from "../../../../validations/CampaignBrief/FacebookCampaignModel";
 import { facebookModelInitialValues } from "../../constant/InitialValues";
 
-const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
+const CreateFacebookCampaign = ({ isOpen, onClose, clientId, data }) => {
     const toast = useToast();
 
     const onSubmit = async (values, actions) => {
@@ -67,7 +67,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
 
         await instance({
             method: "POST",
-            url: `/client/${clientId}/campaign-brief/${campaignId}/fb-campaign`,
+            url: `/client/${clientId}/campaign-brief/${data?.id}/fb-campaign`,
             data: {
                 detail: {
                     adCategory: values.category,
@@ -129,7 +129,7 @@ const CreateFacebookCampaign = ({ campaignId, isOpen, onClose, clientId }) => {
                 <ModalCloseButton onClick={() => {}} />
                 <Formik
                     enableReinitialize
-                    initialValues={facebookModelInitialValues}
+                    initialValues={facebookModelInitialValues(data)}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >

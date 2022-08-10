@@ -11,7 +11,7 @@ import {
     Stack,
     Text,
 } from "@chakra-ui/react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IoMdAddCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import Datatable from "../../components/Datatable";
@@ -35,7 +35,7 @@ const Users = () => {
                 accessor: "email",
             },
             {
-                Header: "Rotes",
+                Header: "Roles",
                 accessor: "roles",
                 Cell: (data) => {
                     return (
@@ -85,12 +85,36 @@ const Users = () => {
         []
     );
 
+    const [search, setSearch] = useState();
+    const [users, setUsers] = useState();
+
     const { data, refetch } = useGetUserList();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
-        refetch()
-    }, [])
+        refetch();
+    }, []);
+
+    useEffect(() => {
+        setUsers(data?.users);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedUsers = users.filter((el) => {
+                if (el?.email?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (el?.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (el?.access_info?.roles?.includes(search.trim())) {
+                    return true;
+                }
+            });
+            setUsers(searchedUsers);
+        } else {
+            setUsers(data?.users);
+        }
+    }, [search]);
 
     return (
         <div className="ad-upload-list">
@@ -110,7 +134,12 @@ const Users = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -127,7 +156,7 @@ const Users = () => {
             </div>
 
             <Divider />
-            <Datatable data={data ? data.users : []} columns={columns} />
+            <Datatable data={users || []} columns={columns} />
             {/* <CreateUserModal isOpen={isOpen} onClose={onClose} /> */}
         </div>
     );

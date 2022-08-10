@@ -11,7 +11,7 @@ import {
     HStack,
 } from "@chakra-ui/react";
 import Datatable from "../../components/Datatable";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetCampaignList } from "../../hooks/campaign-briefs/useGetCampaignList";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -23,7 +23,8 @@ import { FiCopy, FiEye } from "react-icons/fi";
 
 const CampaignBriefs = () => {
     const navigate = useNavigate();
-
+    const [search, setSearch] = useState();
+    const [campaignData, setCampaignData] = useState([]);
     const clientId = useSelector((state) => state.client.clientId);
 
     const { data, refetch } = useGetCampaignList(clientId);
@@ -33,6 +34,31 @@ const CampaignBriefs = () => {
         refetch();
     }, []);
 
+    useEffect(() => {
+        setCampaignData(data?.campaigns);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedCampaign = campaignData.filter((el) => {
+                if (el?.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.end_date?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                } else if (
+                    el?.start_date?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                }
+            });
+            setCampaignData(searchedCampaign);
+        } else {
+            setCampaignData(data?.campaigns);
+        }
+    }, [search]);
+
     const columns = useMemo(
         () => [
             {
@@ -41,7 +67,7 @@ const CampaignBriefs = () => {
             },
             {
                 Header: "STATUS",
-                accessor: "state",
+                accessor: "status",
                 Cell: (data) => {
                     return (
                         <>
@@ -49,11 +75,12 @@ const CampaignBriefs = () => {
                                 viewBox="0 0 200 200"
                                 mr={2}
                                 color={
-                                    data.row.original.state === "ACTIVE"
+                                    data.row.original.status === "Approved"
                                         ? "#3F7EE6"
-                                        : data.row.original.state === "INACTIVE"
+                                        : data.row.original.status ===
+                                          "Rejected"
                                         ? "#B5B7C8"
-                                        : data.row.original.state === "ON_HOLD"
+                                        : data.row.original.status === "Created"
                                         ? "#59AB9E"
                                         : "blue"
                                 }
@@ -63,7 +90,7 @@ const CampaignBriefs = () => {
                                     d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
                                 />
                             </Icon>
-                            {data.row.original.state}
+                            {data.row.original.status}
                         </>
                     );
                 },
@@ -133,7 +160,12 @@ const CampaignBriefs = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -150,7 +182,7 @@ const CampaignBriefs = () => {
             </div>
 
             <Divider />
-            <Datatable data={data?.campaigns || []} columns={columns} />
+            <Datatable data={campaignData || []} columns={columns} />
         </div>
     );
 };

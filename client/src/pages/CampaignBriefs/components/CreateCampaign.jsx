@@ -261,17 +261,17 @@ const CreateCampaign = () => {
             </GridItem>
 
             <CreateDV360Campaign
-                campaignId={id}
                 isOpen={isDV360odelOpen}
                 onClose={onDV360ModelClose}
                 clientId={clientId}
+                data={campaignData?.campaign}
             />
 
             <CreateFacebookCampaign
-                campaignId={id}
                 isOpen={isFacebookModelOpen}
                 onClose={onFacebookModelClose}
                 clientId={clientId}
+                data={campaignData?.campaign}
             />
         </Grid>
     );

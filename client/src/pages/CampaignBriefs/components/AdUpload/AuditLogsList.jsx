@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Avatar,
     Button,
@@ -23,6 +23,9 @@ const AuditLogsList = () => {
     const { id, fbId } = useParams();
     const clientId = useSelector((state) => state.client.clientId);
 
+    const [search, setSearch] = useState();
+    const [adLogs, setAdLogs] = useState([]);
+
     const { data, mutate } = useGetAdUploadAuditLogs();
 
     useEffect(() => {
@@ -33,6 +36,29 @@ const AuditLogsList = () => {
         });
     }, []);
 
+    useEffect(() => {
+        setAdLogs(data?.auditLogs);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedAdLogs = adLogs.filter((el) => {
+                if (el?.user?.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.created_at?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                } else if (el?.state?.toLowerCase().includes(search.trim())) {
+                    return true;
+                }
+            });
+            setAdLogs(searchedAdLogs);
+        } else {
+            setAdLogs(data?.auditLogs);
+        }
+    }, [search]);
+
     const columns = useMemo(
         () => [
             {
@@ -40,14 +66,18 @@ const AuditLogsList = () => {
                 accessor: "user.name",
                 Cell: (data) => (
                     <HStack align="center">
-                        {data?.row?.original?.user?.other_info?.profile_pic_url ? (
+                        {data?.row?.original?.user?.other_info
+                            ?.profile_pic_url ? (
                             <Avatar
                                 size="sm"
                                 src={`${process.env.REACT_APP_API_URL}/uploads/${data.row.original.user.other_info.profile_pic_url}`}
                                 name={data.row.original.user.name}
                             />
                         ) : (
-                            <Avatar size="sm" name={data.row.original.user.name} />
+                            <Avatar
+                                size="sm"
+                                name={data.row.original.user.name}
+                            />
                         )}
                         <Text>{data.row.original.user.name}</Text>
                     </HStack>
@@ -94,7 +124,12 @@ const AuditLogsList = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -108,7 +143,7 @@ const AuditLogsList = () => {
                     Download Data
                 </Button>
             </div>
-            <Datatable data={data?.auditLogs || []} columns={columns} />
+            <Datatable data={adLogs || []} columns={columns} />
         </div>
     );
 };

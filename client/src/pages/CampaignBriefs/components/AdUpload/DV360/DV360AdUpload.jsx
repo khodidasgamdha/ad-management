@@ -36,8 +36,12 @@ const DV360AdUpload = () => {
     const { id, dv360Id } = useParams();
     const clientId = useSelector((state) => state.client.clientId);
 
-    const { data } = useGetAdUpload(clientId, id, dv360Id);
+    const { data, refetch } = useGetAdUpload(clientId, id, dv360Id);
     const { mutateAsync } = useCreateAdPreview();
+
+    useEffect(() => {
+        refetch()
+    }, [])
 
     useEffect(() => {
         if (dv360Id) {

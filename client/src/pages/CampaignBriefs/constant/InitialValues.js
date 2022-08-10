@@ -87,8 +87,8 @@ export const campaignInitialValue = (data, campaignDetails) => ({
         },
         families: campaignDetails?.detail?.families || [],
         familiesCustom: campaignDetails?.detail?.demographyDetails?.familiesCustom || "",
-        householdIncomeDetailsfb: campaignDetails?.detail?.demographyDetails?.householdIncomeDetailsfb || [],
-        householdIncomeDetailsSearchDisplay: campaignDetails?.detail?.demographyDetails?.householdIncomeDetailsSearchDisplay || [],
+        householdIncomeDetailsfb: campaignDetails?.detail?.householdIncomeDetailsfb || [],
+        householdIncomeDetailsSearchDisplay: campaignDetails?.detail?.householdIncomeDetailsSearchDisplay || [],
         audienceTargetting: {
             behavior: {
                 affinity: campaignDetails?.detail?.audienceTargetting?.behavior?.affinity || [],
@@ -124,6 +124,7 @@ export const campaignInitialValue = (data, campaignDetails) => ({
                 technology: campaignDetails?.detail?.audienceTargetting?.interest?.technology || [],
                 undergradYears: campaignDetails?.detail?.audienceTargetting?.interest?.undergradYears || [],
                 work: campaignDetails?.detail?.audienceTargetting?.interest?.work || [],
+                workEmployer: campaignDetails?.detail?.audienceTargetting?.interest?.workEmployer || "",
                 workJobTitle: campaignDetails?.detail?.audienceTargetting?.interest?.workJobTitle || [],
             },
             contextual: campaignDetails?.detail?.audienceTargetting?.contextual || [],
@@ -179,8 +180,8 @@ export const dv360AdUploadInitialValues = {
     hostingSource: "",
 };
 
-export const dv360ModelInitialValues = {
-    campaignName: "",
+export const dv360ModelInitialValues = (data) => ({
+    campaignName: data?.name || "",
     month: "",
     isLead: false,
     adCategory: "",
@@ -189,13 +190,13 @@ export const dv360ModelInitialValues = {
     location: "",
     audience: "",
     campaignGoalType: "",
-    startDate: "",
-    endDate: "",
+    startDate: data?.start_date || "",
+    endDate: data?.end_date || "",
     performanceGoalType: "",
     performanceGoalAmountMicros: "",
     performanceGoalPercentageMicros: "",
     performanceGoalString: "",
-};
+});
 
 export const facebookAdUploadInitialValues = {
     adName: "",
@@ -206,8 +207,8 @@ export const facebookAdUploadInitialValues = {
     facebookAccountId: "",
 };
 
-export const facebookModelInitialValues = {
-    campaignName: "",
+export const facebookModelInitialValues = (data) => ({
+    campaignName: data?.name || "",
     month: "",
     isLead: false,
     category: "",
@@ -215,25 +216,25 @@ export const facebookModelInitialValues = {
     creativeType: "",
     location: "",
     segment: "",
-};
+});
 
-export const fbAdSetInitialValue = {
-    campaignName: "",
-    isLead: false,
-    adCategory: "",
-    targetingMethod: "",
-    location: "",
-    audience: "",
+export const fbAdSetInitialValue = (data) => ({
+    campaignName: data?.detail?.campaignName || "",
+    isLead: data?.detail?.lead.trim() ? true : false,
+    adCategory: data?.detail?.adCategory || "",
+    targetingMethod: data?.detail?.targetingMethod || "",
+    location: data?.detail?.location || "",
+    audience: data?.detail?.audience || "",
     promo: "",
     device: "",
-    creativeType: "",
+    creativeType: data?.detail?.creativeType || "",
     adName: "",
     bidAmount: "",
-    lifeTimeBudget: "",
+    lifetimeBudget: "",
     startTime: "",
     endTime: "",
     optimizationGoal: "",
-};
+});
 
 export const dv360AdUploadalueLengths = {
     adName: 512,

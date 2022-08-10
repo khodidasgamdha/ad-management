@@ -10,7 +10,7 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import { IoMdAddCircle } from "react-icons/io";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Datatable from "./components/Datatable";
 import { useGetConfigList } from "../../hooks/config-management/useGetConfigList";
 import Actions from "./components/Actions";
@@ -21,10 +21,35 @@ import { TEXT_COLOR } from "../../layout/constant/MenuList";
 const ConfigManagement = () => {
     const { data, refetch } = useGetConfigList();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [search, setSearch] = useState();
+    const [configData, setConfigData] = useState([]);
 
     useEffect(() => {
-        refetch()
-    }, [])
+        refetch();
+    }, []);
+
+    useEffect(() => {
+        setConfigData(data?.configs);
+    }, [data]);
+
+    // useEffect(() => {
+    //     if(search?.trim()) {
+    //         const searchedConfigs = configData.filter((el) => {
+    //             if(el?.description?.toLowerCase().includes(search.trim())) {
+    //                 return true
+    //             }
+    //             else if(el?.name?.toLowerCase().includes(search.trim())) {
+    //                 return true
+    //             }
+    //             else if(el?.detail?.industry?.toLowerCase().includes(search.trim())) {
+    //                 return true
+    //             }
+    //         })
+    //         setConfigData(searchedConfigs)
+    //     } else {
+    //         setConfigData(data?.configs)
+    //     }
+    // }, [search]);
 
     const columns = useMemo(
         () => [
@@ -105,7 +130,12 @@ const ConfigManagement = () => {
                             pointerEvents="none"
                             children={<SearchIcon color="gray.300" />}
                         />
-                        <Input type="tel" placeholder="Search" />
+                        <Input
+                            name="search"
+                            type="tel"
+                            placeholder="Search"
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
                     </InputGroup>
                 </Stack>
                 <Button
@@ -121,7 +151,7 @@ const ConfigManagement = () => {
                 </Button>
             </div>
 
-            <Datatable data={data ? data.configs : []} columns={columns} />
+            <Datatable data={configData || []} columns={columns} />
             <CreateConfigModal isOpen={isOpen} onClose={onClose} />
         </div>
     );

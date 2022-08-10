@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Button,
     Heading,
@@ -23,7 +23,9 @@ import FbAdSetModel from "../FbAdSets/FbAdSetModel";
 const FbCampaignList = () => {
     const { id } = useParams();
     const clientId = useSelector((state) => state.client.clientId);
-
+    const [fbData, setFbData] = useState();
+    const [search, setSearch] = useState();
+    const [fbList, setFbList] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const { mutate, data } = useGetFbCampaigns();
@@ -36,6 +38,29 @@ const FbCampaignList = () => {
             });
         }
     }, [clientId, id]);
+
+    useEffect(() => {
+        setFbList(data?.fbCampaigns);
+    }, [data]);
+
+    useEffect(() => {
+        if (search?.trim()) {
+            const searchedFbList = fbList.filter((el) => {
+                if (el?.name?.toLowerCase().includes(search.trim())) {
+                    return true;
+                } else if (
+                    el?.fb_campaign_id?.toLowerCase().includes(search.trim())
+                ) {
+                    return true;
+                } else if (el?.id?.toLowerCase().includes(search.trim())) {
+                    return true;
+                }
+            });
+            setFbList(searchedFbList);
+        } else {
+            setFbList(data?.fbCampaigns);
+        }
+    }, [search]);
 
     const columns = useMemo(
         () => [
@@ -62,7 +87,10 @@ const FbCampaignList = () => {
                             aria-label="New Ad Set"
                             icon={<FiEye />}
                             py={5}
-                            onClick={onOpen}
+                            onClick={() => {
+                                setFbData(data?.rows?.[0]?.original);
+                                onOpen();
+                            }}
                         >
                             New Ad Set
                         </Button>
@@ -106,7 +134,12 @@ const FbCampaignList = () => {
                                 pointerEvents="none"
                                 children={<SearchIcon color="gray.300" />}
                             />
-                            <Input type="tel" placeholder="Search" />
+                            <Input
+                                name="search"
+                                type="tel"
+                                placeholder="Search"
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                         </InputGroup>
                     </Stack>
                     <Button
@@ -120,13 +153,14 @@ const FbCampaignList = () => {
                         Download Data
                     </Button>
                 </div>
-                <Datatable data={data?.fbCampaigns || []} columns={columns} />
+                <Datatable data={fbList || []} columns={columns} />
             </div>
             <FbAdSetModel
                 campaignId={id}
                 clientId={clientId}
                 isOpen={isOpen}
                 onClose={onClose}
+                fbData={fbData}
             />
         </>
     );

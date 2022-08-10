@@ -21,6 +21,11 @@ export const Roles = [
         title: "Account Manager",
         value: "AccountManager",
     },
+    {
+        id: uuidv4(),
+        title: "Developer",
+        value: "Developer",
+    },
 ];
 
 export const States = [

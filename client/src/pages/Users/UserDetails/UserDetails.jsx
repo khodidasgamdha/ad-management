@@ -27,7 +27,6 @@ import { BiArrowBack } from "react-icons/bi";
 // import { HiCamera } from "react-icons/hi";
 import { Form, Formik } from "formik";
 import InputBox from "../../../components/InputBox";
-import { SelectControl } from "formik-chakra-ui";
 import { SubmitButton } from "formik-chakra-ui";
 import { useEffect, useState } from "react";
 import instance from "../../../helpers/axios";
@@ -48,20 +47,27 @@ const UserDetails = () => {
     const [url, setUrl] = useState("");
     const [status, setStatus] = useState(null);
     const [selectedClients, setSelectedClients] = useState([]);
-    const [getClients, setClients] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([]);
 
     const { data: clients } = useGetClientList();
-    const { data } = useGetUserDetails(id);
+    const { data, refetch } = useGetUserDetails(id);
 
     useEffect(() => {
         if (data?.state) {
             setStatus(data.state);
         }
         if (data?.access_info?.clients?.length) {
-            setSelectedClients(data.access_info.clients.map((el) => el.id));
-            setClients(
+            setSelectedClients(
                 data.access_info.clients.map((el) => {
                     return { value: el.id, label: el.name };
+                })
+            );
+        }
+        if (data?.access_info?.roles?.length) {
+            setSelectedRoles(
+                data.access_info.roles.map((el) => {
+                    const id = Roles.filter(e => e.title === el)
+                    return { value: id?.[0]?.id, label: el };
                 })
             );
         }
@@ -76,6 +82,10 @@ const UserDetails = () => {
             setUrl("/user");
         }
     }, [id]);
+
+    useEffect(() => {
+        refetch()
+    }, [])
 
     return (
         <>
@@ -148,16 +158,16 @@ const UserDetails = () => {
                             payload = {
                                 name: values.name,
                                 email: values.email,
-                                password: values.password,
-                                roles: values.roles,
-                                clients: selectedClients,
+                                roles: selectedRoles.map((el) => el.label),
+                                clients: selectedClients.map((el) => el.value),
                             };
                         } else {
                             payload = {
                                 name: values.name,
                                 email: values.email,
-                                roles: values.roles,
-                                clients: selectedClients,
+                                password: values.password,
+                                roles: selectedRoles.map((el) => el.label),
+                                clients: selectedClients.map((el) => el.value),
                             };
                         }
                         await instance({
@@ -201,34 +211,26 @@ const UserDetails = () => {
                                 />
                             )}
                             <HStack gap={4} w="full">
-                                <SelectControl
-                                    name="roles"
+                                <MultiSelectInputBox
                                     label="Roles"
-                                    value={values.roles}
-                                    onChange={handleChange}
-                                    selectProps={{
-                                        placeholder: "-- Select One --",
-                                        variant: "outline",
-                                        border: "2px",
-                                        borderRadius: 0,
-                                        borderColor: "gray",
-                                        fontWeight: "600",
-                                        fontSize: "14px",
-                                        lineHeight: "16px",
-                                        color: "#757998",
-                                        marginRight: "100px",
-                                    }}
-                                >
-                                    {Roles.map((el) => (
-                                        <option key={el.id} value={el.value}>
-                                            {el.title}
-                                        </option>
-                                    ))}
-                                </SelectControl>
+                                    name="roles"
+                                    value={selectedRoles}
+                                    options={Roles?.map((el) => {
+                                        return {
+                                            label: el.title,
+                                            value: el.id,
+                                            id: el.value
+                                        };
+                                    })}
+                                    placeholder={`-- Select One --`}
+                                    onChange={(e) =>
+                                        setSelectedRoles(e.map((v) => v))
+                                    }
+                                />
                                 <MultiSelectInputBox
                                     label="Clients"
                                     name="clients"
-                                    value={getClients}
+                                    value={selectedClients}
                                     options={clients?.clients?.map((el) => {
                                         return {
                                             label: el.name,
@@ -237,9 +239,7 @@ const UserDetails = () => {
                                     })}
                                     placeholder={`-- Select One --`}
                                     onChange={(e) =>
-                                        setSelectedClients(
-                                            e.map((v) => v["value"])
-                                        )
+                                        setSelectedClients(e.map((v) => v))
                                     }
                                 />
                             </HStack>
