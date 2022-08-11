@@ -105,7 +105,7 @@ export const facebookAccountIds = [
     { key: "SUBSCRIBE", name: "Subscribe" },
     { key: "GET_QUOTE", name: "Get quote" },
     { key: "CONTACT_US", name: "Contact us" },
-    { key: "ORDER_NOW", name: "Ordet now" },
+    { key: "ORDER_NOW", name: "Order now" },
     { key: "REQUEST_TIME", name: "Request time" },
     { key: "GET_SHOWTIMES", name: "Get showtimes" },
     { key: "LISTEN_NOW", name: "Listen now" },

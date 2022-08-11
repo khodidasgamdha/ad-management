@@ -18,26 +18,58 @@ import instance from "../../helpers/axios";
 import { useAuthCheck } from "../../hooks/useAuthCheck";
 import { useState } from "react";
 import { useEffect } from "react";
-import { detailInitialValue } from "./constant/InititalValues"
+import { detailInitialValue } from "./constant/InititalValues";
+import MultiSelectInputBox from "../../components/MultiSelectInputBox";
+import { Roles } from "../../constant";
+import { useGetClientList } from "../../hooks/clients/useGetClientList";
+import { getClients } from "../../store/client/clientThunk";
+import { useDispatch } from "react-redux";
 
 const DetailsTab = () => {
     const toast = useToast();
     const [details, setDetails] = useRecoilState(profile);
-    const [isAdmin, setAdmin] = useState(false);
-
     const { refetch } = useAuthCheck();
+    const dispatch = useDispatch()
+
+    const [isAdmin, setAdmin] = useState(false);
+    const [selectedClients, setSelectedClients] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([]);
+    const { data: clients } = useGetClientList();
 
     useEffect(() => {
-        if(details?.access_info?.roles?.length) {
-            setAdmin(details.access_info.roles.includes("Admin"))
+        if (details?.access_info?.roles?.length) {
+            setAdmin(
+                details.access_info.roles.includes("Admin") ||
+                    details.access_info.roles.includes("Developer")
+            );
         }
-    }, [details])
+        if (details?.access_info?.clients?.length) {
+            setSelectedClients(
+                details.access_info.clients.map((el) => {
+                    return { value: el.id, label: el.name };
+                })
+            );
+        }
+        if (details?.access_info?.roles?.length) {
+            setSelectedRoles(
+                details.access_info.roles.map((el) => {
+                    const id = Roles.filter((e) => e.value === el);
+                    return { value: el, label: id?.[0]?.title };
+                })
+            );
+        }
+    }, [details]);
 
     const onSubmit = async (values, actions) => {
         await instance({
             method: "PUT",
             url: `/user/${details.id}`,
-            data: values,
+            data: {
+                name: values.name,
+                email: values.email,
+                roles: selectedRoles.map((el) => el.value),
+                clients: selectedClients.map((el) => el.value)
+            },
         })
             .then((response) => {
                 toast({
@@ -48,6 +80,7 @@ const DetailsTab = () => {
                     title: "Success",
                     description: response.data?.data?.message,
                 });
+                dispatch(getClients(details?.id));
                 refetch();
             })
             .catch((error) => {
@@ -146,6 +179,38 @@ const DetailsTab = () => {
                             label="Email address"
                             type="email"
                         />
+                        <HStack gap={4} w="full">
+                            <MultiSelectInputBox
+                                label="Roles"
+                                name="roles"
+                                value={selectedRoles}
+                                options={Roles?.map((el) => {
+                                    return {
+                                        label: el.title,
+                                        value: el.value,
+                                    };
+                                })}
+                                placeholder={`-- Select One --`}
+                                onChange={(e) =>
+                                    setSelectedRoles(e.map((v) => v))
+                                }
+                            />
+                            <MultiSelectInputBox
+                                label="Clients"
+                                name="clients"
+                                value={selectedClients}
+                                options={clients?.clients?.map((el) => {
+                                    return {
+                                        label: el.name,
+                                        value: el.id,
+                                    };
+                                })}
+                                placeholder={`-- Select One --`}
+                                onChange={(e) =>
+                                    setSelectedClients(e.map((v) => v))
+                                }
+                            />
+                        </HStack>
                         {/* <InputBox name="company" label="Company name" /> */}
                         <SubmitButton
                             size="sm"

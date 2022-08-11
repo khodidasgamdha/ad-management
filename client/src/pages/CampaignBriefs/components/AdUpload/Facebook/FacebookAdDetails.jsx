@@ -11,6 +11,7 @@ import {
     Box,
     Button,
     css,
+    Icon,
 } from "@chakra-ui/react";
 import { InputControl, SelectControl } from "formik-chakra-ui";
 import { Form, Formik } from "formik";
@@ -79,7 +80,28 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
     return (
         <>
             <Heading color={"gray"} fontSize="xl" my={4} mb={7}>
-                Current status: <span>{data?.status || "Draft"}</span>
+            Current status:
+                <span style={{ marginLeft: "10px" }}>
+                    <Icon
+                        viewBox="0 0 200 200"
+                        mr={2}
+                        color={
+                            data?.status === "Created"
+                                ? "#59AB9E"
+                                : data?.status === "Approved"
+                                ? "#3F7EE6"
+                                : data?.status === "Rejected"
+                                ? "#FFA383"
+                                : "#FFA383"
+                        }
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                        />
+                    </Icon>
+                    {data?.status || "Draft"}
+                </span>
             </Heading>
             <Grid className="fb-upload-detail-form">
                 <Formik
@@ -168,10 +190,10 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                                     />
                                                     <CircularProgress
                                                         max={
-                                                            fbAdUploadValueLengths.adName
+                                                            fbAdUploadValueLengths?.adName
                                                         }
                                                         value={
-                                                            values.adName.length
+                                                            values?.adName?.length
                                                         }
                                                         color="green.400"
                                                     >
@@ -218,31 +240,31 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                                     />
                                                     <CircularProgress
                                                         max={
-                                                            fbAdUploadValueLengths.primaryText
+                                                            fbAdUploadValueLengths?.primaryText
                                                         }
                                                         value={
-                                                            values.primaryText
-                                                                .length
+                                                            values?.primaryText
+                                                                ?.length
                                                         }
                                                         color={
-                                                            values.primaryText
-                                                                .length >
-                                                            fbAdUploadValueLengths.primaryText
+                                                            values?.primaryText
+                                                                ?.length >
+                                                            fbAdUploadValueLengths?.primaryText
                                                                 ? "red.400"
                                                                 : "green.400"
                                                         }
                                                     >
                                                         <CircularProgressLabel>
-                                                            {values.primaryText
-                                                                .length >
-                                                            fbAdUploadValueLengths.primaryText
-                                                                ? fbAdUploadValueLengths.primaryText -
+                                                            {values?.primaryText
+                                                                ?.length >
+                                                            fbAdUploadValueLengths?.primaryText
+                                                                ? fbAdUploadValueLengths?.primaryText -
                                                                   values
-                                                                      .primaryText
-                                                                      .length
+                                                                      ?.primaryText
+                                                                      ?.length
                                                                 : values
-                                                                      .primaryText
-                                                                      .length}
+                                                                      ?.primaryText
+                                                                      ?.length}
                                                         </CircularProgressLabel>
                                                     </CircularProgress>
                                                 </div>
@@ -277,31 +299,31 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                                     />
                                                     <CircularProgress
                                                         max={
-                                                            fbAdUploadValueLengths.headline
+                                                            fbAdUploadValueLengths?.headline
                                                         }
                                                         value={
-                                                            values.headline
-                                                                .length
+                                                            values?.headline
+                                                                ?.length
                                                         }
                                                         color={
-                                                            values.headline
-                                                                .length >
-                                                            fbAdUploadValueLengths.headline
+                                                            values?.headline
+                                                                ?.length >
+                                                            fbAdUploadValueLengths?.headline
                                                                 ? "red.400"
                                                                 : "green.400"
                                                         }
                                                     >
                                                         <CircularProgressLabel>
-                                                            {values.headline
-                                                                .length >
-                                                            fbAdUploadValueLengths.headline
-                                                                ? fbAdUploadValueLengths.headline -
+                                                            {values?.headline
+                                                                ?.length >
+                                                            fbAdUploadValueLengths?.headline
+                                                                ? fbAdUploadValueLengths?.headline -
                                                                   values
-                                                                      .headline
-                                                                      .length
+                                                                      ?.headline
+                                                                      ?.length
                                                                 : values
-                                                                      .headline
-                                                                      .length}
+                                                                      ?.headline
+                                                                      ?.length}
                                                         </CircularProgressLabel>
                                                     </CircularProgress>
                                                 </div>
@@ -340,31 +362,31 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                                     />
                                                     <CircularProgress
                                                         max={
-                                                            fbAdUploadValueLengths.description
+                                                            fbAdUploadValueLengths?.description
                                                         }
                                                         value={
-                                                            values.description
-                                                                .length
+                                                            values?.description
+                                                                ?.length
                                                         }
                                                         color={
-                                                            values.description
-                                                                .length >
-                                                            fbAdUploadValueLengths.description
+                                                            values?.description
+                                                                ?.length >
+                                                            fbAdUploadValueLengths?.description
                                                                 ? "red.400"
                                                                 : "green.400"
                                                         }
                                                     >
                                                         <CircularProgressLabel>
-                                                            {values.description
-                                                                .length >
-                                                            fbAdUploadValueLengths.description
-                                                                ? fbAdUploadValueLengths.description -
+                                                            {values?.description
+                                                                ?.length >
+                                                            fbAdUploadValueLengths?.description
+                                                                ? fbAdUploadValueLengths?.description -
                                                                   values
-                                                                      .description
-                                                                      .length
+                                                                      ?.description
+                                                                      ?.length
                                                                 : values
-                                                                      .description
-                                                                      .length}
+                                                                      ?.description
+                                                                      ?.length}
                                                         </CircularProgressLabel>
                                                     </CircularProgress>
                                                 </div>
@@ -398,25 +420,25 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                                         }
                                                     />
                                                     <CircularProgress
-                                                        max={fbAdUploadValueLengths.url}
+                                                        max={fbAdUploadValueLengths?.url}
                                                         value={
-                                                            values.url.length
+                                                            values?.url?.length
                                                         }
                                                         color={
-                                                            values.url.length >
-                                                            fbAdUploadValueLengths.url
+                                                            values?.url?.length >
+                                                            fbAdUploadValueLengths?.url
                                                                 ? "red.400"
                                                                 : "green.400"
                                                         }
                                                     >
                                                         <CircularProgressLabel>
-                                                            {values.url.length >
-                                                            fbAdUploadValueLengths.url
-                                                                ? fbAdUploadValueLengths.url -
-                                                                  values.url
-                                                                      .length
-                                                                : values.url
-                                                                      .length}
+                                                            {values?.url?.length >
+                                                            fbAdUploadValueLengths?.url
+                                                                ? fbAdUploadValueLengths?.url -
+                                                                  values?.url
+                                                                      ?.length
+                                                                : values?.url
+                                                                      ?.length}
                                                         </CircularProgressLabel>
                                                     </CircularProgress>
                                                 </div>

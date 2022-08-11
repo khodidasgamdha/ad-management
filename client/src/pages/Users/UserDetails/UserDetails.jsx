@@ -36,10 +36,16 @@ import editValidationSchema from "../../../validations/User/UserDetails";
 import createValidationSchema from "../../../validations/User/CreateUser";
 import { userDetailInitialValues } from "../constant/InitialValues";
 import MultiSelectInputBox from "../../../components/MultiSelectInputBox";
+import { useDispatch } from "react-redux";
+import { getClients } from "../../../store/client/clientThunk";
+import { useRecoilValue } from "recoil";
+import { profile } from "../../../atoms/authAtom";
 
 const UserDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const { id: userId } = useRecoilValue(profile);
 
     const [isSuccessModalOpen, setSuccessModal] = useState(false);
     const [isErrorModalOpen, setErrorModal] = useState(false);
@@ -49,7 +55,7 @@ const UserDetails = () => {
     const [status, setStatus] = useState(null);
     const [selectedClients, setSelectedClients] = useState([]);
     const [selectedRoles, setSelectedRoles] = useState([]);
-
+    const dispatch = useDispatch();
     const { data: clients } = useGetClientList();
     const { data, refetch } = useGetUserDetails(id);
 
@@ -67,7 +73,7 @@ const UserDetails = () => {
         if (data?.access_info?.roles?.length) {
             setSelectedRoles(
                 data.access_info.roles.map((el) => {
-                    const id = Roles.filter(e => e.value === el)
+                    const id = Roles.filter((e) => e.value === el);
                     return { value: el, label: id?.[0]?.title };
                 })
             );
@@ -85,8 +91,8 @@ const UserDetails = () => {
     }, [id]);
 
     useEffect(() => {
-        refetch()
-    }, [])
+        refetch();
+    }, []);
 
     return (
         <>
@@ -152,7 +158,9 @@ const UserDetails = () => {
                 <Formik
                     enableReinitialize
                     initialValues={userDetailInitialValues(data)}
-                    validationSchema={id ? editValidationSchema : createValidationSchema}
+                    validationSchema={
+                        id ? editValidationSchema : createValidationSchema
+                    }
                     onSubmit={async (values, actions) => {
                         let payload;
                         if (id) {
@@ -161,7 +169,7 @@ const UserDetails = () => {
                                 email: values.email,
                                 roles: selectedRoles.map((el) => el.value),
                                 clients: selectedClients.map((el) => el.value),
-                                state: status
+                                state: status,
                             };
                         } else {
                             payload = {
@@ -170,7 +178,6 @@ const UserDetails = () => {
                                 password: values.password,
                                 roles: selectedRoles.map((el) => el.value),
                                 clients: selectedClients.map((el) => el.value),
-                                state: status
                             };
                         }
                         await instance({
@@ -180,6 +187,9 @@ const UserDetails = () => {
                         })
                             .then((response) => {
                                 if (response.status === 200) {
+                                    if(id == userId) {
+                                        dispatch(getClients(id));
+                                    }
                                     setSuccessModal(true);
                                 }
                             })
@@ -189,7 +199,7 @@ const UserDetails = () => {
                             });
                     }}
                 >
-                    {({ values, errors, handleChange }) => {console.log(values);return(
+                    {({ values, errors, handleChange }) => (
                         <VStack as={Form} w="70%" align={"start"} spacing={4}>
                             <InputBox
                                 name="name"
@@ -245,33 +255,35 @@ const UserDetails = () => {
                                     }
                                 />
                             </HStack>
-                            <HStack spacing={4} w="full">
-                                <FormControl as="fieldset">
-                                    <FormLabel
-                                        as="legend"
-                                        color="gray"
-                                        fontSize="sm"
-                                    >
-                                        Status
-                                    </FormLabel>
-                                    <RadioGroup
-                                        value={status}
-                                        onChange={setStatus}
-                                        name="status"
-                                    >
-                                        <HStack spacing="24px">
-                                            {States.map((el) => (
-                                                <Radio
-                                                    key={el.id}
-                                                    value={el.value}
-                                                >
-                                                    {el.title}
-                                                </Radio>
-                                            ))}
-                                        </HStack>
-                                    </RadioGroup>
-                                </FormControl>
-                            </HStack>
+                            {id && (
+                                <HStack spacing={4} w="full">
+                                    <FormControl as="fieldset">
+                                        <FormLabel
+                                            as="legend"
+                                            color="gray"
+                                            fontSize="sm"
+                                        >
+                                            Status
+                                        </FormLabel>
+                                        <RadioGroup
+                                            value={status}
+                                            onChange={setStatus}
+                                            name="status"
+                                        >
+                                            <HStack spacing="24px">
+                                                {States.map((el) => (
+                                                    <Radio
+                                                        key={el.id}
+                                                        value={el.value}
+                                                    >
+                                                        {el.title}
+                                                    </Radio>
+                                                ))}
+                                            </HStack>
+                                        </RadioGroup>
+                                    </FormControl>
+                                </HStack>
+                            )}
 
                             <SubmitButton
                                 type="submit"
@@ -283,7 +295,7 @@ const UserDetails = () => {
                                 {id ? "Update" : "Add"}
                             </SubmitButton>
                         </VStack>
-                    )}}
+                    )}
                 </Formik>
             </HStack>
 

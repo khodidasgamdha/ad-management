@@ -11,6 +11,7 @@ import {
     Box,
     Button,
     css,
+    Icon,
 } from "@chakra-ui/react";
 import { InputControl, SelectControl } from "formik-chakra-ui";
 import { Form, Formik } from "formik";
@@ -76,7 +77,28 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
     return (
         <>
             <Heading color={"gray"} fontSize="xl" my={4} mb={7}>
-                Current status: <span>{data?.status || "Draft"}</span>
+                Current status:
+                <span style={{ marginLeft: "10px" }}>
+                    <Icon
+                        viewBox="0 0 200 200"
+                        mr={2}
+                        color={
+                            data?.status === "Created"
+                                ? "#59AB9E"
+                                : data?.status === "Approved"
+                                ? "#3F7EE6"
+                                : data?.status === "Rejected"
+                                ? "#FFA383"
+                                : "#FFA383"
+                        }
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                        />
+                    </Icon>
+                    {data?.status || "Draft"}
+                </span>
             </Heading>
             <Grid className="fb-upload-detail-form">
                 <Formik
@@ -86,16 +108,16 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                         const fileInfoList = hashArray.map((el) => {
                             return {
                                 ...el,
-                                metadata: [{ height: "", width: "" }]
-                            }
-                        })
-                        const mediaIds = hashArray.map((el) => el.imageHash)
+                                metadata: [{ height: "", width: "" }],
+                            };
+                        });
+                        const mediaIds = hashArray.map((el) => el.imageHash);
                         const dimensions = hashArray.map(() => {
                             return {
                                 width: "",
-                                height: ""
-                            }
-                        })
+                                height: "",
+                            };
+                        });
                         let payload = {
                             name: values.adName,
                             description: values.mainAsset,
@@ -107,7 +129,7 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                 hostingSource: values.hostingSource,
                                 mediaIds: mediaIds,
                                 fileInfoList: fileInfoList,
-                                dimensions: dimensions
+                                dimensions: dimensions,
                             },
                         };
                         if (!data?.id) {

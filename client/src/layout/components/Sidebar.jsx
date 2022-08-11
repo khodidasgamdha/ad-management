@@ -8,29 +8,43 @@ import {
     Image,
     Select,
 } from "@chakra-ui/react";
-import { MenuList, UserMenuList } from "../constant/MenuList";
+import {
+    MenuList,
+    UserMenuList,
+    DeveloperMenuList,
+} from "../constant/MenuList";
 import NavItem from "./NavItem";
 import { For } from "react-haiku";
 import { profile } from "../../atoms/authAtom";
 import { useGetClientDetailsOnClick } from "../../hooks/clients/useGetClientDetails";
 import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { useDispatch } from "react-redux";
-import { updateCurrentClient } from "../../store/client/clientThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { getClients, updateCurrentClient } from "../../store/client/clientThunk";
 
 const Sidebar = ({ onClose, ...rest }) => {
     var BORDER_COLOR = useColorModeValue("gray.100", "gray.800");
     var BG_COLOR = useColorModeValue("gray.100", "gray.900");
 
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isDeveloper, setIsDeveloper] = useState(false);
     const dispatch = useDispatch();
 
     const {
-        access_info: { roles, clients },
+        access_info: { roles, clients: userClients },
     } = useRecoilValue(profile);
 
     useEffect(() => {
+        if(userClients?.length) {
+            dispatch(getClients(userClients));
+        }
+    }, [userClients])
+
+    const clients = useSelector((state) => state.client.clients);
+
+    useEffect(() => {
         setIsAdmin(roles.includes("Admin"));
+        setIsDeveloper(roles.includes("Developer"));
     }, [roles]);
 
     const { mutate } = useGetClientDetailsOnClick();
@@ -120,7 +134,16 @@ const Sidebar = ({ onClose, ...rest }) => {
                         </Select>
                     </Box>
 
-                    {isAdmin
+                    {isDeveloper
+                        ? DeveloperMenuList.map((link) => (
+                              <NavItem
+                                  key={link.id}
+                                  path={link.path}
+                                  icon={link.icon}
+                                  title={link.name}
+                              />
+                          ))
+                        : isAdmin
                         ? MenuList.map((link) => (
                               <NavItem
                                   key={link.id}

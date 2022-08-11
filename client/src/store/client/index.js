@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { updateCurrentClient } from "./clientThunk";
+import { updateCurrentClient, getClients } from "./clientThunk";
 
 const initialState = {
     clients: [],
@@ -22,6 +22,16 @@ export const clientSlice = createSlice({
         [updateCurrentClient.rejected]: (state, payload) => {
             state.loading = false;
             state.clientId = null;
+        },
+        [getClients.pending]: (state) => {
+            state.loading = true;
+        },
+        [getClients.fulfilled]: (state, { payload }) => {
+            state.loading = false;
+            state.clients = payload;
+        },
+        [getClients.rejected]: (state, payload) => {
+            state.loading = false;
         },
     },
 });

@@ -22,7 +22,7 @@ export const Comments = ({ data }) => {
                                 name={el?.user?.name}
                             />
                         </Box>
-                        <Box width="75%" ml={10} mr={10} fontSize="16px">
+                        <Box width="72%" ml={10} mr={10} fontSize="16px">
                             <Box color="gray.700" fontWeight="semibold">{el?.user?.name}</Box>
                             <Box my={1} color="gray.500" fontWeight="semibold">
                                 commented on

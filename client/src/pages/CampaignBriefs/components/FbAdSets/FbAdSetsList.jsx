@@ -87,10 +87,7 @@ const FbAdSetsList = () => {
         () => [
             {
                 Header: "Ad Set Name",
-                accessor: "detail.adName",
-                Cell: (data) => {
-                    return data?.row?.original?.detail?.adName;
-                },
+                accessor: "name",
             },
             {
                 Header: "FB Ad Set Id",

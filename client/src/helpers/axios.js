@@ -15,7 +15,7 @@ const refreshAuthLogic = (failedRequest) => {
     return instance({
         method: "post",
         url: "/refresh-token",
-        withCredentials: false,
+        withCredentials: true,
         skipAuthRefresh: true,
     })
         .then(() => {

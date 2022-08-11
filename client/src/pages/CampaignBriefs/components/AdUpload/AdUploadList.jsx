@@ -4,6 +4,7 @@ import {
     Button,
     Heading,
     HStack,
+    Icon,
     Input,
     InputGroup,
     InputLeftElement,
@@ -79,10 +80,58 @@ const AdUploadList = () => {
             {
                 Header: "Channel",
                 accessor: "ad_upload_type",
+                Cell: (data) => {
+                    return (
+                        <>
+                            <Icon
+                                viewBox="0 0 200 200"
+                                mr={2}
+                                color={
+                                    data.row.original.ad_upload_type === "Facebook"
+                                        ? "#3F7EE6"
+                                        : data.row.original.ad_upload_type === "DV360"
+                                        ? "#59AB9E"
+                                        : "blue"
+                                }
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                                />
+                            </Icon>
+                            {data.row.original.ad_upload_type}
+                        </>
+                    );
+                },
             },
             {
                 Header: "Status",
                 accessor: "status",
+                Cell: (data) => {
+                    return (
+                        <>
+                            <Icon
+                                viewBox="0 0 200 200"
+                                mr={2}
+                                color={
+                                    data.row.original.status === "Approved"
+                                        ? "#3F7EE6"
+                                        : data.row.original.status === "Rejected"
+                                        ? "#B5B7C8"
+                                        : data.row.original.status === "Created"
+                                        ? "#59AB9E"
+                                        : "blue"
+                                }
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                                />
+                            </Icon>
+                            {data.row.original.status}
+                        </>
+                    );
+                },
             },
             {
                 Header: "Added on",
