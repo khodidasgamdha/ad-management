@@ -28,12 +28,13 @@ const CampaignMetrics = () => {
                         Campaign Metrics
                     </Heading>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <CheckboxContainer
                         name="detail.priceModel"
                         label="Price Model"
                         stackProps={{
                             padding: 0,
+                            direction: { base: "column", lg: "row" },
                         }}
                         labelProps={{
                             fontSize: "sm",
@@ -52,7 +53,7 @@ const CampaignMetrics = () => {
                         ))}
                     </CheckboxContainer>
                 </GridItem>
-                <GridItem>
+                <GridItem colSpan={2}>
                     <CheckboxContainer
                         name="detail.Kpis"
                         label="KPIs"
@@ -116,6 +117,13 @@ const CampaignMetrics = () => {
                             </CheckboxControl>
                         ))}
                     </CheckboxContainer>
+                </GridItem>
+                <GridItem colSpan={2}>
+                    <InputBox
+                        disabled
+                        name="detail.clientgoal"
+                        label="What is the overall client goal ?"
+                    />
                 </GridItem>
                 <GridItem colSpan={2}>
                     <FormControl>

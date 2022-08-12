@@ -123,7 +123,7 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                     type: values.facebookAccountId,
                                 },
                                 fileInfoList: hashArray,
-                                imageHashes: [hashArray[0].imageHash],
+                                imageHashes: hashArray.map(el => el.imageHash),
                             },
                         };
                         if (!data?.id) {

@@ -1,6 +1,7 @@
 import { Box, Grid, GridItem, Heading, Radio } from "@chakra-ui/react";
 import { RadioGroupControl } from "formik-chakra-ui";
 import InputBox from "../../../../components/InputBox";
+import TextAreaBox from "../../../../components/TextAreaBox";
 import { CAMPAIGN_BUDGET } from "../../../../constant";
 
 const CampaignBudget = () => {
@@ -24,6 +25,13 @@ const CampaignBudget = () => {
                     );
                 })}
                 <GridItem>
+                    <TextAreaBox
+                        disabled
+                        name="detail.industryBasic.notes"
+                        label="Notes"
+                    />
+                </GridItem>
+                <GridItem>
                     <RadioGroupControl
                         label="Is Monthly"
                         labelProps={{
@@ -39,6 +47,13 @@ const CampaignBudget = () => {
                             No
                         </Radio>
                     </RadioGroupControl>
+                </GridItem>
+                <GridItem colSpan={2}>
+                    <InputBox
+                        disabled
+                        name="detail.industryBasic.location"
+                        label="Budget, Ad Serving & Locations"
+                    />
                 </GridItem>
             </Grid>
         </Box>

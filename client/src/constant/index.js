@@ -94,6 +94,7 @@ export const CampaignKPI = [
     { value: "CPM", label: "CPM" },
     { value: "CPC", label: "CPC" },
     { value: "CPA", label: "CPA" },
+    { value: "CPV", label: "CPV" },
 ];
 
 export const CampaignObjective = [

@@ -30,7 +30,7 @@ const FacebookAdUpload = () => {
     const [method, setMethod] = useState();
     const [url, setUrl] = useState();
     const [isPreview, setIsPreview] = useState(false);
-    const [previewData, setPreviewData] = useState();
+    const [previewData, setPreviewData] = useState([]);
 
     const navigate = useNavigate();
     const { id, fbId } = useParams();
@@ -55,31 +55,35 @@ const FacebookAdUpload = () => {
         }
     }, [fbId]);
 
-    const getImageData = async (data) => {
-        setImages(data);
-        await mutateAsync(
-            {
-                clientId: clientId,
-                campaignBriefId: id,
-                type: data?.type,
-                description: data?.description,
-                imageHash: data?.images?.[0]?.imageHash,
-                link: data?.url,
-                message: data?.message,
-                name: data?.name,
-            },
-            {
-                onSuccess: (data, variables, context) => {
-                    setPreviewData(data);
-                    if (
-                        data?.previews &&
-                        Object.keys(data.previews).length > 0
-                    ) {
-                        setIsPreview(true);
-                    }
+    const getImageData = async (fbData) => {
+        setImages(fbData);
+        const previewsImages = []
+        
+        for(const i in fbData?.images) {
+            await mutateAsync(
+                {
+                    clientId: clientId,
+                    campaignBriefId: id,
+                    type: fbData?.type,
+                    description: fbData?.description,
+                    imageHash: fbData?.images?.[i]?.imageHash,
+                    link: fbData?.url,
+                    message: fbData?.message,
+                    name: fbData?.name,
                 },
-            }
-        );
+                {
+                    onSuccess: (data, variables, context) => {
+                        if(data?.previews) {
+                            for(const i in Object.keys(data.previews)) {
+                                previewsImages.push(Object.values(data.previews)[i])
+                            }
+                        }
+                    },
+                }
+            );
+        }
+        setPreviewData(previewsImages);
+        setIsPreview(true);
     };
 
     return (

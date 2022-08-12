@@ -127,7 +127,7 @@ const Demographics = ({ setFieldValue, ...props }) => {
                     <VStack align="stretch">
                         <CheckboxContainer
                             name="detail.householdIncomeDetailsfb"
-                            label="Household Income"
+                            label="Household Income (for U.S. Facebook and Instagram only)"
                             labelProps={{
                                 color: "gray",
                                 fontSize: "sm",
@@ -150,15 +150,16 @@ const Demographics = ({ setFieldValue, ...props }) => {
                             ))}
                         </CheckboxContainer>
 
-                        <Text fontSize="small" color="gray.400">
+                        {/* <Text fontSize="small" color="gray.400">
                             For Facebook and Instagram U.S. Only
-                        </Text>
+                        </Text> */}
                     </VStack>
                 </GridItem>
                 <GridItem colSpan={2}>
                     <VStack align="stretch">
                         <CheckboxContainer
                             name="detail.householdIncomeDetailsSearchDisplay"
+                            label="Household Income (for Search and Display only)"
                             labelProps={{
                                 color: "gray",
                                 fontSize: "sm",
@@ -180,24 +181,24 @@ const Demographics = ({ setFieldValue, ...props }) => {
                                 </CheckboxControl>
                             ))}
                         </CheckboxContainer>
-                        <Text fontSize="small" color="gray.400">
+                        {/* <Text fontSize="small" color="gray.400">
                             For Search and Display Only
                         </Text>
                         <Text fontSize="small" color="purple.300">
                             Note: All other channels can’t target household
                             income. *Only offered when targeting US
                             states/cities
-                        </Text>
+                        </Text> */}
                     </VStack>
                 </GridItem>
                 <GridItem colSpan={2}>
                     <Heading fontSize="md" color="purple.500">
                         Behavioral/Audience Targeting
                     </Heading>
-                    <Text color="purple.300" fontSize="small" mt={3}>
+                    {/* <Text color="purple.300" fontSize="small" mt={3}>
                         What type of online behaviors do they have? Do they play
                         video games? What types of things do these people do?
-                    </Text>
+                    </Text> */}
                 </GridItem>
                 {BEHAVIOR.map((input) => (
                     <GridItem colSpan={input.colSpan} key={input.id}>

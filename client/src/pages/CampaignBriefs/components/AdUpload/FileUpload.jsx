@@ -47,12 +47,12 @@ export function FileUpload({ getHashArray, type }) {
             {
                 clientId: clientId,
                 campaignBriefId: id,
-                adFile: accFiles[0],
+                adFile: accFiles,
                 type: adUploadType
             },
             {
                 onSuccess: (data, variables, context) => {
-                    setHashArray([data.fileInfoList[0]]);
+                    setHashArray([...data.fileInfoList]);
                 },
             }
         );
@@ -171,6 +171,7 @@ export function FileUpload({ getHashArray, type }) {
                                                 <Spacer />
                                                 <Grid>
                                                     <CloseIcon
+                                                        cursor="pointer"
                                                         className="close-icon"
                                                         size="small"
                                                         onClick={() =>

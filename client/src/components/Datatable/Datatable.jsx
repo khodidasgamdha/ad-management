@@ -41,8 +41,10 @@ const Datatable = ({ data, columns }) => {
             columns,
             data,
             initialState: { pageIndex: 0, pageSize: 5 },
+            autoResetHiddenColumns: false,
+            autoResetSortBy: false
         },
-        // useSortBy,
+        useSortBy,
         usePagination
     );
 
@@ -55,12 +57,14 @@ const Datatable = ({ data, columns }) => {
                             <Tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
                                     <Th
-                                        {...column.getHeaderProps()}
-                                        // onClick={() =>
-                                        //     column.toggleSortBy(
-                                        //         !column.isSortedDesc
-                                        //     )
-                                        // }
+                                        {...column.getHeaderProps(
+                                            column.getSortByToggleProps()
+                                        )}
+                                        onClick={() =>
+                                            column.toggleSortBy(
+                                                !column.isSortedDesc
+                                            )
+                                        }
                                     >
                                         <Box
                                             display="flex"

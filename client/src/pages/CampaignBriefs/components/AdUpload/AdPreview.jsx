@@ -18,27 +18,27 @@ const AdPreview = ({ data }) => {
     const [ads, setAds] = useState([]);
 
     useEffect(() => {
-        setAds(data?.previews);
-    }, [data?.previews]);
+        if (data?.images) {
+            setAds(data?.images);
+        } else {
+            setAds(data);
+        }
+    }, [data]);
 
     const getSlider = () => {
-        if (ads && Object.keys(ads).length) {
-            const slides = Object.keys(ads).map((el, ind) => (
+        if (ads?.length) {
+            const slides = ads.map((el, ind) => (
                 <Text
-                    py={3}
-                    px={5}
-                    mx={2}
-                    my={5}
-                    borderTopRadius="50%"
-                    borderBottomRadius="50%"
+                    height={1}
+                    borderRadius={5}
+                    px={4}
+                    mx={1}
+                    mt={8}
                     key={ind}
-                    color={ind === index ? "white" : "black"}
-                    background={ind === index ? "grey" : "white"}
+                    background={ind === index ? "grey" : "silver"}
                     onClick={() => setIndex(ind)}
                     cursor="pointer"
-                >
-                    {ind + 1}
-                </Text>
+                />
             ));
             return slides;
         }
@@ -48,7 +48,7 @@ const AdPreview = ({ data }) => {
         <Grid templateColumns="repeat(6, 1fr)" gap={4} className="fb-upload">
             <GridItem w="full" colSpan={{ base: 6, lg: 6 }}>
                 <Heading fontSize="lg" my={4} color={TEXT_COLOR}>
-                    {ads && Object.keys(ads)?.[index]}
+                    {ads?.[index]?.filename}
                 </Heading>
                 <Box
                     borderWidth="2px"
@@ -63,13 +63,23 @@ const AdPreview = ({ data }) => {
                             justify="center"
                         >
                             <Box border="2px" borderColor="#757998">
-                                <iframe
-                                    src={ads?.[Object.keys(ads)?.[index]]?.src}
-                                    title={ads && Object.keys(ads)?.[index]}
-                                    width="400px"
-                                    height={600}
-                                    scrolling="no"
-                                />
+                                {data?.images ? (
+                                    <iframe
+                                        src={`${process.env.REACT_APP_API_URL}/uploads/${ads?.[index]?.imageUrl}`}
+                                        title={ads?.[index]?.filename}
+                                        width="400px"
+                                        height={600}
+                                        scrolling="no"
+                                    />
+                                ) : (
+                                    <iframe
+                                        src={ads?.[index]?.src}
+                                        title={ads?.[index]?.filename}
+                                        width="400px"
+                                        height={600}
+                                        scrolling="no"
+                                    />
+                                )}
                             </Box>
                         </Flex>
                     </Container>
@@ -88,13 +98,16 @@ const AdPreview = ({ data }) => {
                     {getSlider()}
                     <Spacer />
                     <Button
-                        leftIcon={<ArrowForwardIcon color="gray" w={10} h={10} />}
+                        leftIcon={
+                            <ArrowForwardIcon color="gray" w={10} h={10} />
+                        }
                         py={8}
                         variant="ghost"
                         onClick={() =>
                             setIndex(
                                 ads && Object.keys(ads)?.length > index + 1
-                                    ? index + 1 : index
+                                    ? index + 1
+                                    : index
                             )
                         }
                     />

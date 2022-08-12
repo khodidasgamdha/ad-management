@@ -32,15 +32,15 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
 
     const sendData = () => {
         getImages({
-            adName: formData.adName,
-            mainAsset: formData.primaryText,
-            landingPage: formData.headline,
-            creativeType: CreativeType.filter(
-                (el) => el.key === formData.creativeType
-            )?.[0]?.key,
-            hostingSource: hostingSource.filter(
-                (el) => el.key === formData.hostingSource
-            )?.[0]?.key,
+            // adName: formData.adName,
+            // mainAsset: formData.primaryText,
+            // landingPage: formData.headline,
+            // creativeType: CreativeType.filter(
+            //     (el) => el.key === formData.creativeType
+            // )?.[0]?.key,
+            // hostingSource: hostingSource.filter(
+            //     (el) => el.key === formData.hostingSource
+            // )?.[0]?.key,
             images: hashArray,
         });
     };

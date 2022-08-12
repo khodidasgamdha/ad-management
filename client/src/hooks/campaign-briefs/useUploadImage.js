@@ -8,7 +8,11 @@ export const useUploadImage = () => {
     return useMutation(
         async (values) => {
             let formData = new FormData();
-            formData.append("adFile", values.adFile);
+
+            for(const i in values.adFile) {
+                formData.append("adFile", values.adFile[i]);
+            }
+            
             return axios({
                 method: "POST",
                 url: `/client/${values.clientId}/campaign-brief/${values.campaignBriefId}/ad-upload/file-upload/${values.type}`,
