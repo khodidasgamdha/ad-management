@@ -17,6 +17,9 @@ const refreshAuthLogic = (failedRequest) => {
         url: "/refresh-token",
         withCredentials: true,
         skipAuthRefresh: true,
+        headers: {
+            AUTH_JWT_REFRESH: localStorage.getItem("jwtRefresh"),
+        },
     })
         .then(() => {
             return Promise.resolve();

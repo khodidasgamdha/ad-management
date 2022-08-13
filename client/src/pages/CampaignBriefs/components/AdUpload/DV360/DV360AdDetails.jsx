@@ -32,15 +32,6 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
 
     const sendData = () => {
         getImages({
-            // adName: formData.adName,
-            // mainAsset: formData.primaryText,
-            // landingPage: formData.headline,
-            // creativeType: CreativeType.filter(
-            //     (el) => el.key === formData.creativeType
-            // )?.[0]?.key,
-            // hostingSource: hostingSource.filter(
-            //     (el) => el.key === formData.hostingSource
-            // )?.[0]?.key,
             images: hashArray,
         });
     };
@@ -49,24 +40,24 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
         if (data?.id) {
             setFromData({
                 adName: data.name,
-                mainAsset: data.detail.description,
-                landingPage: data.detail.displayName,
+                description: data.detail.description,
+                displayName: data.detail.displayName,
                 creativeType: data.detail.creativeType,
                 hostingSource: data.detail.hostingSource,
             });
             setHashArray(data.detail.fileInfoList);
         } else if (
             data?.adName &&
-            data?.mainAsset &&
-            data?.landingPage &&
+            data?.description &&
+            data?.displayName &&
             data?.creativeType &&
             data?.hostingSource &&
             data?.images
         ) {
             setFromData({
                 adName: data.name,
-                mainAsset: data.mainAsset,
-                landingPage: data.landingPage,
+                description: data.description,
+                displayName: data.displayName,
                 creativeType: data.creativeType,
                 hostingSource: data.hostingSource,
             });
@@ -120,12 +111,12 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                         });
                         let payload = {
                             name: values.adName,
-                            description: values.mainAsset,
+                            description: values.description,
                             detail: {
                                 name: values.adName,
                                 creativeType: values.creativeType,
-                                description: values.mainAsset,
-                                displayName: values.landingPage,
+                                description: values.description,
+                                displayName: values.displayName,
                                 hostingSource: values.hostingSource,
                                 mediaIds: mediaIds,
                                 fileInfoList: fileInfoList,
@@ -226,18 +217,18 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                         <GridItem>
                                             <FormControl>
                                                 <FormLabel
-                                                    htmlFor="mainAsset"
+                                                    htmlFor="description"
                                                     color="gray"
                                                     fontSize="sm"
                                                 >
-                                                    Main Assets - max 128
+                                                    Description - max 128
                                                     characters
                                                 </FormLabel>
                                                 <div className="input-box">
                                                     <Textarea
-                                                        id="mainAsset"
-                                                        name="mainAsset"
-                                                        value={values.mainAsset}
+                                                        id="description"
+                                                        name="description"
+                                                        value={values.description}
                                                         placeholder=""
                                                         inputprops={{
                                                             variant: "outline",
@@ -246,7 +237,7 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                                         onChange={(e) =>
                                                             setFromData({
                                                                 ...formData,
-                                                                mainAsset:
+                                                                description:
                                                                     e.target
                                                                         .value,
                                                             })
@@ -254,30 +245,30 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                                     />
                                                     <CircularProgress
                                                         max={
-                                                            dv360AdUploadalueLengths.mainAsset
+                                                            dv360AdUploadalueLengths.description
                                                         }
                                                         value={
-                                                            values.mainAsset
+                                                            values.description
                                                                 .length
                                                         }
                                                         color={
-                                                            values.mainAsset
+                                                            values.description
                                                                 .length >
-                                                            dv360AdUploadalueLengths.mainAsset
+                                                            dv360AdUploadalueLengths.description
                                                                 ? "red.400"
                                                                 : "green.400"
                                                         }
                                                     >
                                                         <CircularProgressLabel>
-                                                            {values.mainAsset
+                                                            {values.description
                                                                 .length >
-                                                            dv360AdUploadalueLengths.mainAsset
-                                                                ? dv360AdUploadalueLengths.mainAsset -
+                                                            dv360AdUploadalueLengths.description
+                                                                ? dv360AdUploadalueLengths.description -
                                                                   values
-                                                                      .mainAsset
+                                                                      .description
                                                                       .length
                                                                 : values
-                                                                      .mainAsset
+                                                                      .description
                                                                       .length}
                                                         </CircularProgressLabel>
                                                     </CircularProgress>
@@ -287,19 +278,19 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                         <GridItem>
                                             <FormControl>
                                                 <FormLabel
-                                                    htmlFor="landingPage"
+                                                    htmlFor="displayName"
                                                     color="gray"
                                                     fontSize="sm"
                                                 >
-                                                    Landing Page - max 1024
+                                                    Display Name - max 1024
                                                     characters
                                                 </FormLabel>
                                                 <div className="input-box">
                                                     <InputControl
-                                                        id="landingPage"
-                                                        name="landingPage"
+                                                        id="displayName"
+                                                        name="displayName"
                                                         value={
-                                                            values.landingPage
+                                                            values.displayName
                                                         }
                                                         inputprops={{
                                                             variant: "outline",
@@ -308,7 +299,7 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                                         onChange={(e) =>
                                                             setFromData({
                                                                 ...formData,
-                                                                landingPage:
+                                                                displayName:
                                                                     e.target
                                                                         .value,
                                                             })
@@ -316,30 +307,30 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                                     />
                                                     <CircularProgress
                                                         max={
-                                                            dv360AdUploadalueLengths.landingPage
+                                                            dv360AdUploadalueLengths.displayName
                                                         }
                                                         value={
-                                                            values.landingPage
+                                                            values.displayName
                                                                 .length
                                                         }
                                                         color={
-                                                            values.landingPage
+                                                            values.displayName
                                                                 .length >
-                                                            dv360AdUploadalueLengths.landingPage
+                                                            dv360AdUploadalueLengths.displayName
                                                                 ? "red.400"
                                                                 : "green.400"
                                                         }
                                                     >
                                                         <CircularProgressLabel>
-                                                            {values.landingPage
+                                                            {values.displayName
                                                                 .length >
-                                                            dv360AdUploadalueLengths.landingPage
-                                                                ? dv360AdUploadalueLengths.landingPage -
+                                                            dv360AdUploadalueLengths.displayName
+                                                                ? dv360AdUploadalueLengths.displayName -
                                                                   values
-                                                                      .landingPage
+                                                                      .displayName
                                                                       .length
                                                                 : values
-                                                                      .landingPage
+                                                                      .displayName
                                                                       .length}
                                                         </CircularProgressLabel>
                                                     </CircularProgress>

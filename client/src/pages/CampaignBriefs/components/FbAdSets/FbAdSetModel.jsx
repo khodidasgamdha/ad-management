@@ -15,7 +15,7 @@ import {
     ModalOverlay,
     useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { CheckboxControl, SelectControl } from "formik-chakra-ui";
@@ -25,15 +25,48 @@ import {
     TargetingMethod,
     CreativeType,
     DeviceOptions,
-    OptimizationGoalOptions,
+    BrandAwarenessOptimizationGoalOptions,
+    LinkClicksOptimizationGoalOptions,
+    VideoViewsOptimizationGoalOptions,
+    LeadGenerationOptimizationGoalOptions,
+    ConversionsOptimizationGoalOptions,
+    EventType,
+    ProductcatalogsalesOptimizationGoalOptions,
 } from "../../constant/SelectValues";
 import instance from "../../../../helpers/axios";
 import InputBox from "../../../../components/InputBox";
 import validationSchema from "../../../../validations/CampaignBrief/FbAdSetModel";
 import { fbAdSetInitialValue } from "../../constant/InitialValues";
+import { useSelector } from "react-redux";
 
 const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
     const toast = useToast();
+    const [fbObjective, setFbObjective] = useState([]);
+
+    const campaignFacebookObjective = useSelector(
+        (state) => state.campaign.campaignFacebookObjective
+    );
+
+    useEffect(() => {
+        if (campaignFacebookObjective) {
+            if (campaignFacebookObjective === "BRAND_AWARENESS") {
+                setFbObjective(BrandAwarenessOptimizationGoalOptions);
+            } else if (campaignFacebookObjective === "LINK_CLICKS") {
+                setFbObjective(LinkClicksOptimizationGoalOptions);
+            } else if (campaignFacebookObjective === "POST_ENGAGEMENT") {
+                setFbObjective(BrandAwarenessOptimizationGoalOptions);
+            } else if (campaignFacebookObjective === "VIDEO_VIEWS") {
+                setFbObjective(VideoViewsOptimizationGoalOptions);
+            } else if (campaignFacebookObjective === "LEAD_GENERATION") {
+                setFbObjective(LeadGenerationOptimizationGoalOptions);
+            } else if (campaignFacebookObjective === "CONVERSIONS") {
+                setFbObjective(ConversionsOptimizationGoalOptions);
+            } else if (campaignFacebookObjective === "PRODUCT_CATELOG_SALES") {
+                setFbObjective(ProductcatalogsalesOptimizationGoalOptions);
+            }
+        }
+    }, [campaignFacebookObjective]);
+
     const onSubmit = async (values, actions) => {
         let name = "WR";
         if (values.campaignName) name += ` - ${values.campaignName}`;
@@ -72,10 +105,33 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
         }
         if (values.adName) name += ` - ${values.adName}`;
 
-        await instance({
-            method: "POST",
-            url: `/client/${clientId}/campaign-brief/${campaignId}/fb-campaign/${fbData?.id}/fb-ad-set`,
-            data: {
+        let data;
+        if(campaignFacebookObjective === "CONVERSIONS") {
+            data = {
+                name: name,
+                bidAmount: parseInt(values.bidAmount) * 100,
+                lifetimeBudget: parseInt(values.lifeTimeBudget) * 100,
+                startTime: values.startDate,
+                endTime: values.endDate,
+                optimizationGoal: values.optimizationGoal,
+                eventType: values.eventType,
+                pixelId: "Abcd",
+                detail: {
+                    campaignName: values.campaignName,
+                    channel: "FACEBOOK",
+                    lead: values.isLead ? "lead" : "",
+                    adCategory: values.adCategory,
+                    targetingMethod: values.targetingMethod,
+                    location: values.location,
+                    audience: values.audience,
+                    promo: values.promo,
+                    device: values.device,
+                    creativeType: values.creativeType,
+                    adName: values.adName,
+                },
+            }
+        } else {
+            data = {
                 name: name,
                 bidAmount: parseInt(values.bidAmount) * 100,
                 lifetimeBudget: parseInt(values.lifeTimeBudget) * 100,
@@ -95,7 +151,13 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                     creativeType: values.creativeType,
                     adName: values.adName,
                 },
-            },
+            }
+        }
+
+        await instance({
+            method: "POST",
+            url: `/client/${clientId}/campaign-brief/${campaignId}/fb-campaign/${fbData?.id}/fb-ad-set`,
+            data: data,
         })
             .then((response) => {
                 if (response.status === 200) {
@@ -822,130 +884,126 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                         color: "#757998",
                                                     }}
                                                 >
-                                                    {OptimizationGoalOptions.map(
-                                                        (el) => (
-                                                            <option
-                                                                key={el.key}
-                                                                value={el.key}
-                                                            >
-                                                                {el.value}
-                                                            </option>
-                                                        )
-                                                    )}
+                                                    {fbObjective.map((el) => (
+                                                        <option
+                                                            key={el.key}
+                                                            value={el.key}
+                                                        >
+                                                            {el.value}
+                                                        </option>
+                                                    ))}
                                                 </SelectControl>
                                             </FormControl>
                                         </GridItem>
-                                        {/* <GridItem>
-                                            <FormControl>
-                                                <FormLabel
-                                                    htmlFor="targetingMethod"
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "12px",
-                                                        lineHeight: "15px",
-                                                        color: "#A7A9BD",
-                                                        marginBottom: "5px",
-                                                    })}
-                                                >
-                                                    Event Type{" "}
-                                                    <span
-                                                        style={{
-                                                            color: "#FFB8B8",
+                                        {campaignFacebookObjective ===
+                                            "CONVERSIONS" && (
+                                            <GridItem>
+                                                <FormControl>
+                                                    <FormLabel
+                                                        htmlFor="eventType"
+                                                        css={css({
+                                                            fontWeight: "600",
+                                                            fontSize: "12px",
+                                                            lineHeight: "15px",
+                                                            color: "#A7A9BD",
+                                                            marginBottom: "5px",
+                                                        })}
+                                                    >
+                                                        Event Type{" "}
+                                                        <span
+                                                            style={{
+                                                                color: "#FFB8B8",
+                                                            }}
+                                                        >
+                                                            (required)
+                                                        </span>
+                                                    </FormLabel>
+                                                    <SelectControl
+                                                        id="eventType"
+                                                        name="eventType"
+                                                        value={values.eventType}
+                                                        onChange={handleChange}
+                                                        selectProps={{
+                                                            placeholder:
+                                                                "-- Select One --",
+                                                            variant: "outline",
+                                                            border: "2px",
+                                                            borderRadius: 0,
+                                                            borderColor: "gray",
+                                                            fontWeight: "600",
+                                                            fontSize: "14px",
+                                                            lineHeight: "16px",
+                                                            color: "#757998",
                                                         }}
                                                     >
-                                                        (required)
-                                                    </span>
-                                                </FormLabel>
-                                                <SelectControl
-                                                    id="targetingMethod"
-                                                    name="targetingMethod"
-                                                    value={
-                                                        values.targetingMethod
-                                                    }
-                                                    onChange={handleChange}
-                                                    selectProps={{
-                                                        placeholder:
-                                                            "-- Select One --",
-                                                        variant: "outline",
-                                                        border: "2px",
-                                                        borderRadius: 0,
-                                                        borderColor: "gray",
-                                                        fontWeight: "600",
-                                                        fontSize: "14px",
-                                                        lineHeight: "16px",
-                                                        color: "#757998",
-                                                    }}
-                                                >
-                                                    {optionsValues.targetingMethod.map(
-                                                        (el) => (
+                                                        {EventType.map((el) => (
                                                             <option
                                                                 key={el.key}
                                                                 value={el.key}
                                                             >
                                                                 {el.value}
                                                             </option>
-                                                        )
-                                                    )}
-                                                </SelectControl>
-                                            </FormControl>
-                                        </GridItem> */}
+                                                        ))}
+                                                    </SelectControl>
+                                                </FormControl>
+                                            </GridItem>
+                                        )}
                                     </Grid>
-                                    {/* <Grid mt={3}>
-                                    <GridItem>
-                                            <FormControl>
-                                                <FormLabel
-                                                    htmlFor="targetingMethod"
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "12px",
-                                                        lineHeight: "15px",
-                                                        color: "#A7A9BD",
-                                                        marginBottom: "5px",
-                                                    })}
-                                                >
-                                                    Poxel ID{" "}
-                                                    <span
-                                                        style={{
-                                                            color: "#FFB8B8",
+                                    {campaignFacebookObjective ===
+                                        "CONVERSIONS" && (
+                                        <Grid mt={3}>
+                                            <GridItem>
+                                                <FormControl>
+                                                    <FormLabel
+                                                        htmlFor="pixelId"
+                                                        css={css({
+                                                            fontWeight: "600",
+                                                            fontSize: "12px",
+                                                            lineHeight: "15px",
+                                                            color: "#A7A9BD",
+                                                            marginBottom: "5px",
+                                                        })}
+                                                    >
+                                                        Poxel ID{" "}
+                                                        <span
+                                                            style={{
+                                                                color: "#FFB8B8",
+                                                            }}
+                                                        >
+                                                            (required)
+                                                        </span>
+                                                    </FormLabel>
+                                                    <SelectControl
+                                                        id="pixelId"
+                                                        name="pixelId"
+                                                        value={values.pixelId}
+                                                        onChange={handleChange}
+                                                        selectProps={{
+                                                            placeholder:
+                                                                "-- Select One --",
+                                                            variant: "outline",
+                                                            border: "2px",
+                                                            borderRadius: 0,
+                                                            borderColor: "gray",
+                                                            fontWeight: "600",
+                                                            fontSize: "14px",
+                                                            lineHeight: "16px",
+                                                            color: "#757998",
                                                         }}
                                                     >
-                                                        (required)
-                                                    </span>
-                                                </FormLabel>
-                                                <SelectControl
-                                                    id="targetingMethod"
-                                                    name="targetingMethod"
-                                                    value={
-                                                        values.targetingMethod
-                                                    }
-                                                    onChange={handleChange}
-                                                    selectProps={{
-                                                        placeholder:
-                                                            "-- Select One --",
-                                                        variant: "outline",
-                                                        border: "2px",
-                                                        borderRadius: 0,
-                                                        borderColor: "gray",
-                                                        fontWeight: "600",
-                                                        fontSize: "14px",
-                                                        lineHeight: "16px",
-                                                        color: "#757998",
-                                                    }}
-                                                >
-                                                    {optionsValues.targetingMethod.map(
-                                                        (el) => (
+                                                        {EventType.map((el) => (
                                                             <option
                                                                 key={el.key}
                                                                 value={el.key}
                                                             >
                                                                 {el.value}
                                                             </option>
-                                                        )
-                                                    )}
-                                                </SelectControl>
-                                            </FormControl>
-                                        </GridItem>
-                                    </Grid>          */}
+                                                        ))}
+                                                    </SelectControl>
+                                                </FormControl>
+                                            </GridItem>
+                                        </Grid>
+                                    )}
                                 </ModalBody>
                                 <Flex mt={5}>
                                     <Button

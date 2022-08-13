@@ -174,8 +174,8 @@ export const fileUploadInitialValue = { files: [] };
 
 export const dv360AdUploadInitialValues = {
     adName: "",
-    mainAsset: "",
-    landingPage: "",
+    description: "",
+    displayName: "",
     creativeType: "",
     hostingSource: "",
 };
@@ -234,6 +234,8 @@ export const fbAdSetInitialValue = (data) => ({
     startTime: "",
     endTime: "",
     optimizationGoal: "",
+    pixelId: "",
+    eventType: "",
 });
 
 export const dv360AdUploadalueLengths = {

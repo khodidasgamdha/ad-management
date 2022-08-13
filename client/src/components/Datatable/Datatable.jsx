@@ -12,12 +12,7 @@ import {
     IconButton,
     Box,
 } from "@chakra-ui/react";
-import {
-    FiChevronsLeft,
-    FiChevronLeft,
-    FiChevronsRight,
-    FiChevronRight,
-} from "react-icons/fi";
+import { GrLinkPrevious, GrLinkNext } from "react-icons/gr";
 import { FaSort } from "react-icons/fa";
 import { useTable, usePagination, useSortBy } from "react-table";
 
@@ -42,7 +37,7 @@ const Datatable = ({ data, columns }) => {
             data,
             initialState: { pageIndex: 0, pageSize: 5 },
             autoResetHiddenColumns: false,
-            autoResetSortBy: false
+            autoResetSortBy: false,
         },
         useSortBy,
         usePagination
@@ -112,9 +107,9 @@ const Datatable = ({ data, columns }) => {
                 </Table>
             </TableContainer>
             {/* Pagination */}
-            <Flex justifyContent="space-between" m={4} alignItems="center">
+            <Flex justifyContent="start" m={4} alignItems="center">
                 <Flex>
-                    <Tooltip label="First Page">
+                    {/* <Tooltip label="First Page">
                         <IconButton
                             size="sm"
                             variant="ghost"
@@ -122,7 +117,7 @@ const Datatable = ({ data, columns }) => {
                             isDisabled={!canPreviousPage}
                             background={
                                 !canPreviousPage
-                                    ? "#F8F9FA !important"
+                                    ? "#A7A9BD !important"
                                     : "#79A9FF !important"
                             }
                             icon={
@@ -136,7 +131,7 @@ const Datatable = ({ data, columns }) => {
                             }
                             mr={4}
                         />
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip label="Previous Page">
                         <IconButton
                             size="sm"
@@ -149,7 +144,7 @@ const Datatable = ({ data, columns }) => {
                                     : "#79A9FF !important"
                             }
                             icon={
-                                <FiChevronLeft
+                                <GrLinkPrevious
                                     color={
                                         !canPreviousPage ? "#A7A9BD" : "#FFFFFF"
                                     }
@@ -160,14 +155,25 @@ const Datatable = ({ data, columns }) => {
                         />
                     </Tooltip>
                 </Flex>
-                <Flex alignItems="center">
+                <Flex alignItems="center" mx={3}>
                     <Text flexShrink="0">
-                        Page{" "}
-                        <Text fontWeight="bold" as="span">
+                        {/* Page{" "} */}
+                        <Text
+                            borderColor="#79A9FF"
+                            borderRadius={5}
+                            color="#79A9FF"
+                            px="18px"
+                            py="3px"
+                            borderWidth={2}
+                            fontWeight="bold"
+                            as="span"
+                        >
                             {pageIndex + 1}
                         </Text>{" "}
-                        of{" "}
-                        <Text fontWeight="bold" as="span">
+                        <span style={{ margin: "auto 8px", color: "#79A9FF" }}>
+                            /
+                        </span>
+                        <Text p={1} color="#79A9FF" fontWeight="bold" as="span">
                             {pageOptions.length}
                         </Text>
                     </Text>
@@ -185,7 +191,7 @@ const Datatable = ({ data, columns }) => {
                                     : "#79A9FF !important"
                             }
                             icon={
-                                <FiChevronRight
+                                <GrLinkNext
                                     color={!canNextPage ? "#A7A9BD" : "#FFFFFF"}
                                     h={6}
                                     w={6}
@@ -193,14 +199,14 @@ const Datatable = ({ data, columns }) => {
                             }
                         />
                     </Tooltip>
-                    <Tooltip label="Last Page">
+                    {/* <Tooltip label="Last Page">
                         <IconButton
                             size="sm"
                             variant="ghost"
                             onClick={() => gotoPage(pageCount - 1)}
                             isDisabled={!canNextPage}
                             background={
-                                !canNextPage ? "#F8F9FA" : "#79A9FF !important"
+                                !canNextPage ? "#A7A9BD" : "#79A9FF !important"
                             }
                             icon={
                                 <FiChevronsRight
@@ -211,7 +217,7 @@ const Datatable = ({ data, columns }) => {
                             }
                             ml={4}
                         />
-                    </Tooltip>
+                    </Tooltip> */}
                 </Flex>
             </Flex>
         </>

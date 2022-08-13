@@ -158,7 +158,7 @@ export const Comment = ({ clientId, campaignId }) => {
                                 >
                                     {el?.user?.name}
                                 </Box>
-                                <Box width="58%" px={2} fontSize="14px">
+                                <Box width="56%" px={2} fontSize="14px">
                                     {el?.content}
                                 </Box>
                                 <Box fontSize="12px" color="gray.500">

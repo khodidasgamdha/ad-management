@@ -121,9 +121,83 @@ export const DeviceOptions = [
     { value: "Connect TV", key: "CONNECT_TV" },
 ];
 
-export const OptimizationGoalOptions = [
+export const BrandAwarenessOptimizationGoalOptions = [
     { value: "Impressions", key: "IMPRESSIONS" },
     { value: "Post engagement", key: "POST_ENGAGEMENT" },
     { value: "Link clicks", key: "LINK_CLICKS" },
     { value: "Reach", key: "REACH" },
+];
+
+export const LinkClicksOptimizationGoalOptions = [
+    { value: "Impressions", key: "IMPRESSIONS" },
+    { value: "Post engagement", key: "POST_ENGAGEMENT" },
+    { value: "Offsite conversions", key: "OFFSITE_CONVERSIONS" },
+    { value: "Link clicks", key: "LINK_CLICKS" },
+    { value: "Reach", key: "REACH" },
+    { value: "Landing Page Views", key: "LANDING_PAGE_VIEWS" },
+    { value: "App Installs", key: "APP_INSTALLS" },
+    { value: "Engaged Users", key: "ENGAGED_USERS" },
+];
+
+export const VideoViewsOptimizationGoalOptions = [
+    { value: "Thruplay", key: "THRUPLAY" }
+];
+
+export const LeadGenerationOptimizationGoalOptions = [
+    { value: "Link Clicks", key: "LINK_CLICKS" },
+    { value: "Quality Lead", key: "QUALITY_LEAD" },
+    { value: "Quality Call", key: "QUALITY_CALL" },
+    { value: "Lead Generation", key: "LEAD_GENERATION" }
+];
+
+export const ConversionsOptimizationGoalOptions = [
+    { value: "Impressions", key: "IMPERSSIONS" },
+    { value: "Post engagement", key: "POST_ENGAGEMENT" },
+    { value: "Offsite conversions", key: "OFFSITE_CONVERSIONS" },
+    { value: "Link clicks", key: "LINK_CLICKS" },
+    { value: "Reach", key: "REACH" },
+    { value: "Value", key: "VALUE" },
+    { value: "Landing Page Views", key: "LANDING_PAGE_VIEWS" },
+    { value: "Conversations", key: "CONVERSATIONS" },
+];
+
+export const EventType = [
+    { value: "Rate", key: "RATE" },
+    { value: "Tutorial Completion", key: "TUTORIAL_COMLETION" },
+    { value: "Contact", key: "CONTACT" },
+    { value: "Customize Product", key: "CUSTOMIZE_PRODUCT" },
+    { value: "Donate", key: "DONATE" },
+    { value: "Find Location", key: "FIND_LOCATION" },
+    { value: "Schedule", key: "SCHEDULE" },
+    { value: "Start Trial", key: "START_TRIAL" },
+    { value: "Submit Application", key: "SUBMIT_APPLICATION" },
+    { value: "Subscribe", key: "SUBSCRIBE" },
+    { value: "Add To Cart", key: "ADD_TO_CART" },
+    { value: "Add To Wishlist", key: "ADD_TO_WISHLIST" },
+    { value: "Initiated Checkout", key: "INITIATED_CHECKOUT" },
+    { value: "Add Payment Info", key: "ADD_PAYMENT_INFO" },
+    { value: "Purchase", key: "PURCHASE" },
+    { value: "Lead", key: "LEAD" },
+    { value: "Complete Registration", key: "COMPLETE_REGISTRATION" },
+    { value: "Content View", key: "CONTENT_VIEW" },
+    { value: "Search", key: "SEARCH" },
+    { value: "Service Booking Request", key: "SERVICE_BOOKING_REQUEST" },
+    { value: "Messaging Conversation Started 7d", key: "MESSAGING_CONVERSATION_STARTED_7D" },
+    { value: "Level Achieved", key: "LEVEL_ACHIEVED" },
+    { value: "Achievement Unlocked", key: "ACHIEVEMENT_UNLOCKED" },
+    { value: "Spent Credits", key: "SPENT_CREDITS" },
+    { value: "Listing Interaction", key: "LISTING_INTERACTION" },
+    { value: "D2 Retention", key: "D2_RETENTION" },
+    { value: "D7 Retention", key: "D7_RETENTION" },
+    { value: "Other", key: "OTHER" },
+];
+
+export const ProductcatalogsalesOptimizationGoalOptions = [
+    { value: "Impressions", key: "IMPERSSIONS" },
+    { value: "Post engagement", key: "POST_ENGAGEMENT" },
+    { value: "Offsite conversions", key: "OFFSITE_CONVERSIONS" },
+    { value: "Link clicks", key: "LINK_CLICKS" },
+    { value: "Reach", key: "REACH" },
+    { value: "Value", key: "VALUE" },
+    { value: "Conversations", key: "CONVERSATIONS" },
 ];

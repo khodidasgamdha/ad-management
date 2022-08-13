@@ -11,12 +11,15 @@ import Demographics from "./Demographics";
 import MediaStrategies from "./MediaStrategies";
 import validationSchema from "../../../../validations/CampaignBrief/CampaignForm";
 import { campaignInitialValue } from "../../constant/InitialValues";
+import { updateCampaignFbObjective } from "../../../../store/campaign/campaignThunk";
+import { useDispatch } from "react-redux";
 
 const CreateForm = ({ id, clientDetails, campaignDetails }) => {
     const toast = useToast();
-
+    const dispatch = useDispatch()
     const [method, setMethod] = useState();
     const [url, setURL] = useState();
+    const [fbObjective, setFbObjective] = useState();
 
     useEffect(() => {
         if (id && clientDetails?.id) {
@@ -27,6 +30,12 @@ const CreateForm = ({ id, clientDetails, campaignDetails }) => {
             setURL(`/client/${clientDetails.id}/campaign-brief`);
         }
     }, [id, clientDetails]);
+
+    useEffect(() => {
+        if(fbObjective) {
+            dispatch(updateCampaignFbObjective(fbObjective));
+        }
+    }, [fbObjective])
 
     return (
         <Formik
@@ -42,6 +51,7 @@ const CreateForm = ({ id, clientDetails, campaignDetails }) => {
                 })
                     .then((res) => {
                         if (res.status === 200) {
+                            setFbObjective(values?.detail?.objective)
                             toast({
                                 isClosable: true,
                                 status: "success",

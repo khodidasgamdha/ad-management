@@ -132,7 +132,7 @@ const CampaignMetrics = () => {
                             color="gray"
                             fontSize="sm"
                         >
-                            What is the main objective for this campaign?
+                            What is the main facebook objective for this campaign?
                         </FormLabel>
                         <SelectControl
                             id="detail.objective"

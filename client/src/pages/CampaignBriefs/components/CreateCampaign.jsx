@@ -28,16 +28,18 @@ import CreateFacebookCampaign from "./FbCampaigns/CreateFacebookCampaignModel";
 import CreateDV360Campaign from "./Dv360Campaings/CreateDV360CampaignModel";
 import AdUploadList from "./AdUpload/AdUploadList";
 import { Comment } from "./Comment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FbCampaignList from "./FbCampaigns/FbCampaignList";
 import DV360CampaignList from "./Dv360Campaings/Dv360CampaignList";
 import FbAdSetsList from "./FbAdSets/FbAdSetsList";
 import AuditLogsList from "./AuditLogsList";
 import { useGetCampaign } from "../../../hooks/campaign-briefs/useGetCampaign";
 import { useUpdateCampaign } from "../../../hooks/campaign-briefs/useUpdateCampaign";
+import { updateCampaignFbObjective } from "../../../store/campaign/campaignThunk";
 
 const CreateCampaign = () => {
     const [tabIndex, SetTabIndex] = useState(0);
+    const dispatch = useDispatch();
     const {
         isOpen: isFacebookModelOpen,
         onOpen: onFacebookModelOpen,
@@ -53,6 +55,9 @@ const CreateCampaign = () => {
 
     const navigate = useNavigate();
     const { id } = useParams();
+    const { mutate, data } = useGetClientDetailsOnClick();
+    const { mutate: updateCampaignStatus } = useUpdateCampaign();
+    const { data: campaignData, mutate: mutateGetCampaign } = useGetCampaign();
 
     useEffect(() => {
         if (clientId) {
@@ -64,9 +69,12 @@ const CreateCampaign = () => {
         }
     }, [clientId]);
 
-    const { mutate, data } = useGetClientDetailsOnClick();
-    const { mutate: updateCampaignStatus } = useUpdateCampaign();
-    const { data: campaignData, mutate: mutateGetCampaign } = useGetCampaign();
+    useEffect(() => {
+        if(campaignData?.campaign?.detail?.objective) {
+            dispatch(updateCampaignFbObjective(campaignData.campaign.detail.objective));
+        }
+    }, [campaignData])
+
 
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={4}>
