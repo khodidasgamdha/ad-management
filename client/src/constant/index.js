@@ -335,7 +335,7 @@ export const FamilyOption = [
     { value: "Parent", label: "Parent" },
     { value: "NoParent", label: "Not a parent" },
     { value: "Unknown", label: "Unknown" },
-    { value: "NA", label: "n/a" },
+    { value: "NA", label: "N/A" },
 ];
 
 export const IncomeOptionFbInstaUS = [
@@ -343,7 +343,7 @@ export const IncomeOptionFbInstaUS = [
     { value: "FiftyKPlus", label: "$50K+" },
     { value: "SeventyFiveKPlus", label: "$75K+" },
     { value: "HundredKPlus", label: "$100K+" },
-    { value: "NA", label: "n/a" },
+    // { value: "NA", label: "n/a" },
 ];
 
 export const IncomeOptionSearchDisplay = [
@@ -352,7 +352,7 @@ export const IncomeOptionSearchDisplay = [
     { value: "TwentyOne", label: "21-30%" },
     { value: "ThirtyOne", label: "31-40%" },
     { value: "FortyOne", label: "41-50%" },
-    { value: "Lower50", label: "Lower50%" },
+    { value: "Lower50", label: "Lower 50%" },
 ];
 
 export const TargettingOptionAffinity = [
@@ -895,7 +895,6 @@ export const BEHAVIOR = [
         label: "Seasonal & Events",
         name: "detail.audienceTargetting.behavior.seasonalAndEvents",
         options: TargettingOptionSeasonal,
-        colSpan: 2,
     },
 ];
 
@@ -962,13 +961,13 @@ export const INTEREST_TOPIC_TARGETING = [
     },
     {
         id: uuidv4(),
-        label: "Relationship - Interest",
+        label: "Relationship - Gender",
         name: "detail.audienceTargetting.interest.relationshipGender",
         options: TargettingOptionRelationshipGender,
     },
     {
         id: uuidv4(),
-        label: "Relationship",
+        label: "Relationship - Type",
         name: "detail.audienceTargetting.interest.relationshipType",
         options: TargettingOptionRelationshipType,
     },

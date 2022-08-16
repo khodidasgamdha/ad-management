@@ -82,12 +82,12 @@ const MediaStrategies = ({ setFieldValue }) => {
                     />
                 </GridItem>
                 <GridItem colSpan={6}>
-                    <InputBox name="detail.whitelist" label="Placement" />
+                    <InputBox name="detail.whitelist" label="White Lists/Placements" />
                 </GridItem>
                 <GridItem colSpan={6}>
                     <InputBox
                         name="detail.blacklist"
-                        label="Placement Exclusions"
+                        label="Black Lists/Exclusions"
                     />
                 </GridItem>
             </Grid>

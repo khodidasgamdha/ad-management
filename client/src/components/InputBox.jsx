@@ -1,5 +1,6 @@
 import { FormControl, FormLabel } from '@chakra-ui/react'
 import { InputControl } from 'formik-chakra-ui'
+import "../pages/CampaignBriefs/style/Model.css"
 
 const InputBox = ({ name, label, type, ...rest }) => {
   return (

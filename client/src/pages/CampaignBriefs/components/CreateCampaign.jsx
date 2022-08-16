@@ -236,7 +236,7 @@ const CreateCampaign = () => {
                 {id &&
                     tabIndex === 0 &&
                     campaignData?.campaign?.status != "Created" && (
-                        <VStack align="start">
+                        <VStack align="start" display="inline-grid">
                             <Button
                                 colorScheme="blue"
                                 backgroundColor="blue.400"

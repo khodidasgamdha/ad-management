@@ -1,0 +1,115 @@
+.url-item,
+.creative-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.url-item label.chakra-form__label {
+  min-width: 250px;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+
+.creative-item label.chakra-form__label {
+  min-width: 70%;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+
+.creative-item .chakra-checkbox {
+margin-right: 20px;
+}
+
+.url-item label.chakra-checkbox {
+  margin: 0 20px;
+}
+
+.url-item .chakra-form-control {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  outline: none !important;
+}
+
+.url-item .chakra-form-control label,
+.budget-item .input-box .chakra-form-control label {
+  display: none;
+  outline: none !important;
+}
+
+.url-item .chakra-form-control input,
+.budget-item .input-box input {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  outline: none !important;
+  padding: 0;
+}
+
+.budget-item {
+  border: 2px solid gray;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+.budget-item .heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.budget-item p {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 24px;
+  color: #59ab9e;
+}
+
+.total-budget {
+  background: #59ab9e !important;
+  width: 100%;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.household-income-box {
+  display: flex;
+  align-items: center;
+}
+
+.household-income-box .chakra-slider__thumb {
+  background-color: #9981d4;
+}
+
+.household-income-box .range-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.household-income-box .range-text p {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  font-size: 14px;
+  line-height: 16px;
+  color: #757998;
+}
+
+.household-income-box .chakra-slider__track {
+  height: 5px;
+}
+
+.household-income-box .chakra-slider__filled-track {
+  background-color: #9981d4;
+}
+
+.household-income-box .income-range {
+  width: 70%;
+  margin-right: 50px;
+}
