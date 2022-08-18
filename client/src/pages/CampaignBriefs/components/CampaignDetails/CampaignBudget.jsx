@@ -20,6 +20,7 @@ import { useEffect } from "react";
 const CampaignBudget = ({ values, setFieldValue }) => {
   const [budgets, setBudgets] = useState([]);
   const [total, setTotal] = useState(0);
+  const [campaignValue, setCampaignValue] = useState([]);
 
   useEffect(() => {
     let total = 0;
@@ -36,6 +37,16 @@ const CampaignBudget = ({ values, setFieldValue }) => {
       total += parseInt(values.detail.campaignBudget.instaAds) || 0;
     }
     if (values.detail.campaignBudget.displayAds) {
+      if (parseInt(values.detail.campaignBudget.displayAds) > 0) {
+        // setCampaignValue([
+        //   ...campaignValue,
+        //   {
+        //     label: "Display Ads",
+        //     name: `detail.campaignBudget.displayAds`,
+        //     value: "Display Ads",
+        //   },
+        // ]);
+      }
       total += parseInt(values.detail.campaignBudget.displayAds) || 0;
     }
     if (values.detail.campaignBudget.twitterAds) {
@@ -162,6 +173,282 @@ const CampaignBudget = ({ values, setFieldValue }) => {
     setTotal(total);
   }, [values.detail.campaignBudget]);
 
+  useEffect(() => {
+    if(values?.detail?.campaignBudget?.googleSearchAds?.length) {
+      setCampaignValue([...campaignValue, {
+        label: "Google Search Ads",
+        name: "detail.campaignBudget.googleSearchAds",
+        value: "Google Search Ads"
+      }])
+    }
+    if(values?.detail?.campaignBudget?.bingSearchAds?.length) {
+      setCampaignValue([...campaignValue, {
+        name: "detail.campaignBudget.bingSearchAds",
+        label: "Bing Search Ads",
+        value: "Bing Search Ads",
+      }])
+    }
+    // if(values?.detail?.campaignBudget?.fbAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.fbAds",
+    //     label: "Facebook Ads",
+    //     value: "Facebook Ads"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.instaAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.instaAds",
+    //     label: "Instagram Ads",
+    //     value: "Instagram Ads",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.displayAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.displayAds",
+    //     label: "Display Ads",
+    //     value: "Display Ads"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.twitterAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.twitterAds",
+    //     label: "Twitter Ads",
+    //     value: "Twitter Ads",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.nativeAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.nativeAds",
+    //     label: "Native Ads",
+    //     value: "Native Ads"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.spotifyAudioAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.spotifyAudioAds",
+    //     label: "Spotify Audio Ads",
+    //     value: "Spotify Audio Ads",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.pinterestAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.pinterestAds",
+    //     label: "Pinterest Ads",
+    //     value: "Pinterest Ads"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.quoraAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.quoraAds",
+    //     label: "Quora Ads",
+    //     value: "Quora Ads",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.displayVideo?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.displayVideo",
+    //     label: "Video (Display)",
+    //     value: "Video (Display)"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.youtubeVideo?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.youtubeVideo",
+    //     label: "Video (YouTube)",
+    //     value: "Video (YouTube)",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.fbVideo?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.fbVideo",
+    //     label: "Video (Facebook)",
+    //     value: "Video (Facebook)"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.instaVideo?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.instaVideo",
+    //     label: "Video (Instagram)",
+    //     value: "Video (Instagram)",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.overTheTop?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.overTheTop",
+    //     label: "Over The Top",
+    //     value: "Over The Top"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.googleSearchRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.googleSearchRt",
+    //     label: "Google Search RT",
+    //     value: "Google Search RT",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.bingSearchRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.bingSearchRt",
+    //     label: "Bing Search RT",
+    //     value: "Bing Search RT"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.fbRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.fbRt",
+    //     label: "Facebook RT",
+    //     value: "Facebook RT",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.instaRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.instaRt",
+    //     label: "Instagram RT",
+    //     value: "Instagram RT"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.displayRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.displayRt",
+    //     label: "Display RT",
+    //     value: "Display RT",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.linkedinRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.linkedinRt",
+    //     label: "Linkedin RT",
+    //     value: "Linkedin RT"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.nativeRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.nativeRt",
+    //     label: "Native RT",
+    //     value: "Native RT",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.pinterestRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.pinterestRt",
+    //     label: "Pinterest RT",
+    //     value: "Pinterest RT"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.retargetting?.videoRt?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.retargetting.videoRt",
+    //     label: "Video RT",
+    //     value: "Video RT",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.hotelAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.hotelAds",
+    //     label: "Hotel Ads",
+    //     value: "Hotel Ads"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.travelAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.travelAds",
+    //     label: "Travel Ads",
+    //     value: "Travel Ads",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.shoppingAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.shoppingAds",
+    //     label: "Shopping Ads",
+    //     value: "Shopping Ads"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.fbEvents?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.fbEvents",
+    //     label: "Facebook Events",
+    //     value: "Facebook Events",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.fbLookalike?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.fbLookalike",
+    //     label: "Facebook Lookalike",
+    //     value: "Facebook Lookalike"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.instaLookalike?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.instaLookalike",
+    //     label: "Instagram Lookalike",
+    //     value: "Instagram Lookalike",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.displayList?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.displayList",
+    //     label: "Display List",
+    //     value: "Display List"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.fbList?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.fbList",
+    //     label: "Facebook List",
+    //     value: "Facebook List",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.instaList?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.instaList",
+    //     label: "Instagram List",
+    //     value: "Instagram List"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.weatherAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.weatherAds",
+    //     label: "Weather Ads",
+    //     value: "Weather Ads",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.linkedinInmail?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.linkedinInmail",
+    //     label: "Linkedin InMail",
+    //     value: "Linkedin InMail"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.linkedinSponsored?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.linkedinSponsored",
+    //     label: "Linkedin Sponsored",
+    //     value: "Linkedin Sponsored",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.fbLead?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.fbLead",
+    //     label: "Facebook Lead",
+    //     value: "Facebook Lead"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.instaLead?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.instaLead",
+    //     label: "Instagram Lead",
+    //     value: "Instagram Lead",
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.other?.instantExperience?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.other.instantExperience",
+    //     label: "Instant Experience",
+    //     value: "Instant Experience"
+    //   }])
+    // }
+  }, [values?.detail?.campaignBudget])
+
   return (
     <Box bg="green.50" p={4}>
       <Grid templateColumns="repeat(2, 1fr)" gap={4}>
@@ -177,25 +464,31 @@ const CampaignBudget = ({ values, setFieldValue }) => {
                 label="Campaign Budget"
                 name="Campaign Budget"
                 options={CampaignBudgetOptions}
+                value={campaignValue}
                 placeholder={`Select...`}
                 onChange={(e) => {
                   setBudgets(e);
+                  setCampaignValue(e);
                 }}
               />
             </GridItem>
             <GridItem colSpan={2}>
               <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                {budgets.map((el, index) => (
+                {campaignValue.map((el, index) => (
                   <GridItem key={index} colSpan={1}>
                     <Box className="budget-item">
                       <Box className="heading">
                         <Text fontSize="sm">{el.label}</Text>
                         <CloseIcon
-                          onClick={() =>
+                          onClick={() => {
                             setBudgets(
                               budgets.filter((e) => e.label != el.label)
-                            )
-                          }
+                            );
+                            setCampaignValue(
+                              campaignValue.filter((e) => e.label != el.label)
+                            );
+                            setFieldValue(el.name, "");
+                          }}
                           cursor="pointer"
                           w={3}
                           h={3}
@@ -211,17 +504,6 @@ const CampaignBudget = ({ values, setFieldValue }) => {
             </GridItem>
           </Grid>
         </GridItem>
-        {/* {CAMPAIGN_BUDGET.map((input, index) => {
-                    return (
-                        <GridItem key={index}>
-                            <InputBox
-                                name={input.name}
-                                type={input.type}
-                                label={input.placeholder}
-                            />
-                        </GridItem>
-                    );
-                })} */}
         <GridItem>
           <RadioGroupControl
             label="Monthly"

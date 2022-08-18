@@ -98,6 +98,18 @@ export const DeveloperMenuList = [
     },
     {
         id: uuidv4(),
+        name: "Users",
+        path: "/users",
+        icon: FiUser,
+    },
+    {
+        id: uuidv4(),
+        name: "Config management",
+        path: "/config",
+        icon: FiServer,
+    },
+    {
+        id: uuidv4(),
         name: "Settings",
         path: "/settings",
         icon: FiSettings,

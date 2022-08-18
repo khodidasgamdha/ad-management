@@ -143,7 +143,7 @@ export const campaignInitialValue = (data, campaignDetails) => ({
         frequencyCapping: campaignDetails?.detail?.frequencyCapping || "",
         optimizationExclusions: campaignDetails?.detail?.optimizationExclusions || "",
         // Remaining fields
-        inventoryRestrictions: campaignDetails?.detail?.inventoryRestrictions || "",
+        inventoryRestrictions: campaignDetails?.detail?.inventoryRestrictions || [],
         whitelist: campaignDetails?.detail?.whitelist || "",
         blacklist: campaignDetails?.detail?.blacklist || "",
         creativeUnit: campaignDetails?.detail?.creativeUnit || [],

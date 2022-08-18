@@ -82,7 +82,7 @@ const CreateForm = ({ id, clientDetails, campaignDetails }) => {
           <CampaignMetrics />
           <Demographics setFieldValue={setFieldValue} values={values} />
           <MediaStrategies setFieldValue={setFieldValue} values={values} />
-          <Creative />
+          <Creative setFieldValue={setFieldValue} values={values} />
           <AdditionalQuestions setFieldValue={setFieldValue} values={values} />
 
           <Stack direction="row" justifyContent="flex-end">

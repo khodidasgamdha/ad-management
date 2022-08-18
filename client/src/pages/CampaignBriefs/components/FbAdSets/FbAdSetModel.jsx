@@ -49,20 +49,23 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
 
     useEffect(() => {
         if (campaignFacebookObjective) {
-            if (campaignFacebookObjective === "BRAND_AWARENESS") {
+            if (
+                campaignFacebookObjective === "BRAND_AWARENESS" ||
+                campaignFacebookObjective === "POST_ENGAGEMENT"
+            ) {
                 setFbObjective(BrandAwarenessOptimizationGoalOptions);
             } else if (campaignFacebookObjective === "LINK_CLICKS") {
                 setFbObjective(LinkClicksOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "POST_ENGAGEMENT") {
-                setFbObjective(BrandAwarenessOptimizationGoalOptions);
             } else if (campaignFacebookObjective === "VIDEO_VIEWS") {
                 setFbObjective(VideoViewsOptimizationGoalOptions);
             } else if (campaignFacebookObjective === "LEAD_GENERATION") {
                 setFbObjective(LeadGenerationOptimizationGoalOptions);
             } else if (campaignFacebookObjective === "CONVERSIONS") {
                 setFbObjective(ConversionsOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "PRODUCT_CATELOG_SALES") {
+            } else if (campaignFacebookObjective === "PRODUCT_CATALOG_SALES") {
                 setFbObjective(ProductcatalogsalesOptimizationGoalOptions);
+            } else if(campaignFacebookObjective === "REACH") {
+                setFbObjective([]);
             }
         }
     }, [campaignFacebookObjective]);

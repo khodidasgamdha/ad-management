@@ -8,13 +8,38 @@ import {
     Radio,
 } from "@chakra-ui/react";
 import { RadioGroupControl } from "formik-chakra-ui";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputBox from "../../../../components/InputBox";
 import MultiSelectInputBox from "../../../../components/MultiSelectInputBox";
 import "../../style/CampaignDetails.css";
 import { CreativeUnit, CreativeSizes } from "../../constant/SelectValues"
 
-const Creative = () => {
+const Creative = ({ values, setFieldValue }) => {
+    const [selectedCreativeUnit, setSelectedCreativUnit] = useState([]);
+    const [selectedCreativeSize, setSelectedCreativeSize] = useState([]);
+    
+    useEffect(() => {
+        if (values?.detail?.creativeSize?.length) {
+            setSelectedCreativeSize(
+                values.detail.creativeSize.map((el) => {
+                    const id = CreativeSizes.filter((e) => e.value === el);
+                    return { value: el, label: id?.[0]?.label };
+                })
+            );
+        }
+    }, [values?.detail?.creativeSize]);
+
+    useEffect(() => {
+        if (values?.detail?.creativeUnit?.length) {
+            setSelectedCreativUnit(
+                values.detail.creativeUnit.map((el) => {
+                    const id = CreativeUnit.filter((e) => e.value === el);
+                    return { value: el, label: id?.[0]?.label };
+                })
+            );
+        }
+    }, [values?.detail?.creativeUnit]);
+
     return (
         <Box bg="orange.50" p={4}>
             <Grid templateColumns="repeat(2, 1fr)" gap={4}>
@@ -26,17 +51,33 @@ const Creative = () => {
                 <GridItem>
                     <MultiSelectInputBox
                         options={CreativeUnit}
+                        value={selectedCreativeUnit}
                         label="Creative Unit"
                         name="detail.creativeUnit"
                         placeholder={`Select...`}
+                        onChange={(e) => {
+                            setSelectedCreativUnit(e.map((v) => v))
+                            setFieldValue(
+                                'detail.creativeUnit', 
+                                e.map(el => el.value)
+                            )
+                        }}
                     />
                 </GridItem>
                 <GridItem>
                     <MultiSelectInputBox
                         options={CreativeSizes}
+                        value={selectedCreativeSize}
                         label="What creative sizes will we have access to?"
                         name="detail.creativeSize"
                         placeholder={`Select...`}
+                        onChange={(e) => {
+                            setSelectedCreativeSize(e.map((v) => v))
+                            setFieldValue(
+                                'detail.creativeSize', 
+                                e.map(el => el.value)
+                            )
+                        }}
                     />
                 </GridItem>
                 <GridItem colSpan={2}>

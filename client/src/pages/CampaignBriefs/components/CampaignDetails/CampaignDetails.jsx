@@ -18,7 +18,7 @@ const CampaignDetails = ({ setFieldValue, values }) => {
             const startDate = moment(values.detail.campaignBasic.startDate);
             const endDate = moment(values.detail.campaignBasic.endDate);
             const diff = endDate.diff(startDate, 'days');
-            setDuration(diff)
+            setDuration(diff+1)
             setFieldValue('detail.campaignBasic.duration', duration)
         }
     }, [values.detail.campaignBasic])
@@ -48,7 +48,7 @@ const CampaignDetails = ({ setFieldValue, values }) => {
                         type="date"
                     />
                 </GridItem>
-                <GridItem display="flex" justifyContent="end" alignItems="center">
+                <GridItem mt={8} display="flex" justifyContent="end" alignItems="center">
                     <TbEqual />
                 </GridItem>
                 <GridItem>

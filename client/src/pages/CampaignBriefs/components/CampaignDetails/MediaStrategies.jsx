@@ -1,5 +1,6 @@
 import { Box, Heading, Grid, GridItem } from "@chakra-ui/react";
 import { CheckboxContainer, CheckboxControl } from "formik-chakra-ui";
+import { useEffect, useState } from "react";
 import InputBox from "../../../../components/InputBox";
 import MultiSelectInputBox from "../../../../components/MultiSelectInputBox";
 import {
@@ -7,7 +8,20 @@ import {
     TargettingOptionDevices,
 } from "../../../../constant";
 
-const MediaStrategies = ({ setFieldValue }) => {
+const MediaStrategies = ({ values, setFieldValue }) => {
+    const [selectedInventory, setSelectedInventory] = useState([]);
+
+    useEffect(() => {
+        if (values?.detail?.inventoryRestrictions?.length) {
+            setSelectedInventory(
+                values.detail.inventoryRestrictions.map((el) => {
+                    const id = CampaignInventoryRestriction.filter((e) => e.value === el);
+                    return { value: el, label: id?.[0]?.label };
+                })
+            );
+        }
+    }, [values?.detail?.inventoryRestrictions]);
+
     return (
         <Box bg="blue.50" p={4}>
             <Heading fontSize="md" mb={4} color="blue.500">
@@ -72,13 +86,15 @@ const MediaStrategies = ({ setFieldValue }) => {
                         label="Inventory Restrictions/Digital Content Labels"
                         name="detail.inventoryRestrictions"
                         options={CampaignInventoryRestriction}
+                        value={selectedInventory}
                         placeholder={`Select Inventory...`}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                            setSelectedInventory(e.map((v) => v))
                             setFieldValue(
                                 "detail.inventoryRestrictions",
                                 e.map((v) => v["value"])
                             )
-                        }
+                        }}
                     />
                 </GridItem>
                 <GridItem colSpan={6}>

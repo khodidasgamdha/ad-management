@@ -810,7 +810,7 @@ export const BEHAVIOR = [
         id: uuidv4(),
         label: "Affinity",
         name: "detail.audienceTargetting.behavior.affinity",
-        options: TargettingOptionAffinity,
+        options: TargettingOptionAffinity
     },
     {
         id: uuidv4(),
@@ -976,7 +976,6 @@ export const INTEREST_TOPIC_TARGETING = [
         label: "Work",
         name: "detail.audienceTargetting.interest.work",
         options: TargettingOptionWork,
-        colSpan: 2,
     },
 ];
 
