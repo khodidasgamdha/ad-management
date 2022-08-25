@@ -122,7 +122,7 @@ const Creative = ({ values, setFieldValue }) => {
                     />
                 </GridItem>
                 <GridItem colSpan={2}>
-                    <InputBox name="detail.socialPage" label="Social Page" />
+                    <InputBox name="detail.socialPage" label="Social Page (Required)" />
                 </GridItem>
             </Grid>
         </Box>

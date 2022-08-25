@@ -252,17 +252,19 @@ export const fbAdUploadValueLengths = {
     url: 255,
 };
 
-export const facebookAdSets = {
-    campaignName: "",
-    channel: "",
-    isLead: false,
-    adCategory: "",
-    targetingMethod: "",
-    location: "",
-    audience: "",
-    promo: "",
-    device: "",
-    creativeType: "",
-    adName: "",
-    
-}
+export const facebookAdSets = (fbAd) => ({
+    adSetId: fbAd?.id || "",
+    imageHash: "",
+    requireTracking: "",
+    adCategory: fbAd?.detail?.adCategory || "",
+    adName: fbAd?.detail?.adName || "",
+    adSize: "",
+    audience: fbAd?.detail?.audience || "",
+    campaignName: fbAd?.detail?.campaignName || "",
+    creativeType: fbAd?.detail?.creativeType || "",
+    device: fbAd?.detail?.device || "",
+    isLead: fbAd?.detail?.lead?.trim() ? true : false,
+    location: fbAd?.detail?.location || "",
+    promo: fbAd?.detail?.promo || "",
+    targetingMethod: fbAd?.detail?.targetingMethod || ""
+})

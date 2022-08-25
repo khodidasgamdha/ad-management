@@ -9,7 +9,7 @@ import moment from 'moment'
 
 const CampaignDetails = ({ setFieldValue, values }) => {
     const [duration, setDuration] = useState(0)
-
+    console.log(values);
     useEffect(() => {
         if(
             values?.detail?.campaignBasic?.startDate && 
@@ -32,20 +32,35 @@ const CampaignDetails = ({ setFieldValue, values }) => {
                     </Heading>
                 </GridItem>
                 <GridItem colSpan={2}>
-                    <InputBox name="name" label="Campaign Name" />
+                    <InputBox 
+                        name="detail.campaignBasic.campaignName" 
+                        label="Campaign Name (Required)" 
+                        onChange={(e) => {
+                            setFieldValue('detail.campaignBasic.campaignName', e.target.value)
+                            setFieldValue('name', e.target.value)
+                        }}
+                    />
                 </GridItem>
                 <GridItem>
                     <InputBox
                         name="detail.campaignBasic.startDate"
-                        label="Start Date"
+                        label="Start Date (Required)"
                         type="date"
+                        onChange={(e) => {
+                            setFieldValue('detail.campaignBasic.startDate', e.target.value)
+                            setFieldValue('startDate', e.target.value)
+                        }}
                     />
                 </GridItem>
                 <GridItem>
                     <InputBox
                         name="detail.campaignBasic.endDate"
-                        label="End Date"
+                        label="End Date (Required)"
                         type="date"
+                        onChange={(e) => {
+                            setFieldValue('detail.campaignBasic.endDate', e.target.value)
+                            setFieldValue('endDate', e.target.value)
+                        }}
                     />
                 </GridItem>
                 <GridItem mt={8} display="flex" justifyContent="end" alignItems="center">
@@ -62,7 +77,7 @@ const CampaignDetails = ({ setFieldValue, values }) => {
                 <GridItem colSpan={2}>
                     <InputBox
                         name="detail.campaignBasic.websiteUrl"
-                        label="Website URL"
+                        label="Website URL (Required)"
                         type="url"
                     />
                 </GridItem>
@@ -73,7 +88,7 @@ const CampaignDetails = ({ setFieldValue, values }) => {
                         </FormLabel>
                         <Checkbox colorScheme="yellow"></Checkbox>
                         <InputBox
-                            name="detail.campaignBasic.websiteUrl"
+                            name="detail.campaignBasic.landingPageDocLink"
                             type="url"
                         />
                     </Box>
@@ -83,7 +98,7 @@ const CampaignDetails = ({ setFieldValue, values }) => {
                         </FormLabel>
                         <Checkbox colorScheme="yellow"></Checkbox>
                         <InputBox
-                            name="detail.campaignBasic.websiteUrl"
+                            name="detail.campaignBasic.landingPageMobileLink"
                             type="url"
                         />
                     </Box>
@@ -93,7 +108,7 @@ const CampaignDetails = ({ setFieldValue, values }) => {
                         </FormLabel>
                         <Checkbox colorScheme="yellow"></Checkbox>
                         <InputBox
-                            name="detail.campaignBasic.websiteUrl"
+                            name="detail.campaignBasic.thankYouLink"
                             type="url"
                         />
                     </Box>

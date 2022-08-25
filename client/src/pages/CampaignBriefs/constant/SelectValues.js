@@ -437,3 +437,14 @@ export const CampaignBudgetOptions = [
         value: "Instant Experience",
     },
 ];
+
+export const FacebookAdSize = [
+    { label: "320X100", value: "D320X100" },
+    { label: "320X50", value: "D320X50" },
+    { label: "300X250", value: "D300X250" },
+    { label: "970X250", value: "D970X250" },
+    { label: "728X90", value: "D728X90" },
+    { label: "336X280", value: "D336X280" },
+    { label: "300X600", value: "D300X600" },
+    { label: "160X600", value: "D160X600" },
+];

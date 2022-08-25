@@ -75,7 +75,7 @@ const CampaignMetrics = () => {
         <GridItem colSpan={2}>
           <InputBox
             name="detail.customMetricsAndGoals"
-            label="Metrics/Goals to Reach & Exceed"
+            label="Metrics/Goals to Reach & Exceed (Required)"
           />
         </GridItem>
         <GridItem colSpan={2}>
@@ -115,7 +115,7 @@ const CampaignMetrics = () => {
         <GridItem colSpan={2}>
           <FormControl>
             <FormLabel htmlFor="detail.objective" color="gray" fontSize="sm">
-              What is the main facebook objective for this campaign?
+              What is the main facebook objective for this campaign? (Required)
             </FormLabel>
             <SelectControl
               id="detail.objective"
@@ -139,7 +139,7 @@ const CampaignMetrics = () => {
         <GridItem colSpan={2}>
           <TextAreaBox
             name="detail.conversionMeasurement"
-            label="What is being measured and how will the campaign be assessed?"
+            label="What is being measured and how will the campaign be assessed? (Required)"
           />
         </GridItem>
       </Grid>
