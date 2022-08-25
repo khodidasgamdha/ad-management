@@ -7,3 +7,35 @@ body {
 .css-9k693q {
     margin-bottom: auto;
 }
+
+::-webkit-input-placeholder {
+    /* WebKit, Blink, Edge */
+    color: #bfc5cc;
+}
+
+:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #bfc5cc !important;
+    opacity: 1;
+}
+
+::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #bfc5cc !important;
+    opacity: 1;
+}
+
+:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #bfc5cc !important;
+}
+
+::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #bfc5cc !important;
+}
+
+::placeholder {
+    /* Most modern browsers support this now. */
+    color: #bfc5cc !important;
+}

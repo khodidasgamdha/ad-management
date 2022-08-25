@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import "../../style/AdUploadList.css";
 import { useSelector } from "react-redux";
 import { useGetFbCampaigns } from "../../../../hooks/campaign-briefs/useGetFbCampaigns";
+
 const FbAdSetsList = () => {
     const { id } = useParams();
     const clientId = useSelector((state) => state.client.clientId);
@@ -49,7 +50,6 @@ const FbAdSetsList = () => {
     useEffect(() => {
         if (search?.trim()) {
             const searchedFbAds = fbAdSets.filter((el) => {
-                console.log(el);
                 if (el?.name?.toLowerCase().includes(search.trim())) {
                     return true;
                 } else if (el?.fbId?.toLowerCase().includes(search.trim())) {
@@ -89,10 +89,10 @@ const FbAdSetsList = () => {
                 Header: "Ad Set Name",
                 accessor: "name",
             },
-            {
-                Header: "FB Ad Set Id",
-                accessor: "fbId",
-            },
+            // {
+            //     Header: "FB Ad Set Id",
+            //     accessor: "fbId",
+            // },
             {
                 Header: "Start Date",
                 accessor: "start_time",

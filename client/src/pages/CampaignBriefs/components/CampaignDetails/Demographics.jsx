@@ -541,7 +541,15 @@ const Demographics = ({ setFieldValue, values }) => {
                 ))}
               </Box>
             </Box>
-            <Checkbox onChange={() => setFbIncomeRange(!fbIncomeRange)}>
+            <Checkbox onChange={() => {
+                setFbIncomeRange(!fbIncomeRange)
+                if(!fbIncomeRange) {
+                    setFieldValue(
+                      "detail.householdIncomeDetailsfb",
+                      ['NA']
+                    );
+                }
+            }}>
               N / A
             </Checkbox>
           </Box>

@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 import "../../style/AdUploadList.css";
 import { useSelector } from "react-redux";
 import FbAdSetModel from "../FbAdSets/FbAdSetModel";
+import moment from 'moment'
 
 const FbCampaignList = () => {
     const { id } = useParams();
@@ -64,17 +65,39 @@ const FbCampaignList = () => {
 
     const columns = useMemo(
         () => [
-            {
-                Header: "Id",
-                accessor: "id",
-            },
+            // {
+            //     Header: "Id",
+            //     accessor: "id",
+            // },
             {
                 Header: "NAME",
                 accessor: "name",
             },
+            // {
+            //     Header: "FB Campaign ID",
+            //     accessor: "fb_campaign_id",
+            // },
             {
-                Header: "FB Campaign ID",
-                accessor: "fb_campaign_id",
+                Header: "Created At",
+                accessor: "created_at",
+                Cell: (data) => (
+                    `${moment(data?.row?.original?.created_at).format(
+                        "h:mm:ss A"
+                    )}, ${moment(data?.row?.original?.created_at).format(
+                        "MMMM DD YYYY"
+                    )}`
+                )
+            },
+            {
+                Header: "Updated At",
+                accessor: "updated_at",
+                Cell: (data) => (
+                    `${moment(data?.row?.original?.updated_at).format(
+                        "h:mm:ss A"
+                    )}, ${moment(data?.row?.original?.updated_at).format(
+                        "MMMM DD YYYY"
+                    )}`
+                )
             },
             {
                 Header: () => <Text>Actions</Text>,

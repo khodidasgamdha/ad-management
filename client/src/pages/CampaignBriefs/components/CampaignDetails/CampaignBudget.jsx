@@ -37,16 +37,6 @@ const CampaignBudget = ({ values, setFieldValue }) => {
       total += parseInt(values.detail.campaignBudget.instaAds) || 0;
     }
     if (values.detail.campaignBudget.displayAds) {
-      if (parseInt(values.detail.campaignBudget.displayAds) > 0) {
-        // setCampaignValue([
-        //   ...campaignValue,
-        //   {
-        //     label: "Display Ads",
-        //     name: `detail.campaignBudget.displayAds`,
-        //     value: "Display Ads",
-        //   },
-        // ]);
-      }
       total += parseInt(values.detail.campaignBudget.displayAds) || 0;
     }
     if (values.detail.campaignBudget.twitterAds) {
@@ -173,21 +163,21 @@ const CampaignBudget = ({ values, setFieldValue }) => {
     setTotal(total);
   }, [values.detail.campaignBudget]);
 
-  useEffect(() => {
-    if(values?.detail?.campaignBudget?.googleSearchAds?.length) {
-      setCampaignValue([...campaignValue, {
-        label: "Google Search Ads",
-        name: "detail.campaignBudget.googleSearchAds",
-        value: "Google Search Ads"
-      }])
-    }
-    if(values?.detail?.campaignBudget?.bingSearchAds?.length) {
-      setCampaignValue([...campaignValue, {
-        name: "detail.campaignBudget.bingSearchAds",
-        label: "Bing Search Ads",
-        value: "Bing Search Ads",
-      }])
-    }
+//   useEffect(() => {
+    // if(values?.detail?.campaignBudget?.googleSearchAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     label: "Google Search Ads",
+    //     name: "detail.campaignBudget.googleSearchAds",
+    //     value: "Google Search Ads"
+    //   }])
+    // }
+    // if(values?.detail?.campaignBudget?.bingSearchAds?.length) {
+    //   setCampaignValue([...campaignValue, {
+    //     name: "detail.campaignBudget.bingSearchAds",
+    //     label: "Bing Search Ads",
+    //     value: "Bing Search Ads",
+    //   }])
+    // }
     // if(values?.detail?.campaignBudget?.fbAds?.length) {
     //   setCampaignValue([...campaignValue, {
     //     name: "detail.campaignBudget.fbAds",
@@ -447,7 +437,7 @@ const CampaignBudget = ({ values, setFieldValue }) => {
     //     value: "Instant Experience"
     //   }])
     // }
-  }, [values?.detail?.campaignBudget])
+//   }, [values?.detail?.campaignBudget])
 
   return (
     <Box bg="green.50" p={4}>

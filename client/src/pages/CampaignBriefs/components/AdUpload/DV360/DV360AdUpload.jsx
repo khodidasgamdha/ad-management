@@ -20,7 +20,6 @@ import "../../../style/FacebookAdUpload.css";
 import { DV360AdDetails } from "./DV360AdDetails";
 import AdPreview from "../AdPreview";
 import { useGetAdUpload } from "../../../../../hooks/campaign-briefs/useGetAdUpload";
-import { useCreateAdPreview } from "../../../../../hooks/campaign-briefs/useCreateAdPreview";
 import { Comments } from "./Comments";
 import { useSelector } from "react-redux";
 import AuditLogsList from "../AuditLogsList";
@@ -37,7 +36,6 @@ const DV360AdUpload = () => {
     const clientId = useSelector((state) => state.client.clientId);
 
     const { data, refetch } = useGetAdUpload(clientId, id, dv360Id);
-    const { mutateAsync } = useCreateAdPreview();
 
     useEffect(() => {
         refetch()
@@ -59,29 +57,6 @@ const DV360AdUpload = () => {
         setImages(data);
         setPreviewData(data)
         setIsPreview(true);
-        // await mutateAsync(
-        //     {
-        //         clientId: clientId,
-        //         campaignBriefId: id,
-        //         type: data?.type,
-        //         description: data?.description,
-        //         imageHash: data?.images?.[0]?.imageHash,
-        //         link: data?.url,
-        //         message: data?.message,
-        //         name: data?.name,
-        //     },
-        //     {
-        //         onSuccess: (data, variables, context) => {
-        //             setPreviewData(data);
-        //             if (
-        //                 data?.previews &&
-        //                 Object.keys(data.previews).length > 0
-        //             ) {
-        //                 setIsPreview(true);
-        //             }
-        //         },
-        //     }
-        // );
     };
 
     return (
@@ -163,6 +138,9 @@ const DV360AdUpload = () => {
                                     data={data?.adUpload || images}
                                     url={url}
                                     method={method}
+                                    clientId={clientId}
+                                    campaignId={id}
+                                    adUploadId={dv360Id}
                                 />
                             )}
                         </TabPanel>

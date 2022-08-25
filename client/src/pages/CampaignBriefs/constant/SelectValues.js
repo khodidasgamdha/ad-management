@@ -186,7 +186,7 @@ export const LeadGenerationOptimizationGoalOptions = [
 ];
 
 export const ConversionsOptimizationGoalOptions = [
-    { value: "Impressions", key: "IMPERSSIONS" },
+    { value: "Impressions", key: "IMPRESSIONS" },
     { value: "Post engagement", key: "POST_ENGAGEMENT" },
     { value: "Offsite conversions", key: "OFFSITE_CONVERSIONS" },
     { value: "Link clicks", key: "LINK_CLICKS" },
@@ -198,7 +198,7 @@ export const ConversionsOptimizationGoalOptions = [
 
 export const EventType = [
     { value: "Rate", key: "RATE" },
-    { value: "Tutorial Completion", key: "TUTORIAL_COMLETION" },
+    { value: "Tutorial Completion", key: "TUTORIAL_COMPLETION" },
     { value: "Contact", key: "CONTACT" },
     { value: "Customize Product", key: "CUSTOMIZE_PRODUCT" },
     { value: "Donate", key: "DONATE" },
@@ -231,7 +231,7 @@ export const EventType = [
 ];
 
 export const ProductcatalogsalesOptimizationGoalOptions = [
-    { value: "Impressions", key: "IMPERSSIONS" },
+    { value: "Impressions", key: "IMPRESSIONS" },
     { value: "Post engagement", key: "POST_ENGAGEMENT" },
     { value: "Offsite conversions", key: "OFFSITE_CONVERSIONS" },
     { value: "Link clicks", key: "LINK_CLICKS" },

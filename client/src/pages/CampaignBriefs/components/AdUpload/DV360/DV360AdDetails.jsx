@@ -22,13 +22,25 @@ import instance from "../../../../../helpers/axios";
 import ErrorModal from "../../../../../components/PopupModal/ErrorModal";
 import SuccessModal from "../../../../../components/PopupModal/SuccessModal";
 import { dv360AdUploadInitialValues } from "../../../constant/InitialValues";
+import { useUpdateAdUploadStatus } from "../../../../../hooks/campaign-briefs/useUpdateAdUploadStatus";
 
-export const DV360AdDetails = ({ data, getImages, url, method }) => {
+export const DV360AdDetails = ({
+    data,
+    getImages,
+    url,
+    method,
+    clientId,
+    campaignId,
+    adUploadId,
+}) => {
     const [isSuccessModalOpen, setSuccessModal] = useState(false);
     const [isErrorModalOpen, setErrorModal] = useState(false);
     const [formData, setFromData] = useState(dv360AdUploadInitialValues);
     const [hashArray, setHashArray] = useState([]);
     const [description, setDescription] = useState("");
+    const [approval, setApproval] = useState(false);
+
+    const { mutate } = useUpdateAdUploadStatus();
 
     const sendData = () => {
         getImages({
@@ -63,34 +75,85 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
             });
             setHashArray(data.images);
         }
+        if (data?.status && data.status == "Created") {
+            setApproval(true);
+        }
     }, [data]);
 
     return (
         <>
-            <Heading color={"gray"} fontSize="xl" my={4} mb={7}>
-                Current status:
-                <span style={{ marginLeft: "10px" }}>
-                    <Icon
-                        viewBox="0 0 200 200"
-                        mr={2}
-                        color={
-                            data?.status === "Created"
-                                ? "#59AB9E"
-                                : data?.status === "Approved"
-                                ? "#3F7EE6"
-                                : data?.status === "Rejected"
-                                ? "#FFA383"
-                                : "#FFA383"
-                        }
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-                        />
-                    </Icon>
-                    {data?.status || "Draft"}
-                </span>
-            </Heading>
+            <Box display="flex" justifyContent="space-between" my={4} mb={7}>
+                <Heading color={"gray"} fontSize="xl">
+                    Current status:
+                    <span style={{ marginLeft: "10px" }}>
+                        <Icon
+                            viewBox="0 0 200 200"
+                            mr={2}
+                            color={
+                                data?.status === "Created"
+                                    ? "#59AB9E"
+                                    : data?.status === "Approved"
+                                    ? "#3F7EE6"
+                                    : data?.status === "Rejected"
+                                    ? "#FFA383"
+                                    : "#FFA383"
+                            }
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                            />
+                        </Icon>
+                        {data?.status || "Draft"}
+                    </span>
+                </Heading>
+                {approval && (
+                    <Box display="flex">
+                        <Button
+                            size="sm"
+                            mr={2}
+                            colorScheme="green"
+                            backgroundColor="green.400"
+                            borderRadius={4}
+                            disabled={!clientId || !campaignId || !adUploadId}
+                            onClick={() =>
+                                mutate(
+                                    {
+                                        clientId,
+                                        campaignId,
+                                        adUploadId,
+                                        status: "Approved",
+                                    },
+                                    {
+                                        onSuccess: () => {
+                                            setApproval(false);
+                                        },
+                                    }
+                                )
+                            }
+                        >
+                            Approve
+                        </Button>
+                        <Button
+                            size="sm"
+                            colorScheme="red"
+                            backgroundColor="red.400"
+                            borderRadius={4}
+                            disabled={!clientId || !campaignId || !adUploadId}
+                            onClick={() =>
+                                mutate({
+                                    clientId,
+                                    campaignId,
+                                    adUploadId,
+                                    status: "Rejected",
+                                })
+                            }
+                        >
+                            Reject
+                        </Button>
+                    </Box>
+                )}
+            </Box>
             <Grid className="fb-upload-detail-form">
                 <Formik
                     enableReinitialize
@@ -228,7 +291,9 @@ export const DV360AdDetails = ({ data, getImages, url, method }) => {
                                                     <Textarea
                                                         id="description"
                                                         name="description"
-                                                        value={values.description}
+                                                        value={
+                                                            values.description
+                                                        }
                                                         placeholder=""
                                                         inputprops={{
                                                             variant: "outline",

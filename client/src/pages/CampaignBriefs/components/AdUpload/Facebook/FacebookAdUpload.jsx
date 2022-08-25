@@ -163,6 +163,9 @@ const FacebookAdUpload = () => {
                                     data={data?.adUpload || images}
                                     url={url}
                                     method={method}
+                                    clientId={clientId}
+                                    campaignId={id}
+                                    adUploadId={fbId}
                                 />
                             )}
                         </TabPanel>

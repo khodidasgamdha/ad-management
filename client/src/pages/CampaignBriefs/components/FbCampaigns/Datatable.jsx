@@ -82,17 +82,11 @@ const Datatable = ({ data, columns }) => {
                                         return (
                                             <Td
                                                 style={
-                                                    index === 1
+                                                    index === 0
                                                         ? {
                                                               whiteSpace:
                                                                   "break-spaces",
                                                               maxWidth: 400,
-                                                          }
-                                                        : index === 0
-                                                        ? {
-                                                              whiteSpace:
-                                                                  "break-spaces",
-                                                              maxWidth: 240,
                                                           }
                                                         : {}
                                                 }

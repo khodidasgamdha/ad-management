@@ -13,77 +13,36 @@ import {
     ModalContent,
     ModalHeader,
     ModalOverlay,
+    Radio,
     useToast,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { CheckboxControl, SelectControl } from "formik-chakra-ui";
+import {
+    CheckboxControl,
+    RadioGroupControl,
+    SelectControl,
+} from "formik-chakra-ui";
 import { LockIcon } from "@chakra-ui/icons";
 import {
     AdCategory,
     TargetingMethod,
     CreativeType,
     DeviceOptions,
-    BrandAwarenessOptimizationGoalOptions,
-    LinkClicksOptimizationGoalOptions,
-    VideoViewsOptimizationGoalOptions,
-    LeadGenerationOptimizationGoalOptions,
-    ConversionsOptimizationGoalOptions,
-    EventType,
-    ProductcatalogsalesOptimizationGoalOptions,
-} from "../../constant/SelectValues";
-import instance from "../../../../helpers/axios";
-import InputBox from "../../../../components/InputBox";
-import {
-    conversionsValidationSchema,
-    validationSchema,
-} from "../../../../validations/CampaignBrief/FbAdSetModel";
-import { fbAdSetInitialValue } from "../../constant/InitialValues";
-import { useSelector } from "react-redux";
-import { useGetClientDetails } from "../../../../hooks/clients/useGetClientDetails";
+} from "../../../constant/SelectValues";
+import instance from "../../../../../helpers/axios";
+import InputBox from "../../../../../components/InputBox";
+import { facebookAdSets } from "../../../constant/InitialValues";
 
-const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
+const FacebookAdSetModel = ({
+    campaignId,
+    isOpen,
+    onClose,
+    clientId,
+    fbData,
+}) => {
     const toast = useToast();
-    const [fbObjective, setFbObjective] = useState([]);
-    const [pixelIds, setPixelIds] = useState([]);
-
-    const campaignFacebookObjective = useSelector(
-        (state) => state.campaign.campaignFacebookObjective
-    );
-
-    const { data, refetch } = useGetClientDetails(clientId);
-
-    useEffect(() => {
-        refetch();
-    }, [clientId]);
-
-    useEffect(() => {
-        setPixelIds(data?.detail?.fbPixels);
-    }, [data]);
-
-    useEffect(() => {
-        if (campaignFacebookObjective) {
-            if (
-                campaignFacebookObjective === "BRAND_AWARENESS" ||
-                campaignFacebookObjective === "POST_ENGAGEMENT"
-            ) {
-                setFbObjective(BrandAwarenessOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "LINK_CLICKS") {
-                setFbObjective(LinkClicksOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "VIDEO_VIEWS") {
-                setFbObjective(VideoViewsOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "LEAD_GENERATION") {
-                setFbObjective(LeadGenerationOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "CONVERSIONS") {
-                setFbObjective(ConversionsOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "PRODUCT_CATALOG_SALES") {
-                setFbObjective(ProductcatalogsalesOptimizationGoalOptions);
-            } else if (campaignFacebookObjective === "REACH") {
-                setFbObjective([]);
-            }
-        }
-    }, [campaignFacebookObjective]);
 
     const onSubmit = async (values, actions) => {
         let name = "WR";
@@ -123,54 +82,27 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
         }
         if (values.adName) name += ` - ${values.adName}`;
 
-        let data;
-        if (campaignFacebookObjective === "CONVERSIONS") {
-            data = {
-                name: name,
-                bidAmount: parseInt(values.bidAmount) * 100,
-                lifetimeBudget: parseInt(values.lifeTimeBudget) * 100,
-                startTime: values.startDate,
-                endTime: values.endDate,
-                optimizationGoal: values.optimizationGoal,
-                eventType: values.eventType,
-                pixelId: values.pixelId,
-                detail: {
-                    campaignName: values.campaignName,
-                    channel: "FACEBOOK",
-                    lead: values.isLead ? "lead" : "",
-                    adCategory: values.adCategory,
-                    targetingMethod: values.targetingMethod,
-                    location: values.location,
-                    audience: values.audience,
-                    promo: values.promo,
-                    device: values.device,
-                    creativeType: values.creativeType,
-                    adName: values.adName,
-                },
-            };
-        } else {
-            data = {
-                name: name,
-                bidAmount: parseInt(values.bidAmount) * 100,
-                lifetimeBudget: parseInt(values.lifeTimeBudget) * 100,
-                startTime: values.startDate,
-                endTime: values.endDate,
-                optimizationGoal: values.optimizationGoal,
-                detail: {
-                    campaignName: values.campaignName,
-                    channel: "FACEBOOK",
-                    lead: values.isLead ? "lead" : "",
-                    adCategory: values.adCategory,
-                    targetingMethod: values.targetingMethod,
-                    location: values.location,
-                    audience: values.audience,
-                    promo: values.promo,
-                    device: values.device,
-                    creativeType: values.creativeType,
-                    adName: values.adName,
-                },
-            };
-        }
+        let data = {
+            name: name,
+            bidAmount: parseInt(values.bidAmount) * 100,
+            lifetimeBudget: parseInt(values.lifeTimeBudget) * 100,
+            startTime: values.startDate,
+            endTime: values.endDate,
+            optimizationGoal: values.optimizationGoal,
+            detail: {
+                campaignName: values.campaignName,
+                channel: "FACEBOOK",
+                lead: values.isLead ? "lead" : "",
+                adCategory: values.adCategory,
+                targetingMethod: values.targetingMethod,
+                location: values.location,
+                audience: values.audience,
+                promo: values.promo,
+                device: values.device,
+                creativeType: values.creativeType,
+                adName: values.adName,
+            },
+        };
 
         await instance({
             method: "POST",
@@ -221,12 +153,8 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                 <ModalCloseButton onClick={() => {}} />
                 <Formik
                     enableReinitialize
-                    initialValues={fbAdSetInitialValue(fbData)}
-                    validationSchema={
-                        campaignFacebookObjective === "CONVERSIONS"
-                            ? conversionsValidationSchema
-                            : validationSchema
-                    }
+                    initialValues={facebookAdSets}
+                    // validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
                     {({
@@ -335,9 +263,9 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                 </InputGroup>
                                             </FormControl>
                                         </GridItem>
-                                        <GridItem alignSelf={"end"}>
+                                        <GridItem alignSelf={"center"}>
                                             <CheckboxControl
-                                                colorScheme="pink"
+                                                mt={3}
                                                 name="isLead"
                                                 value={values?.isLead.toString()}
                                                 onChange={handleChange}
@@ -716,10 +644,10 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                         }}
                                         gap={4}
                                     >
-                                        <GridItem>
+                                        <GridItem colSpan={3}>
                                             <FormControl>
                                                 <FormLabel
-                                                    htmlFor="startDate"
+                                                    htmlFor="device"
                                                     css={css({
                                                         fontWeight: "600",
                                                         fontSize: "12px",
@@ -728,156 +656,7 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                         marginBottom: "5px",
                                                     })}
                                                 >
-                                                    Start Date{" "}
-                                                    <span
-                                                        style={{
-                                                            color: "#FFB8B8",
-                                                        }}
-                                                    >
-                                                        (required)
-                                                    </span>
-                                                </FormLabel>
-                                                <InputBox
-                                                    id="startDate"
-                                                    name="startDate"
-                                                    type="date"
-                                                    value={values.startDate}
-                                                    onChange={handleChange}
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "14px",
-                                                        color: "#757998",
-                                                    })}
-                                                />
-                                            </FormControl>
-                                        </GridItem>
-                                        <GridItem>
-                                            <FormControl>
-                                                <FormLabel
-                                                    htmlFor="endDate"
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "12px",
-                                                        lineHeight: "15px",
-                                                        color: "#A7A9BD",
-                                                        marginBottom: "5px",
-                                                    })}
-                                                >
-                                                    End Date{" "}
-                                                    <span
-                                                        style={{
-                                                            color: "#FFB8B8",
-                                                        }}
-                                                    >
-                                                        (required)
-                                                    </span>
-                                                </FormLabel>
-                                                <InputBox
-                                                    id="endDate"
-                                                    name="endDate"
-                                                    type="date"
-                                                    value={values.endDate}
-                                                    onChange={handleChange}
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "14px",
-                                                        color: "#757998",
-                                                    })}
-                                                />
-                                            </FormControl>
-                                        </GridItem>
-                                        <GridItem>
-                                            <FormControl>
-                                                <FormLabel
-                                                    htmlFor="bidAmount"
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "12px",
-                                                        lineHeight: "15px",
-                                                        color: "#A7A9BD",
-                                                    })}
-                                                >
-                                                    Bid Amount{" "}
-                                                    <span
-                                                        style={{
-                                                            color: "#FFB8B8",
-                                                        }}
-                                                    >
-                                                        (required)
-                                                    </span>
-                                                </FormLabel>
-                                                <InputBox
-                                                    id="bidAmount"
-                                                    name="bidAmount"
-                                                    placeholder="$100"
-                                                    value={values.bidAmount}
-                                                    onChange={handleChange}
-                                                    css={css({
-                                                        color: "#757998",
-                                                        fontSize: "14px",
-                                                        fontWeight: "600",
-                                                    })}
-                                                />
-                                            </FormControl>
-                                        </GridItem>
-                                    </Grid>
-                                    <Grid
-                                        mt={3}
-                                        templateColumns={{
-                                            base: "repeat(2, 1fr)",
-                                            md: "repeat(3, 1fr)",
-                                        }}
-                                        gap={4}
-                                    >
-                                        <GridItem>
-                                            <FormControl>
-                                                <FormLabel
-                                                    htmlFor="lifeTimeBudget"
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "12px",
-                                                        lineHeight: "15px",
-                                                        color: "#A7A9BD",
-                                                    })}
-                                                >
-                                                    Lifetime Budget{" "}
-                                                    <span
-                                                        style={{
-                                                            color: "#FFB8B8",
-                                                        }}
-                                                    >
-                                                        (required)
-                                                    </span>
-                                                </FormLabel>
-                                                <InputBox
-                                                    id="lifeTimeBudget"
-                                                    name="lifeTimeBudget"
-                                                    placeholder="$1,000,000"
-                                                    value={
-                                                        values.lifeTimeBudget
-                                                    }
-                                                    onChange={handleChange}
-                                                    css={css({
-                                                        color: "#757998",
-                                                        fontSize: "14px",
-                                                        fontWeight: "600",
-                                                    })}
-                                                />
-                                            </FormControl>
-                                        </GridItem>
-                                        <GridItem>
-                                            <FormControl>
-                                                <FormLabel
-                                                    htmlFor="optimizationGoal"
-                                                    css={css({
-                                                        fontWeight: "600",
-                                                        fontSize: "12px",
-                                                        lineHeight: "15px",
-                                                        color: "#A7A9BD",
-                                                        marginBottom: "5px",
-                                                    })}
-                                                >
-                                                    Optimization Goal{" "}
+                                                    Device{" "}
                                                     <span
                                                         style={{
                                                             color: "#FFB8B8",
@@ -887,11 +666,9 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                     </span>
                                                 </FormLabel>
                                                 <SelectControl
-                                                    id="optimizationGoal"
-                                                    name="optimizationGoal"
-                                                    value={
-                                                        values.optimizationGoal
-                                                    }
+                                                    id="device"
+                                                    name="device"
+                                                    value={values.device}
                                                     onChange={handleChange}
                                                     selectProps={{
                                                         placeholder:
@@ -906,7 +683,7 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                         color: "#757998",
                                                     }}
                                                 >
-                                                    {fbObjective.map((el) => (
+                                                    {DeviceOptions.map((el) => (
                                                         <option
                                                             key={el.key}
                                                             value={el.key}
@@ -917,67 +694,94 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                 </SelectControl>
                                             </FormControl>
                                         </GridItem>
-                                        {campaignFacebookObjective ===
-                                            "CONVERSIONS" && (
-                                            <GridItem>
-                                                <FormControl>
-                                                    <FormLabel
-                                                        htmlFor="eventType"
-                                                        css={css({
-                                                            fontWeight: "600",
-                                                            fontSize: "12px",
-                                                            lineHeight: "15px",
-                                                            color: "#A7A9BD",
-                                                            marginBottom: "5px",
-                                                        })}
-                                                    >
-                                                        Event Type{" "}
-                                                        <span
-                                                            style={{
-                                                                color: "#FFB8B8",
-                                                            }}
-                                                        >
-                                                            (required)
-                                                        </span>
-                                                    </FormLabel>
-                                                    <SelectControl
-                                                        id="eventType"
-                                                        name="eventType"
-                                                        value={values.eventType}
-                                                        onChange={handleChange}
-                                                        selectProps={{
-                                                            placeholder:
-                                                                "-- Select One --",
-                                                            variant: "outline",
-                                                            border: "2px",
-                                                            borderRadius: 0,
-                                                            borderColor: "gray",
-                                                            fontWeight: "600",
-                                                            fontSize: "14px",
-                                                            lineHeight: "16px",
-                                                            color: "#757998",
-                                                        }}
-                                                    >
-                                                        {EventType.map((el) => (
-                                                            <option
-                                                                key={el.key}
-                                                                value={el.key}
-                                                            >
-                                                                {el.value}
-                                                            </option>
-                                                        ))}
-                                                    </SelectControl>
-                                                </FormControl>
-                                            </GridItem>
-                                        )}
                                     </Grid>
-                                    {campaignFacebookObjective ===
-                                        "CONVERSIONS" && (
-                                        <Grid mt={3}>
+                                    <Grid
+                                        mt={3}
+                                        templateColumns={{
+                                            base: "repeat(2, 1fr)",
+                                            md: "repeat(3, 1fr)",
+                                        }}
+                                        gap={4}
+                                    >
+                                        <GridItem>
+                                            <FormControl>
+                                                <FormLabel
+                                                    htmlFor="channel"
+                                                    css={css({
+                                                        fontWeight: "600",
+                                                        fontSize: "12px",
+                                                        lineHeight: "15px",
+                                                        color: "#A7A9BD",
+                                                        marginBottom: "5px",
+                                                    })}
+                                                >
+                                                    UTM Source
+                                                </FormLabel>
+                                                <InputGroup>
+                                                    <Input
+                                                        id="channel"
+                                                        name="channel"
+                                                        placeholder="Facebook"
+                                                        disabled
+                                                        css={css({
+                                                            borderRadius: "0",
+                                                            border: "2px solid #757998",
+                                                            fontWeight: "600",
+                                                            fontSize: "14px",
+                                                            lineHeight: "16px",
+                                                            color: "#757998",
+                                                        })}
+                                                    />
+                                                    <InputRightElement
+                                                        children={
+                                                            <LockIcon color="#757998" />
+                                                        }
+                                                    />
+                                                </InputGroup>
+                                            </FormControl>
+                                        </GridItem>
+                                        <GridItem>
+                                            <FormControl>
+                                                <FormLabel
+                                                    htmlFor="channel"
+                                                    css={css({
+                                                        fontWeight: "600",
+                                                        fontSize: "12px",
+                                                        lineHeight: "15px",
+                                                        color: "#A7A9BD",
+                                                        marginBottom: "5px",
+                                                    })}
+                                                >
+                                                    UTM Medium
+                                                </FormLabel>
+                                                <InputGroup>
+                                                    <Input
+                                                        id="channel"
+                                                        name="channel"
+                                                        placeholder="Facebook"
+                                                        disabled
+                                                        css={css({
+                                                            borderRadius: "0",
+                                                            border: "2px solid #757998",
+                                                            fontWeight: "600",
+                                                            fontSize: "14px",
+                                                            lineHeight: "16px",
+                                                            color: "#757998",
+                                                        })}
+                                                    />
+                                                    <InputRightElement
+                                                        children={
+                                                            <LockIcon color="#757998" />
+                                                        }
+                                                    />
+                                                </InputGroup>
+                                            </FormControl>
+                                        </GridItem>
+                                        <GridItem>
                                             <GridItem>
                                                 <FormControl>
                                                     <FormLabel
-                                                        htmlFor="pixelId"
+                                                        htmlFor="tracking"
                                                         css={css({
                                                             fontWeight: "600",
                                                             fontSize: "12px",
@@ -986,7 +790,7 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                             marginBottom: "5px",
                                                         })}
                                                     >
-                                                        Pixel ID{" "}
+                                                        Require Tracking ?{" "}
                                                         <span
                                                             style={{
                                                                 color: "#FFB8B8",
@@ -995,41 +799,26 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
                                                             (required)
                                                         </span>
                                                     </FormLabel>
-                                                    <SelectControl
-                                                        id="pixelId"
-                                                        name="pixelId"
-                                                        value={values.pixelId}
-                                                        onChange={handleChange}
-                                                        selectProps={{
-                                                            placeholder:
-                                                                "-- Select One --",
-                                                            variant: "outline",
-                                                            border: "2px",
-                                                            borderRadius: 0,
-                                                            borderColor: "gray",
-                                                            fontWeight: "600",
-                                                            fontSize: "14px",
-                                                            lineHeight: "16px",
-                                                            color: "#757998",
+
+                                                    <RadioGroupControl
+                                                        mt={3}
+                                                        labelProps={{
+                                                            fontSize: "sm",
+                                                            color: "gray",
                                                         }}
+                                                        name="tracking"
                                                     >
-                                                        {pixelIds.map(
-                                                            (el, index) => (
-                                                                <option
-                                                                    key={index}
-                                                                    value={
-                                                                        el.pixelId
-                                                                    }
-                                                                >
-                                                                    {el.pixelId}
-                                                                </option>
-                                                            )
-                                                        )}
-                                                    </SelectControl>
+                                                        <Radio value="Yes">
+                                                            Yes
+                                                        </Radio>
+                                                        <Radio value="No">
+                                                            No
+                                                        </Radio>
+                                                    </RadioGroupControl>
                                                 </FormControl>
                                             </GridItem>
-                                        </Grid>
-                                    )}
+                                        </GridItem>
+                                    </Grid>
                                 </ModalBody>
                                 <Flex mt={5}>
                                     <Button
@@ -1072,4 +861,4 @@ const FbAdSetModel = ({ campaignId, isOpen, onClose, clientId, fbData }) => {
     );
 };
 
-export default FbAdSetModel;
+export default FacebookAdSetModel;

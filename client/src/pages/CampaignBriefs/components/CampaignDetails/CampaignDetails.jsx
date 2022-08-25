@@ -21,7 +21,7 @@ const CampaignDetails = ({ setFieldValue, values }) => {
             setDuration(diff+1)
             setFieldValue('detail.campaignBasic.duration', duration)
         }
-    }, [values.detail.campaignBasic])
+    }, [values.detail.campaignBasic.startDate, values.detail.campaignBasic.endDate])
 
     return (
         <Box bg="orange.50" p={4}>

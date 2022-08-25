@@ -12,6 +12,8 @@ import {
     Button,
     css,
     Icon,
+    Select,
+    useDisclosure,
 } from "@chakra-ui/react";
 import { InputControl, SelectControl } from "formik-chakra-ui";
 import { Form, Formik } from "formik";
@@ -22,14 +24,52 @@ import instance from "../../../../../helpers/axios";
 import ErrorModal from "../../../../../components/PopupModal/ErrorModal";
 import SuccessModal from "../../../../../components/PopupModal/SuccessModal";
 import { facebookAdUploadInitialValues } from "../../../constant/InitialValues";
+import { useUpdateAdUploadStatus } from "../../../../../hooks/campaign-briefs/useUpdateAdUploadStatus";
+import { useGetFbCampaigns } from "../../../../../hooks/campaign-briefs/useGetFbCampaigns";
+import FacebookAdSetModel from "./FacebookAdSetModel"
 
-export const FacebookAdDetails = ({ data, getImages, url, method }) => {
+export const FacebookAdDetails = ({
+    data,
+    getImages,
+    url,
+    method,
+    clientId,
+    campaignId,
+    adUploadId,
+}) => {
     const [formData, setFromData] = useState(facebookAdUploadInitialValues);
     const [hashArray, setHashArray] = useState([]);
 
     const [isSuccessModalOpen, setSuccessModal] = useState(false);
     const [isErrorModalOpen, setErrorModal] = useState(false);
     const [description, setDescription] = useState("");
+    const [approval, setApproval] = useState(false);
+    const [fbAdSets, setFbAdSets] = useState([]);
+
+    const {
+        isOpen: isFacebookModelOpen,
+        onOpen: onFacebookModelOpen,
+        onClose: onFacebookModelClose,
+    } = useDisclosure();
+
+    const { mutate } = useUpdateAdUploadStatus();
+    const { mutate: mutateFbCampaigns, data: fbCampaignsData } =
+        useGetFbCampaigns();
+
+    useEffect(() => {
+        if (clientId && campaignId) {
+            mutateFbCampaigns({
+                clientId,
+                campaignId,
+            });
+        }
+    }, [clientId, campaignId]);
+
+    useEffect(() => {
+        fbCampaignsData?.fbCampaigns?.forEach((el) => {
+            setFbAdSets(el?.fb_ad_sets?.value);
+        });
+    }, [fbCampaignsData]);
 
     const sendData = () => {
         getImages({
@@ -75,34 +115,119 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
             });
             setHashArray(data.images);
         }
+        if (data?.status && data.status == "Created") {
+            setApproval(true);
+        }
     }, [data]);
 
     return (
         <>
-            <Heading color={"gray"} fontSize="xl" my={4} mb={7}>
-            Current status:
-                <span style={{ marginLeft: "10px" }}>
-                    <Icon
-                        viewBox="0 0 200 200"
-                        mr={2}
-                        color={
-                            data?.status === "Created"
-                                ? "#59AB9E"
-                                : data?.status === "Approved"
-                                ? "#3F7EE6"
-                                : data?.status === "Rejected"
-                                ? "#FFA383"
-                                : "#FFA383"
-                        }
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-                        />
-                    </Icon>
-                    {data?.status || "Draft"}
-                </span>
-            </Heading>
+            <Box display="flex" justifyContent="space-between" my={4} mb={7}>
+                <Heading color={"gray"} fontSize="xl">
+                    Current status:
+                    <span style={{ marginLeft: "10px" }}>
+                        <Icon
+                            viewBox="0 0 200 200"
+                            mr={2}
+                            color={
+                                data?.status === "Created"
+                                    ? "#59AB9E"
+                                    : data?.status === "Approved"
+                                    ? "#3F7EE6"
+                                    : data?.status === "Rejected"
+                                    ? "#FFA383"
+                                    : "#FFA383"
+                            }
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+                            />
+                        </Icon>
+                        {data?.status || "Draft"}
+                    </span>
+                </Heading>
+                {approval ? (
+                    <Box display="flex">
+                        <Button
+                            size="sm"
+                            mr={2}
+                            colorScheme="green"
+                            backgroundColor="green.400"
+                            borderRadius={4}
+                            disabled={!clientId || !campaignId || !adUploadId}
+                            onClick={() =>
+                                mutate(
+                                    {
+                                        clientId,
+                                        campaignId,
+                                        adUploadId,
+                                        status: "Approved",
+                                    },
+                                    {
+                                        onSuccess: () => {
+                                            setApproval(false);
+                                        },
+                                    }
+                                )
+                            }
+                        >
+                            Approve
+                        </Button>
+                        <Button
+                            size="sm"
+                            colorScheme="red"
+                            backgroundColor="red.400"
+                            borderRadius={4}
+                            disabled={!clientId || !campaignId || !adUploadId}
+                            onClick={() =>
+                                mutate({
+                                    clientId,
+                                    campaignId,
+                                    adUploadId,
+                                    status: "Rejected",
+                                })
+                            }
+                        >
+                            Reject
+                        </Button>
+                    </Box>
+                ) : (
+                    <Box backgroundColor="blue.50" p={4} maxWidth={390}>
+                        <Select
+                            placeholder="-- Select One --"
+                            borderColor="grey"
+                            border="2px"
+                            borderRadius={0}
+                            fontWeight="600"
+                            fontSize="14px"
+                            lineHeight="16px"
+                            color="#757998"
+                            onChange={(e) => console.log(e.target.value)}
+                        >
+                            {fbAdSets.map((el) => (
+                                <option value={el.id} key={el.id}>
+                                    {el.name}
+                                </option>
+                            ))}
+                        </Select>
+                        <Button
+                            size="small"
+                            css={css({
+                                background: "#24a0ed !important",
+                                borderRadius: "5px",
+                                width: "100%",
+                                height: "35px",
+                                marginRight: "10px",
+                            })}
+                            mt={3}
+                            onClick={onFacebookModelOpen}
+                        >
+                            Facebook Ad Set
+                        </Button>
+                    </Box>
+                )}
+            </Box>
             <Grid className="fb-upload-detail-form">
                 <Formik
                     enableReinitialize
@@ -123,7 +248,9 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                     type: values.facebookAccountId,
                                 },
                                 fileInfoList: hashArray,
-                                imageHashes: hashArray.map(el => el.imageHash),
+                                imageHashes: hashArray.map(
+                                    (el) => el.imageHash
+                                ),
                             },
                         };
                         if (!data?.id) {
@@ -193,7 +320,8 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                                             fbAdUploadValueLengths?.adName
                                                         }
                                                         value={
-                                                            values?.adName?.length
+                                                            values?.adName
+                                                                ?.length
                                                         }
                                                         color="green.400"
                                                     >
@@ -420,19 +548,23 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                                                         }
                                                     />
                                                     <CircularProgress
-                                                        max={fbAdUploadValueLengths?.url}
+                                                        max={
+                                                            fbAdUploadValueLengths?.url
+                                                        }
                                                         value={
                                                             values?.url?.length
                                                         }
                                                         color={
-                                                            values?.url?.length >
+                                                            values?.url
+                                                                ?.length >
                                                             fbAdUploadValueLengths?.url
                                                                 ? "red.400"
                                                                 : "green.400"
                                                         }
                                                     >
                                                         <CircularProgressLabel>
-                                                            {values?.url?.length >
+                                                            {values?.url
+                                                                ?.length >
                                                             fbAdUploadValueLengths?.url
                                                                 ? fbAdUploadValueLengths?.url -
                                                                   values?.url
@@ -561,6 +693,11 @@ export const FacebookAdDetails = ({ data, getImages, url, method }) => {
                     }}
                 </Formik>
             </Grid>
+
+            <FacebookAdSetModel
+                isOpen={isFacebookModelOpen}
+                onClose={onFacebookModelClose}
+            />
 
             <SuccessModal
                 isOpen={isSuccessModalOpen}

@@ -80,10 +80,7 @@ export function FileUpload({ getHashArray, type }) {
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
-        accept: {
-            "image/png": [".png"],
-            "image/jpeg": [".jpg", ".jpeg"],
-        },
+        accept: '*',
         maxSize: 5 * 1024 * 1024, // 5MB
     });
 

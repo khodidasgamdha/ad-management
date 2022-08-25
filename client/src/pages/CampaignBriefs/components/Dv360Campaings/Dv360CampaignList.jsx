@@ -17,6 +17,7 @@ import { useGetDv360Campaigns } from "../../../../hooks/campaign-briefs/useGetDv
 import { useParams } from "react-router-dom";
 import "../../style/AdUploadList.css";
 import { useSelector } from "react-redux";
+import moment from 'moment'
 
 const Dv360CampaignList = () => {
     const { id } = useParams();
@@ -60,17 +61,39 @@ const Dv360CampaignList = () => {
 
     const columns = useMemo(
         () => [
-            {
-                Header: "Id",
-                accessor: "id",
-            },
+            // {
+            //     Header: "Id",
+            //     accessor: "id",
+            // },
             {
                 Header: "NAME",
                 accessor: "name",
             },
+            // {
+            //     Header: "DV360 Campaign ID",
+            //     accessor: "dv_campaign_id",
+            // },
             {
-                Header: "DV360 Campaign ID",
-                accessor: "dv_campaign_id",
+                Header: "Created At",
+                accessor: "created_at",
+                Cell: (data) => (
+                    `${moment(data?.row?.original?.created_at).format(
+                        "h:mm:ss A"
+                    )}, ${moment(data?.row?.original?.created_at).format(
+                        "MMMM DD YYYY"
+                    )}`
+                )
+            },
+            {
+                Header: "Updated At",
+                accessor: "updated_at",
+                Cell: (data) => (
+                    `${moment(data?.row?.original?.updated_at).format(
+                        "h:mm:ss A"
+                    )}, ${moment(data?.row?.original?.updated_at).format(
+                        "MMMM DD YYYY"
+                    )}`
+                )
             },
             {
                 Header: () => <Text>Actions</Text>,

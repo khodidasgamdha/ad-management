@@ -251,3 +251,18 @@ export const fbAdUploadValueLengths = {
     description: 125,
     url: 255,
 };
+
+export const facebookAdSets = {
+    campaignName: "",
+    channel: "",
+    isLead: false,
+    adCategory: "",
+    targetingMethod: "",
+    location: "",
+    audience: "",
+    promo: "",
+    device: "",
+    creativeType: "",
+    adName: "",
+    
+}
